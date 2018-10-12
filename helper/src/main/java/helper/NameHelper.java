@@ -91,6 +91,7 @@ public final class NameHelper {
     boolean isValid = false;
     if (!Strings.isNullOrEmpty(value)) {
       if (CharMatcher.javaLetterOrDigit().matchesAllOf(value)) {
+        isValid = true;
         int length = value.length();
         if (min > 0) {
           isValid = length >= min;

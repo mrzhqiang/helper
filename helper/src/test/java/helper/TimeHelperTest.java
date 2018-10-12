@@ -2,6 +2,7 @@ package helper;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import org.junit.Before;
@@ -41,12 +42,12 @@ public final class TimeHelperTest {
     } catch (NullPointerException ignore) {
     }
 
-    assertEquals("刚刚", TimeHelper.untilNow(nowInstant));
-    assertEquals("1 分钟前", TimeHelper.untilNow(minutesInstant));
-    assertEquals("1 小时前", TimeHelper.untilNow(hoursInstant));
-    assertEquals("1 天前", TimeHelper.untilNow(dayInstant));
-    assertEquals("2 个月前", TimeHelper.untilNow(monthInstant));
-    assertEquals("1 年前", TimeHelper.untilNow(yearInstant));
+    assertEquals("刚刚", TimeHelper.untilNow(Date.from(nowInstant)));
+    assertEquals("1 分钟前", TimeHelper.untilNow(Date.from(minutesInstant)));
+    assertEquals("1 小时前", TimeHelper.untilNow(Date.from(hoursInstant)));
+    assertEquals("1 天前", TimeHelper.untilNow(Date.from(dayInstant)));
+    assertEquals("2 个月前", TimeHelper.untilNow(Date.from(monthInstant)));
+    assertEquals("1 年前", TimeHelper.untilNow(Date.from(yearInstant)));
   }
 
   @Test
@@ -57,17 +58,21 @@ public final class TimeHelperTest {
     } catch (NullPointerException ignore) {
     }
 
-    assertEquals(ISO_LOCAL_TIME.format(nowInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(nowInstant));
-    assertEquals(ISO_LOCAL_TIME.format(minutesInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(minutesInstant));
-    assertEquals(ISO_LOCAL_TIME.format(hoursInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(hoursInstant));
-    assertEquals(ISO_LOCAL_DATE.format(dayInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(dayInstant));
-    assertEquals(ISO_LOCAL_DATE.format(monthInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(monthInstant));
-    assertEquals(ISO_LOCAL_DATE.format(yearInstant.atZone(ZoneId.systemDefault())),
-        TimeHelper.display(yearInstant));
+    assertEquals(ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(nowInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(nowInstant)));
+    assertEquals(
+        ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(minutesInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(minutesInstant)));
+    assertEquals(
+        ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(hoursInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(hoursInstant)));
+    assertEquals(ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(dayInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(dayInstant)));
+    assertEquals(
+        ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(monthInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(monthInstant)));
+    assertEquals(
+        ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(yearInstant, ZoneId.systemDefault())),
+        TimeHelper.display(Date.from(yearInstant)));
   }
 }

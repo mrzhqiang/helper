@@ -1,9 +1,12 @@
 package helper;
 
 import com.google.common.base.Preconditions;
-import java.sql.Date;
-import java.time.Instant;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+
+import static java.time.format.DateTimeFormatter.*;
 
 /**
  * Time 辅助工具。
@@ -25,7 +28,7 @@ public final class TimeHelper {
   private static final String FORMAT_UNTIL_SECONDS = "%d 秒钟前";
 
   /**
-   * 计算某个瞬间到现在，已过去多久。
+   * 计算某个日期到现在，已过去多久。
    * <p>
    * 比如 3 分钟，则是 3 分钟前，不会显示 1 小时前。
    * <p>
@@ -38,39 +41,40 @@ public final class TimeHelper {
    * 1 minute = 60 second
    * </pre>
    * <p>
-   * 注意：如果这个瞬间在未来，则显示“未知”。
+   * 注意：如果这个日期在未来，则显示“未知”。
    *
-   * @param value 某个瞬间。
+   * @param value 某个日期。
    * @return 对时间间隔的文字描述，比如："1 秒钟前"、"1 小时前"。
    */
-  public static String untilNow(Instant value) {
+  public static String untilNow(Date value) {
     Preconditions.checkNotNull(value);
 
-    Instant now = Instant.now();
-    if (value.isAfter(now)) {
+    LocalDateTime dateTime = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+    LocalDateTime now = LocalDateTime.now();
+    if (dateTime.isAfter(now)) {
       return "未知";
     }
-    long seconds = value.until(now, ChronoUnit.SECONDS);
+    long seconds = dateTime.until(now, ChronoUnit.SECONDS);
     if (seconds == 0) {
       return "刚刚";
     }
-    long minutes = value.until(now, ChronoUnit.MINUTES);
+    long minutes = dateTime.until(now, ChronoUnit.MINUTES);
     if (minutes == 0) {
       return String.format(FORMAT_UNTIL_SECONDS, seconds);
     }
-    long hours = value.until(now, ChronoUnit.HOURS);
+    long hours = dateTime.until(now, ChronoUnit.HOURS);
     if (hours == 0) {
       return String.format(FORMAT_UNTIL_MINUTES, minutes);
     }
-    long days = value.until(now, ChronoUnit.DAYS);
+    long days = dateTime.until(now, ChronoUnit.DAYS);
     if (days == 0) {
       return String.format(FORMAT_UNTIL_HOURS, hours);
     }
-    long months = value.until(now, ChronoUnit.MONTHS);
+    long months = dateTime.until(now, ChronoUnit.MONTHS);
     if (months == 0) {
       return String.format(FORMAT_UNTIL_DAYS, days);
     }
-    long years = value.until(now, ChronoUnit.YEARS);
+    long years = dateTime.until(now, ChronoUnit.YEARS);
     if (years == 0) {
       return String.format(FORMAT_UNTIL_MONTHS, months);
     }
@@ -78,7 +82,7 @@ public final class TimeHelper {
   }
 
   /**
-   * 显示某个瞬间的特定时间格式。
+   * 显示某个日期的特定时间格式。
    * <p>
    * 1. 如果是未来：yyyy-MM-dd HH:mm:ss
    * <p>
@@ -86,23 +90,24 @@ public final class TimeHelper {
    * <p>
    * 3. 如果是过去：yyyy-MM-dd
    *
-   * @param value 某个瞬间。
+   * @param value 某个日期。
    * @return 格式化的时间字符串。
    */
-  public static String display(Instant value) {
+  public static String display(Date value) {
     Preconditions.checkNotNull(value);
 
-    Instant now = Instant.now();
-    if (value.isAfter(now)) {
+    LocalDateTime dateTime = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+    LocalDateTime now = LocalDateTime.now();
+    if (dateTime.isAfter(now)) {
       // yyyy-MM-dd HH:mm:ss
-      return DateHelper.formatNormal(Date.from(value));
+      return DateHelper.formatNormal(value);
     }
-    long days = value.until(now, ChronoUnit.DAYS);
+    long days = dateTime.until(now, ChronoUnit.DAYS);
     if (days == 0) {
       // HH:mm:ss
-      return DateHelper.formatLocalTime(Date.from(value));
+      return ISO_LOCAL_TIME.format(dateTime);
     }
     // yyyy-MM-dd
-    return DateHelper.formatLocalDate(Date.from(value));
+    return ISO_LOCAL_DATE.format(dateTime);
   }
 }
