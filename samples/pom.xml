@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.github.mrzhqiang.helper</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.github.mrzhqiang.helper.sample</groupId>
+  <artifactId>sample-parent</artifactId>
+  <packaging>pom</packaging>
+  <name>Samples (Parent)</name>
+
+  <modules>
+    <module>datetime</module>
+    <module>strings</module>
+    <module>database</module>
+    <module>oauth2</module>
+  </modules>
+</project>
