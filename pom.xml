@@ -27,8 +27,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+    <!-- Compilation -->
+    <airlift.version>0.7</airlift.version>
     <!-- Library Dependencies -->
     <android.version>4.1.1.4</android.version>
+    <animal.sniffer.version>1.15</animal.sniffer.version>
     <guava.version>23.0</guava.version>
     <java.version>1.8</java.version>
     <config.version>1.3.2</config.version>
@@ -49,14 +52,6 @@
     <developerConnection>scm:git:git@github.com:mrzhqiang/helper.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-
-  <developers>
-    <developer>
-      <name>qiang.zhang</name>
-      <email>qiang.zhang0314@gmail.com</email>
-      <url>http://github.com/mrzhqiang</url>
-    </developer>
-  </developers>
 
   <issueManagement>
     <system>GitHub Issues</system>
@@ -169,6 +164,34 @@
             <source>${java.version}</source>
             <target>${java.version}</target>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.codehaus.plexus</groupId>
+              <artifactId>plexus-compiler-javac-errorprone</artifactId>
+              <version>2.8.4</version>
+            </dependency>
+            <dependency>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.3.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.21.0</version>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit47</artifactId>
+              <version>2.21.0</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>
@@ -221,6 +244,26 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>${animal.sniffer.version}</version>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java16</artifactId>
+            <version>1.1</version>
+          </signature>
+        </configuration>
       </plugin>
     </plugins>
   </build>
