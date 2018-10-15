@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.github.mrzhqiang.helper</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta</version>
+    <version>2018.1.0</version>
   </parent>
 
   <groupId>com.github.mrzhqiang.helper.sample</groupId>
@@ -17,8 +17,6 @@
 
   <modules>
     <module>datetime</module>
-    <module>strings</module>
-    <module>database</module>
-    <module>oauth2</module>
+    <module>username</module>
   </modules>
 </project>

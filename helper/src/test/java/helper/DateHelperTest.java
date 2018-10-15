@@ -1,13 +1,16 @@
 package helper;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.junit.Before;
 import org.junit.Test;
 
+import static helper.DateHelper.*;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -20,9 +23,16 @@ import static org.junit.Assert.assertNotNull;
 public final class DateHelperTest {
   private Instant instant;
 
+  private Instant nowInstant;
+  private Instant minutesInstant;
+  private Instant hoursInstant;
+  private Instant dayInstant;
+  private Instant monthInstant;
+  private Instant yearInstant;
+
   @Before
   public void setUp() {
-    instant = Instant.parse("2008-06-03T11:05:30Z");
+    instant = Instant.parse("2009-06-23T14:05:30Z");
   }
 
   @Test
@@ -35,58 +45,82 @@ public final class DateHelperTest {
     }
     // RFC_1123_DATE_TIME such as 'Tue, 3 Jun 2008 11:05:30 GMT'.
     //String instantFormat = RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.of("GMT")));
-    assertEquals("Tue, 03 Jun 2008 11:05:30 GMT", DateHelper.format(Date.from(instant)));
+    String format = DateHelper.format(Date.from(instant));
+    assertEquals("Tue, 23 Jun 2009 14:05:30 GMT", format);
   }
 
   @Test
   public void formatNormal() {
-    try {
-      String format = DateHelper.formatNormal(null);
-      assertNotNull(format);
-    } catch (NullPointerException ignore) {
-    }
     // 2018-07-05 22:56:40
-    String instantFormat =
+    String expected =
         ofPattern("yyyy-MM-dd HH:mm:ss").format(instant.atZone(ZoneId.systemDefault()));
-    assertEquals(instantFormat, DateHelper.formatNormal(Date.from(instant)));
+    String actual = DateHelper.formatNormal(Date.from(instant));
+    assertEquals(expected, actual);
   }
 
   @Test
   public void parse() {
-    try {
-      Date date = DateHelper.parse(null);
-      assertNotNull(date);
-    } catch (NullPointerException ignore) {
-    }
     Date date = DateHelper.parse(RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.systemDefault())));
-    assertNotNull(date);
     // Instant 是一个瞬间时刻，而 DateHelper.parse 方法只解析到秒，所以要进行比较必须截断到秒
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), date);
   }
 
   @Test
   public void parseNormal() {
-    try {
-      Date date = DateHelper.parseNormal(null);
-      assertNotNull(date);
-    } catch (NullPointerException ignore) {
-    }
     Date normalDate = DateHelper.parseNormal(
         ofPattern("yyyy-MM-dd HH:mm:ss").format(instant.atZone(ZoneId.systemDefault())));
-    assertNotNull(normalDate);
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), normalDate);
   }
 
+  @Before
+  public void before() {
+    nowInstant = Instant.now();
+    minutesInstant = nowInstant.minus(Duration.ofMinutes(1));
+    hoursInstant = nowInstant.minus(Duration.ofHours(1));
+    dayInstant = nowInstant.minus(Duration.ofDays(1));
+    monthInstant = nowInstant.minus(Duration.ofDays(62));
+    yearInstant = nowInstant.minus(Duration.ofDays(365));
+  }
+
   @Test
-  public void multiThread() throws InterruptedException {
-    ExecutorService service = Executors.newFixedThreadPool(10);
-    Instant now = Instant.now();
-    for (int i = 0; i < 10; i++) {
-      service.execute(() -> {
-        String format = DateHelper.format(Date.from(now));
-        System.out.println(Thread.currentThread().getName() + ": " + DateHelper.parse(format));
-      });
+  public void between() {
+    try {
+      String between = untilNow(null);
+      assertNotNull(between);
+    } catch (NullPointerException ignore) {
     }
-    Thread.sleep(1000);
+
+    assertEquals("刚刚", untilNow(Date.from(nowInstant)));
+    assertEquals("1 分钟前", untilNow(Date.from(minutesInstant)));
+    assertEquals("1 小时前", untilNow(Date.from(hoursInstant)));
+    assertEquals("1 天前", untilNow(Date.from(dayInstant)));
+    assertEquals("2 个月前", untilNow(Date.from(monthInstant)));
+    assertEquals("1 年前", untilNow(Date.from(yearInstant)));
+  }
+
+  @Test
+  public void showTime() {
+    try {
+      String display = display(null);
+      assertNotNull(display);
+    } catch (NullPointerException ignore) {
+    }
+
+    assertEquals(ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(nowInstant, ZoneId.systemDefault())),
+        display(Date.from(nowInstant)));
+    assertEquals(
+        ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(minutesInstant, ZoneId.systemDefault())),
+        display(Date.from(minutesInstant)));
+    assertEquals(
+        ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(hoursInstant, ZoneId.systemDefault())),
+        display(Date.from(hoursInstant)));
+    assertEquals(ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(dayInstant, ZoneId.systemDefault())),
+        display(Date.from(dayInstant)));
+    assertEquals(
+        ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(monthInstant, ZoneId.systemDefault())),
+        display(Date.from(monthInstant)));
+    assertEquals(
+        ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(yearInstant, ZoneId.systemDefault())),
+        display(Date.from(yearInstant)));
   }
 }

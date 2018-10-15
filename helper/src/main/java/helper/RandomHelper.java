@@ -40,8 +40,8 @@ public final class RandomHelper {
   /**
    * 通过指定最小长度和最大长度，生成随机长度的随机字符序列。
    *
-   * @param min 最小长度，不能小于或等于 0。
-   * @param max 最大长度，不能小于或等于 0，并且不能小于最小长度。
+   * @param min 最小长度，必须 > 0。
+   * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
   public static String asString(int min, int max) {
@@ -63,7 +63,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机数字序列的字符串。
    *
-   * @param length 指定长度，必须大于 0。
+   * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：数字。
    */
   public static String asNumber(int length) {
@@ -75,8 +75,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机数字序列的字符串。
    *
-   * @param min 最小长度，必须大于 0。
-   * @param max 最大长度，必须大于 0，并且必须大于或等于最小长度。
+   * @param min 最小长度，必须 > 0。
+   * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：数字。
    */
   public static String asNumber(int min, int max) {
@@ -100,7 +100,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机小写字母序列的字符串。
    *
-   * @param length 指定长度，必须大于 0。
+   * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：小写字母。
    */
   public static String asLowerCase(int length) {
@@ -116,8 +116,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机小写字母序列的字符串。
    *
-   * @param min 最小长度，必须大于 0。
-   * @param max 最大长度，必须大于 0，并且必须大于或等于最小长度。
+   * @param min 最小长度，必须 > 0。
+   * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：小写字母。
    */
   public static String asLowerCase(int min, int max) {
@@ -135,7 +135,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机大写字母序列的字符串。
    *
-   * @param length 指定长度，必须大于 0。
+   * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：大写字母。
    */
   public static String asUpperCase(int length) {
@@ -151,8 +151,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机大写字母序列的字符串。
    *
-   * @param min 最小长度，必须大于 0。
-   * @param max 最大长度，必须大于 0，并且必须大于或等于最小长度。
+   * @param min 最小长度，必须 > 0。
+   * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：大写字母。
    */
   public static String asUpperCase(int min, int max) {
