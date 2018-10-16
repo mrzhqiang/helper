@@ -12,11 +12,9 @@
 
 ## 有什么功能？
 - [helper] 模块：包含一系列 `Java API` 的辅助工具。
-- [database] 模块：包含通用数据库辅助工具。未完成。
-- [oauth2] 模块：包含 `OAuth2` 的相关实现。
 
 ## 如何使用？
-- [samples] 模块：是对以上所有模块的使用样例。
+- [samples] 模块：是对 [helper] 的使用样例。
 
 - 依赖：[helper in jitpack.io] 或者 [mvnrepository]（从 `sonatype` 同步略有延迟）。
 
