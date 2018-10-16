@@ -1,0 +1,2 @@
+entity-packages: database.test
+querybean-packages: database.test

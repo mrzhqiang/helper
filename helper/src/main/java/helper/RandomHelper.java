@@ -10,7 +10,7 @@ import java.util.Random;
  * <p>
  * 可以生成某种类型的指定长度或长度范围区间的随机字符串。
  *
- * @author qiang.zhang
+ * @author mrzhqiang
  */
 public final class RandomHelper {
   private RandomHelper() {
@@ -31,10 +31,10 @@ public final class RandomHelper {
    * @param length 指定长度。
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
-  public static String asString(int length) {
+  public static String getString(int length) {
     Preconditions.checkArgument(length > 0,
         "length %s must be > 0.", length);
-    return asString(length, length);
+    return getString(length, length);
   }
 
   /**
@@ -44,7 +44,7 @@ public final class RandomHelper {
    * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，包含：大小写字母，数字，特殊字符。
    */
-  public static String asString(int min, int max) {
+  public static String getString(int min, int max) {
     Preconditions.checkArgument(min > 0,
         "min length %s must be > 0.", min);
     Preconditions.checkArgument(max > 0,
@@ -66,10 +66,10 @@ public final class RandomHelper {
    * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：数字。
    */
-  public static String asNumber(int length) {
+  public static String getNumber(int length) {
     Preconditions.checkArgument(length > 0,
         "length %s must be > 0.", length);
-    return asNumber(length, length);
+    return getNumber(length, length);
   }
 
   /**
@@ -79,7 +79,7 @@ public final class RandomHelper {
    * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：数字。
    */
-  public static String asNumber(int min, int max) {
+  public static String getNumber(int min, int max) {
     Preconditions.checkArgument(min > 0,
         "min length %s must be > 0.", min);
     Preconditions.checkArgument(max > 0,
@@ -103,7 +103,7 @@ public final class RandomHelper {
    * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：小写字母。
    */
-  public static String asLowerCase(int length) {
+  public static String getLowerCase(int length) {
     Preconditions.checkArgument(length > 0,
         "length %s must be > 0.", length);
     StringBuilder builder = new StringBuilder(length);
@@ -120,7 +120,7 @@ public final class RandomHelper {
    * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：小写字母。
    */
-  public static String asLowerCase(int min, int max) {
+  public static String getLowerCase(int min, int max) {
     Preconditions.checkArgument(min > 0,
         "min length %s must be > 0.", min);
     Preconditions.checkArgument(max > 0,
@@ -129,7 +129,7 @@ public final class RandomHelper {
         "max length %s must be >= min length %s.", max, min);
 
     int length = Math.max(min, RANDOM.get().nextInt(max));
-    return asLowerCase(length);
+    return getLowerCase(length);
   }
 
   /**
@@ -138,7 +138,7 @@ public final class RandomHelper {
    * @param length 指定长度，必须 > 0。
    * @return 随机字符串，仅包含：大写字母。
    */
-  public static String asUpperCase(int length) {
+  public static String getUpperCase(int length) {
     Preconditions.checkArgument(length > 0,
         "length %s must be > 0.", length);
     StringBuilder builder = new StringBuilder(length);
@@ -155,7 +155,7 @@ public final class RandomHelper {
    * @param max 最大长度，必须 > 0，并且必须 >= min。
    * @return 随机字符串，仅包含：大写字母。
    */
-  public static String asUpperCase(int min, int max) {
+  public static String getUpperCase(int min, int max) {
     Preconditions.checkArgument(min > 0,
         "min length %s must be > 0.", min);
     Preconditions.checkArgument(max > 0,
@@ -164,6 +164,6 @@ public final class RandomHelper {
         "max length %s must be >= min length %s.", max, min);
 
     int length = Math.max(min, RANDOM.get().nextInt(max));
-    return asUpperCase(length);
+    return getUpperCase(length);
   }
 }

@@ -84,12 +84,6 @@ public final class DateHelperTest {
 
   @Test
   public void between() {
-    try {
-      String between = untilNow(null);
-      assertNotNull(between);
-    } catch (NullPointerException ignore) {
-    }
-
     assertEquals("刚刚", untilNow(Date.from(nowInstant)));
     assertEquals("1 分钟前", untilNow(Date.from(minutesInstant)));
     assertEquals("1 小时前", untilNow(Date.from(hoursInstant)));
@@ -100,12 +94,6 @@ public final class DateHelperTest {
 
   @Test
   public void showTime() {
-    try {
-      String display = display(null);
-      assertNotNull(display);
-    } catch (NullPointerException ignore) {
-    }
-
     assertEquals(ISO_LOCAL_TIME.format(LocalDateTime.ofInstant(nowInstant, ZoneId.systemDefault())),
         display(Date.from(nowInstant)));
     assertEquals(

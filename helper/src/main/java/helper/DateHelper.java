@@ -21,7 +21,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
  * <p>
  * 如果你不喜欢 {@link Date 日期}，推荐 {@link java.time.format.DateTimeFormatter 日期时间格式化}。
  *
- * @author qiang.zhang
+ * @author mrzhqiang
  */
 public final class DateHelper {
   private DateHelper() {

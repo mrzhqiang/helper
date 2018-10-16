@@ -1,14 +1,24 @@
+[helper]:https://github.com/mrzhqiang/helper/tree/master/helper
+[database]:https://github.com/mrzhqiang/helper/tree/master/database
+[oauth2]:https://github.com/mrzhqiang/helper/tree/master/oauth2
+[samples]:https://github.com/mrzhqiang/helper/tree/master/samples
+[mvnrepository]:https://mvnrepository.com/artifact/com.github.mrzhqiang.helper/helper
 [helper in jitpack.io]:https://jitpack.io/#mrzhqiang/helper
 
-# 助手 
+# helper
 [![Release](https://jitpack.io/v/mrzhqiang/helper.svg)](https://jitpack.io/#mrzhqiang/helper)
-- `Java` 和 `Android` 通用辅助工具
-- `MySQL`、`Sqlite3`、`Redis`、`Cassandra`、`Elasticsearch`、等等数据库辅助工具
-- `OAuth2` 客户端与服务端辅助工具
-- 待添加
+
+助手是一系列通用代码库，在此封装成模块，不需要再拷贝一堆文件。
+
+## 有什么功能？
+- [helper] 模块：包含一系列 `Java API` 的辅助工具。
+- [database] 模块：包含通用数据库辅助工具。未完成。
+- [oauth2] 模块：包含 `OAuth2` 的相关实现。
 
 ## 如何使用？
-请移步：[helper in jitpack.io]
+- [samples] 模块：是对以上所有模块的使用样例。
+
+- 依赖：[helper in jitpack.io] 或者 [mvnrepository]（从 `sonatype` 同步略有延迟）。
 
 ## Licenses
 ```

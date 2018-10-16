@@ -4,18 +4,25 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <groupId>com.github.mrzhqiang.helper</groupId>
   <artifactId>parent</artifactId>
   <version>2018.1.0</version>
   <packaging>pom</packaging>
 
   <name>Helper (Parent)</name>
-  <description>The helper is a library for Java and Android.</description>
+  <description>An helper tools for Java and Android.</description>
   <url>https://github.com/mrzhqiang/helper</url>
 
   <modules>
     <module>helper</module>
     <module>samples</module>
+    <module>database</module>
   </modules>
 
   <properties>
@@ -26,6 +33,8 @@
     <!-- Android -->
     <android.version>4.1.1.4</android.version>
 
+    <!-- Compilation -->
+    <animal.sniffer.version>1.15</animal.sniffer.version>
 
     <log4j.version>2.11.1</log4j.version>
     <config.version>1.3.2</config.version>
@@ -33,6 +42,9 @@
     <guava.version>23.0</guava.version>
     <jjwt.version>0.10.5</jjwt.version>
     <jedis.version>2.9.0</jedis.version>
+    <ebean.version>11.22.9</ebean.version>
+    <ebean-test-confg.version>11.21.1</ebean-test-confg.version>
+    <mysql.version>8.0.11</mysql.version>
     <cassandra-driver.version>3.6.0</cassandra-driver.version>
     <elasticsearch-client.version>5.5.3</elasticsearch-client.version>
 
@@ -123,6 +135,22 @@
         <version>${jedis.version}</version>
       </dependency>
       <dependency>
+        <groupId>io.ebean</groupId>
+        <artifactId>ebean</artifactId>
+        <version>${ebean.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.ebean.test</groupId>
+        <artifactId>ebean-test-config</artifactId>
+        <version>${ebean-test-confg.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.datastax.cassandra</groupId>
         <artifactId>cassandra-driver-core</artifactId>
         <version>${cassandra-driver.version}</version>
@@ -174,6 +202,22 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.21.0</version>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit47</artifactId>
+              <version>2.21.0</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>2.10.4</version>
         </plugin>
@@ -194,6 +238,27 @@
         </dependencies>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>${animal.sniffer.version}</version>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java16</artifactId>
+            <version>1.1</version>
+          </signature>
         </configuration>
       </plugin>
     </plugins>
