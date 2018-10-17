@@ -24,6 +24,18 @@ public final class RandomHelperTest {
   }
 
   @Test
+  public void chineseOf() {
+    String chinese = RandomHelper.getChinese(5);
+    assertEquals(5, chinese.length());
+    System.out.println(chinese);
+  }
+
+  @Test
+  public void chineseOf1() {
+
+  }
+
+  @Test
   public void numberOf() {
     String s = RandomHelper.getNumber(5);
     assertEquals(5, s.length());

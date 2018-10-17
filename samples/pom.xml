@@ -6,8 +6,8 @@
 
   <parent>
     <groupId>com.github.mrzhqiang.helper</groupId>
-    <artifactId>parent</artifactId>
-    <version>2018.1.0</version>
+    <artifactId>helper-parent</artifactId>
+    <version>2018.2.1-SNAPSHOT</version>
   </parent>
 
   <groupId>com.github.mrzhqiang.helper.sample</groupId>
