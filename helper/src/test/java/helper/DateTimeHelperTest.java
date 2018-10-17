@@ -2,7 +2,6 @@ package helper;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -10,11 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static helper.DateTimeHelper.*;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +21,7 @@ public final class DateTimeHelperTest {
   private Instant instant;
 
   private Instant nowInstant;
+  private Instant secondsInstant;
   private Instant minutesInstant;
   private Instant hoursInstant;
   private Instant dayInstant;
@@ -37,6 +33,7 @@ public final class DateTimeHelperTest {
     instant = Instant.parse("2009-06-23T14:05:30Z");
 
     nowInstant = Instant.now();
+    secondsInstant = nowInstant.minus(Duration.ofSeconds(1));
     minutesInstant = nowInstant.minus(Duration.ofMinutes(1));
     hoursInstant = nowInstant.minus(Duration.ofHours(1));
     dayInstant = nowInstant.minus(Duration.ofDays(1));
@@ -84,6 +81,7 @@ public final class DateTimeHelperTest {
   public void parse() {
     Date normalDate = DateTimeHelper.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         .format(instant.atZone(ZoneId.systemDefault())));
+    // Instant 是一个瞬间时刻，而 DateTimeHelper.parse 方法只解析到秒，所以要进行比较必须截断到秒
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), normalDate);
   }
 
@@ -91,17 +89,17 @@ public final class DateTimeHelperTest {
   public void parseHTTP() {
     Date date =
         DateTimeHelper.parseHTTP(RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.systemDefault())));
-    // Instant 是一个瞬间时刻，而 DateTimeHelper.parse 方法只解析到秒，所以要进行比较必须截断到秒
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), date);
   }
 
   @Test
   public void between() {
     assertEquals("刚刚", untilNow(Date.from(nowInstant)));
+    assertEquals("1 秒钟前", untilNow(Date.from(secondsInstant)));
     assertEquals("1 分钟前", untilNow(Date.from(minutesInstant)));
     assertEquals("1 小时前", untilNow(Date.from(hoursInstant)));
     assertEquals("1 天前", untilNow(Date.from(dayInstant)));
-    assertEquals("2 个月前", untilNow(Date.from(monthInstant)));
+    assertEquals("2 月前", untilNow(Date.from(monthInstant)));
     assertEquals("1 年前", untilNow(Date.from(yearInstant)));
   }
 
@@ -109,6 +107,8 @@ public final class DateTimeHelperTest {
   public void showTime() {
     assertEquals(DateTimeHelper.formatTime(Date.from(nowInstant)),
         display(Date.from(nowInstant)));
+    assertEquals(DateTimeHelper.formatTime(Date.from(secondsInstant)),
+        display(Date.from(secondsInstant)));
     assertEquals(DateTimeHelper.formatTime(Date.from(minutesInstant)),
         display(Date.from(minutesInstant)));
     assertEquals(DateTimeHelper.formatTime(Date.from(hoursInstant)),

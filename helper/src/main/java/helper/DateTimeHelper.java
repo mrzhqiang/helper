@@ -2,6 +2,7 @@ package helper;
 
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -24,26 +25,33 @@ import javax.annotation.Nullable;
  * 你将获得更加灵活的格式设定，另外还可以格式化为：仅日期、仅时间、仅 HTTP，等等。
  * <p>
  * 关于解析：
- * 字符串变化多端，如果解析失败，将返回 Null 值。
+ * 字符串不确定格式，如果解析失败，将返回 Null 值。
  * <p>
  * 关于配置加载：
- * 请参考 https://github.com/lightbend/config 相关内容。
+ * <pre>
+ *   https://github.com/lightbend/config
+ * </pre>
  * <p>
  * 关于配置设定：
  * <pre>
  *   helper {
- *     datetime {
- *       localDatetime = "yyyy-MM-dd HH:mm:ss"
- *       localDate = "yyyy-MM-dd"
- *       localTime = "HH:mm:ss"
- *       untilUnknown = "未知"
- *       untilNow = "刚刚"
- *       untilSecond = "%d 秒钟前"
- *       untilMinute = "%d 分钟前"
- *       untilHour = "%d 小时前"
- *       untilDay = "%d 天前"
- *       untilMonth = "%d 月前"
- *       untilYear = "%d 年前"
+ *     datatime {
+ *       local {
+ *         datetime = "yyyy-MM-dd HH:mm:ss"
+ *         date = "yyyy-MM-dd"
+ *         time = "HH:mm:ss"
+ *       }
+ *
+ *       until {
+ *         unknown = "未知"
+ *         now = "刚刚"
+ *         second = "%d 秒钟前"
+ *         minute = "%d 分钟前"
+ *         hour = "%d 小时前"
+ *         day = "%d 天前"
+ *         month = "%d 月前"
+ *         year = "%d 年前"
+ *       }
  *     }
  *   }
  * </pre>
@@ -70,26 +78,52 @@ public final class DateTimeHelper {
     throw new AssertionError("No instance.");
   }
 
+  /**
+   * 读取 resources 目录下的 reference.conf 配置文件。
+   */
+  private static final Config CONFIG = ConfigFactory.load();
+
+  private static final String PATH_ROOT = "helper.datetime";
+  private static final String PATH_LOCAL = PATH_ROOT + ".local";
+  private static final String PATH_LOCAL_DATETIME = PATH_LOCAL + ".datetime";
+  private static final String PATH_LOCAL_DATE = PATH_LOCAL + ".date";
+  private static final String PATH_LOCAL_TIME = PATH_LOCAL + ".time";
+  private static final String PATH_UNTIL = PATH_ROOT + ".until";
+  private static final String PATH_UNTIL_YEARS = PATH_UNTIL + ".years";
+  private static final String PATH_UNTIL_MONTHS = PATH_UNTIL + ".months";
+  private static final String PATH_UNTIL_DAYS = PATH_UNTIL + ".days";
+  private static final String PATH_UNTIL_HOURS = PATH_UNTIL + ".hours";
+  private static final String PATH_UNTIL_MINUTES = PATH_UNTIL + ".minutes";
+  private static final String PATH_UNTIL_SECONDS = PATH_UNTIL + ".seconds";
+  private static final String PATH_UNTIL_NOW = PATH_UNTIL + ".now";
+  private static final String PATH_UNTIL_UNKNOWN = PATH_UNTIL + ".unknown";
+
   private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_DATETIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()));
+      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_DATETIME)));
 
   private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_DATE = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()));
+      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_DATE)));
 
   private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_TIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat("HH:mm:ss", Locale.getDefault()));
+      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_TIME)));
 
-  private static final String FORMAT_UNTIL_YEARS = "%d 年前";
-  private static final String FORMAT_UNTIL_MONTHS = "%d 个月前";
-  private static final String FORMAT_UNTIL_DAYS = "%d 天前";
-  private static final String FORMAT_UNTIL_HOURS = "%d 小时前";
-  private static final String FORMAT_UNTIL_MINUTES = "%d 分钟前";
-  private static final String FORMAT_UNTIL_SECONDS = "%d 秒钟前";
-  private static final String FORMAT_UNTIL_NOW = "刚刚";
-  private static final String FORMAT_UNTIL_UNKNOWN = "未知";
+  private static final String FORMAT_UNTIL_YEARS = CONFIG.getString(PATH_UNTIL_YEARS);
+  private static final String FORMAT_UNTIL_MONTHS = CONFIG.getString(PATH_UNTIL_MONTHS);
+  private static final String FORMAT_UNTIL_DAYS = CONFIG.getString(PATH_UNTIL_DAYS);
+  private static final String FORMAT_UNTIL_HOURS = CONFIG.getString(PATH_UNTIL_HOURS);
+  private static final String FORMAT_UNTIL_MINUTES = CONFIG.getString(PATH_UNTIL_MINUTES);
+  private static final String FORMAT_UNTIL_SECONDS = CONFIG.getString(PATH_UNTIL_SECONDS);
+  private static final String FORMAT_UNTIL_NOW = CONFIG.getString(PATH_UNTIL_NOW);
+  private static final String FORMAT_UNTIL_UNKNOWN = CONFIG.getString(PATH_UNTIL_UNKNOWN);
 
   /**
-   * 日期 + 时间，比如：2018-07-05 22:56:40
+   * 默认格式为：yyyy-MM-dd HH:mm:ss。
+   * <p>
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * <pre>
+   *   helper.datetime.local.datetime = "****"
+   * </pre>
+   * 来修改默认的日期时间格式。
    */
   public static String format(Date value) {
     Preconditions.checkNotNull(value);
@@ -102,7 +136,13 @@ public final class DateTimeHelper {
   }
 
   /**
-   * 仅日期，比如：2018-07-05
+   * 默认格式为：yyyy-MM-dd。
+   * <p>
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * <pre>
+   *   helper.datetime.local.date = "****"
+   * </pre>
+   * 来修改默认的日期格式。
    */
   public static String formatDate(Date value) {
     Preconditions.checkNotNull(value);
@@ -110,7 +150,13 @@ public final class DateTimeHelper {
   }
 
   /**
-   * 仅时间，比如：22:56:40
+   * 默认格式为：HH:mm:ss。
+   * <p>
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * <pre>
+   *   helper.datetime.local.time = "****"
+   * </pre>
+   * 来修改默认的时间格式。
    */
   public static String formatTime(Date value) {
     Preconditions.checkNotNull(value);
@@ -127,6 +173,12 @@ public final class DateTimeHelper {
 
   /**
    * 默认解析：yyyy-MM-dd HH:mm:ss, Locale.getDefault() and TimeZone.getDefault().
+   * <p>
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * <pre>
+   *   helper.datetime.local.datetime = "****"
+   * </pre>
+   * 来修改默认的日期时间格式。
    * <p>
    * 如果失败，尝试使用 HTTP 格式进行解析。
    */
@@ -163,8 +215,13 @@ public final class DateTimeHelper {
    * 1 hour = 60 minute
    * 1 minute = 60 second
    * </pre>
-   * <p>
    * 注意：如果这个日期在未来，则显示“未知”。
+   * <p>
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * <pre>
+   *   helper.until.unknown = "unknown"
+   * </pre>
+   * 来修改对应的格式。
    *
    * @param value 某个日期。
    * @return 对时间间隔的文字描述，比如："1 秒钟前"、"1 小时前"。
@@ -207,11 +264,11 @@ public final class DateTimeHelper {
   /**
    * 显示某个日期的特定时间格式。
    * <p>
-   * 1. 如果是未来：yyyy-MM-dd HH:mm:ss
+   * 1. 如果是未来，则显示 helper.datetime.local.datetime 设定的值
    * <p>
-   * 2. 如果是现在（今天）：HH:mm:ss
+   * 2. 如果是现在（今天），则显示 helper.datetime.local.time 设定的值
    * <p>
-   * 3. 如果是过去：yyyy-MM-dd
+   * 3. 如果是过去，则显示 helper.datetime.local.date 设定的值
    *
    * @param value 某个日期。
    * @return 格式化的时间字符串。
