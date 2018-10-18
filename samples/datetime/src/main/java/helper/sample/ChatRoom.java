@@ -1,4 +1,4 @@
-package helper.datetime;
+package helper.sample;
 
 import helper.DateTimeHelper;
 import java.util.Date;

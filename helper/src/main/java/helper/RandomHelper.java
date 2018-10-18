@@ -58,6 +58,7 @@ public final class RandomHelper {
 
   private static final Config CONFIG = ConfigFactory.load().getConfig("helper.random");
 
+  @SuppressWarnings("unused")
   private static final String SPECIAL = CONFIG.getString("special");
   private static final String NUMBER = CONFIG.getString("number");
   private static final String LOWER_CASE = CONFIG.getString("lowerCase");

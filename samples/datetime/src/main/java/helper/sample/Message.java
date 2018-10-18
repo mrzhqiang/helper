@@ -1,4 +1,4 @@
-package helper.datetime;
+package helper.sample;
 
 import com.google.common.base.MoreObjects;
 import helper.DateTimeHelper;

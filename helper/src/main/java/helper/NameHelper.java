@@ -42,7 +42,7 @@ public final class NameHelper {
   private static final String DEFAULT_FIRST = CONFIG.getString("first");
 
   private static final List<String> COLORS = CONFIG.getStringList("colors");
-  private static final int DEFAULT_COLOR = Integer.decode(COLORS.get(COLORS.size() - 1));
+  private static final String DEFAULT_COLOR = COLORS.get(COLORS.size() - 1);
 
   private static final String REGEX_CHINESE = CONFIG.getString("regex.chinese");
 
@@ -76,15 +76,15 @@ public final class NameHelper {
    * </pre>
    *
    * @param value 字符串，如果是 Null 或者空串，则返回 {@link #DEFAULT_COLOR}。
-   * @return ARGB 颜色常量数值。
+   * @return ARGB 颜色字符串。比如：0x202020，大多数 Color 类可以解析它，并且使用 Integer 进行解码。
    */
-  public static int color(@Nullable String value) {
+  public static String color(@Nullable String value) {
     if (Strings.isNullOrEmpty(value)) {
       return DEFAULT_COLOR;
     }
     // 获得 name 的 hashCode，位与 0xFFFFFFFF——即取后 8 位
     // 再根据颜色数量取模，得到下标位置，返回对应的颜色值
-    return Integer.decode(COLORS.get((int) ((value.hashCode() & 0xFFFFFFL) % COLORS.size())));
+    return COLORS.get((int) ((value.hashCode() & 0xFFFFFFL) % COLORS.size()));
   }
 
   /**

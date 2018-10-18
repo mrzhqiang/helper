@@ -24,9 +24,9 @@ public final class NameHelperTest {
 
   @Test
   public void color() {
-    int color = NameHelper.color("mrzhqiang");
+    String color = NameHelper.color("mrzhqiang");
     // 0xff3d00
-    assertEquals(16727296, color);
+    assertEquals("0xff3d00", color);
   }
 
   @Test
