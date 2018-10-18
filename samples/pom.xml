@@ -17,6 +17,7 @@
 
   <modules>
     <module>datetime</module>
-    <module>username</module>
+    <module>name</module>
+    <module>random</module>
   </modules>
 </project>
