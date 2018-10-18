@@ -3,44 +3,59 @@ package helper;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 
 /**
- * Username 助手。
+ * 名字助手。
  * <p>
- * 对账户/用户名/昵称的相关处理。
+ * 有时候，检查一个账号或者昵称只能判断是否为 Null or Empty，为了改变这种情况，增加了名字助手类。
+ * <p>
+ * 关于首字母：
+ * 可以处理大部分字符，通常用来生成头像标签。
+ * <p>
+ * 关于颜色：
+ * 每个字符串都对应一组不同的颜色值。
+ * <p>
+ * 关于默认检测：
+ * 判断字符串不为 Null 以及 Empty，并且属于 Java 传统意义上的字符或数字（阿拉伯数字只是其中一种）。
+ * <p>
+ * 关于中文检测：
+ * 通过 Unicode 的正则表达式范围进行判断，这个值可以从配置文件修正。
+ * <p>
+ * 关于字符串检测：
+ * 我们希望通过开放这个方法，有更灵活的检测机制。
  *
  * @author mrzhqiang
  */
-public final class UsernameHelper {
-  private UsernameHelper() {
+public final class NameHelper {
+  private NameHelper() {
     throw new AssertionError("No instance.");
   }
 
-  /**
-   * 默认颜色常量。
-   */
-  private static final int DEFAULT_COLOR = 0xFF202020;
-  /**
-   * 预定义颜色常量数组。
-   */
-  private static final ImmutableList<Integer> COLORS =
-      ImmutableList.of(0xFFe91e63, 0xFF9c27b0, 0xFF673ab7, 0xFF3f51b5, 0xFF5677fc, 0xFF03a9f4,
-          0xFF00bcd4, 0xFF009688, 0xFFff5722, 0xFF795548, 0xFF607d8b);
+  private static final Config CONFIG = ConfigFactory.load().getConfig("helper.name");
+
+  private static final String DEFAULT_FIRST = CONFIG.getString("first");
+
+  private static final List<String> COLORS = CONFIG.getStringList("colors");
+  private static final int DEFAULT_COLOR = Integer.decode(COLORS.get(COLORS.size() - 1));
+
+  private static final String REGEX_CHINESE = CONFIG.getString("regex.chinese");
 
   /**
-   * 获取 Username 的第一个字符（仅限于字母或数字，包括汉字）。
+   * 获取字符串的第一个字符（仅限于字母或数字，包括汉字）。
    * <p>
    * 这个方法来自：
    * <pre>
    *   https://github.com/siacs/Conversations
    * </pre>
    *
-   * @param value Username。
-   * @return 传入字符串的首字母，如果传入一个空串，将使用默认字符："m"。
+   * @param value 字符串。
+   * @return 传入字符串的首字母，如果传入一个空串，将使用 {@link #DEFAULT_FIRST}。
    */
   public static String firstLetter(String value) {
     Preconditions.checkNotNull(value);
@@ -49,16 +64,18 @@ public final class UsernameHelper {
         return c.toString();
       }
     }
-    // from mrzhqiang
-    return "m";
+    return DEFAULT_FIRST;
   }
 
   /**
-   * 获取 Username 哈希值对应的预定义 ARGB 颜色常量。
+   * 获取字符串哈希值对应的预定义 ARGB 颜色常量。
    * <p>
-   * 这个方法来自<a "href"=https://github.com/siacs/Conversations>Conversations</a>。
+   * 这个方法来自：
+   * <pre>
+   *   https://github.com/siacs/Conversations
+   * </pre>
    *
-   * @param value Username，如果是 Null 或者空串，则返回 {@link #DEFAULT_COLOR}。
+   * @param value 字符串，如果是 Null 或者空串，则返回 {@link #DEFAULT_COLOR}。
    * @return ARGB 颜色常量数值。
    */
   public static int color(@Nullable String value) {
@@ -67,7 +84,7 @@ public final class UsernameHelper {
     }
     // 获得 name 的 hashCode，位与 0xFFFFFFFF——即取后 8 位
     // 再根据颜色数量取模，得到下标位置，返回对应的颜色值
-    return COLORS.get((int) ((value.hashCode() & 0xFFFFFFFFL) % COLORS.size()));
+    return Integer.decode(COLORS.get((int) ((value.hashCode() & 0xFFFFFFL) % COLORS.size())));
   }
 
   /**
@@ -126,7 +143,7 @@ public final class UsernameHelper {
    * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
    */
   public static boolean checkChinese(@Nullable String value, int min, int max) {
-    return checkString("[\\u4E00-\\u9FA5]+", value, min, max);
+    return checkString(REGEX_CHINESE, value, min, max);
   }
 
   /**
