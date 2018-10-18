@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.annotation.Nullable;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * 关于配置设定：
  * <pre>
  *   helper {
- *     datatime {
+ *     datetime {
  *       local {
  *         datetime = "yyyy-MM-dd HH:mm:ss"
  *         date = "yyyy-MM-dd"
@@ -52,13 +53,17 @@ import javax.annotation.Nullable;
  *         month = "%d 月前"
  *         year = "%d 年前"
  *       }
+ *
+ *       display {
+ *         range = 2
+ *         prefix = ["昨天 %s", "前天 %s"]
+ *       }
  *     }
  *   }
  * </pre>
  * <p>
  * 关于间距：
- * 利用常识公式，优先判断范围小的时间间隔，这样可以避免间距仅 3 秒钟但位于昨天与今天交替时刻的
- * 显示为“1 天前”的错误信息。
+ * 利用 24 小时 == 1 天 的类似公式，优先判断范围小的时间间隔。
  * <p>
  * 关于显示：
  * 通常我们希望看到本地时间，而 HTTP 以及数据库传递的是 GMT 时间，也就是 0 时区的时间，这样我们需要
@@ -78,48 +83,34 @@ public final class DateTimeHelper {
     throw new AssertionError("No instance.");
   }
 
-  /**
-   * 读取 resources 目录下的 reference.conf 配置文件。
-   */
-  private static final Config CONFIG = ConfigFactory.load();
+  private static final Config CONFIG = ConfigFactory.load().getConfig("helper.datetime");
 
-  private static final String PATH_ROOT = "helper.datetime";
-  private static final String PATH_LOCAL = PATH_ROOT + ".local";
-  private static final String PATH_LOCAL_DATETIME = PATH_LOCAL + ".datetime";
-  private static final String PATH_LOCAL_DATE = PATH_LOCAL + ".date";
-  private static final String PATH_LOCAL_TIME = PATH_LOCAL + ".time";
-  private static final String PATH_UNTIL = PATH_ROOT + ".until";
-  private static final String PATH_UNTIL_YEARS = PATH_UNTIL + ".years";
-  private static final String PATH_UNTIL_MONTHS = PATH_UNTIL + ".months";
-  private static final String PATH_UNTIL_DAYS = PATH_UNTIL + ".days";
-  private static final String PATH_UNTIL_HOURS = PATH_UNTIL + ".hours";
-  private static final String PATH_UNTIL_MINUTES = PATH_UNTIL + ".minutes";
-  private static final String PATH_UNTIL_SECONDS = PATH_UNTIL + ".seconds";
-  private static final String PATH_UNTIL_NOW = PATH_UNTIL + ".now";
-  private static final String PATH_UNTIL_UNKNOWN = PATH_UNTIL + ".unknown";
+  private static final Config LOCAL = CONFIG.getConfig("local");
+  private static final ThreadLocal<DateFormat> LOCAL_DATETIME = ThreadLocal.withInitial(
+      () -> new SimpleDateFormat(LOCAL.getString("datetime")));
+  private static final ThreadLocal<DateFormat> LOCAL_DATE = ThreadLocal.withInitial(
+      () -> new SimpleDateFormat(LOCAL.getString("date")));
+  private static final ThreadLocal<DateFormat> LOCAL_TIME = ThreadLocal.withInitial(
+      () -> new SimpleDateFormat(LOCAL.getString("time")));
 
-  private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_DATETIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_DATETIME)));
+  private static final Config UNTIL = CONFIG.getConfig("until");
+  private static final String UNTIL_YEARS = UNTIL.getString("years");
+  private static final String UNTIL_MONTHS = UNTIL.getString("months");
+  private static final String UNTIL_DAYS = UNTIL.getString("days");
+  private static final String UNTIL_HOURS = UNTIL.getString("hours");
+  private static final String UNTIL_MINUTES = UNTIL.getString("minutes");
+  private static final String UNTIL_SECONDS = UNTIL.getString("seconds");
+  private static final String UNTIL_NOW = UNTIL.getString("now");
+  private static final String UNTIL_UNKNOWN = UNTIL.getString("unknown");
 
-  private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_DATE = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_DATE)));
-
-  private static final ThreadLocal<DateFormat> DATE_FORMAT_LOCAL_TIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(CONFIG.getString(PATH_LOCAL_TIME)));
-
-  private static final String FORMAT_UNTIL_YEARS = CONFIG.getString(PATH_UNTIL_YEARS);
-  private static final String FORMAT_UNTIL_MONTHS = CONFIG.getString(PATH_UNTIL_MONTHS);
-  private static final String FORMAT_UNTIL_DAYS = CONFIG.getString(PATH_UNTIL_DAYS);
-  private static final String FORMAT_UNTIL_HOURS = CONFIG.getString(PATH_UNTIL_HOURS);
-  private static final String FORMAT_UNTIL_MINUTES = CONFIG.getString(PATH_UNTIL_MINUTES);
-  private static final String FORMAT_UNTIL_SECONDS = CONFIG.getString(PATH_UNTIL_SECONDS);
-  private static final String FORMAT_UNTIL_NOW = CONFIG.getString(PATH_UNTIL_NOW);
-  private static final String FORMAT_UNTIL_UNKNOWN = CONFIG.getString(PATH_UNTIL_UNKNOWN);
+  private static final Config DISPLAY = CONFIG.getConfig("display");
+  private static final int DISPLAY_RANGE = DISPLAY.getInt("range");
+  private static final List<String> DISPALY_PREFIX = DISPLAY.getStringList("prefix");
 
   /**
    * 默认格式为：yyyy-MM-dd HH:mm:ss。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
    *   helper.datetime.local.datetime = "****"
    * </pre>
@@ -128,7 +119,7 @@ public final class DateTimeHelper {
   public static String format(Date value) {
     Preconditions.checkNotNull(value);
     try {
-      return DATE_FORMAT_LOCAL_DATETIME.get().format(value);
+      return LOCAL_DATETIME.get().format(value);
     } catch (Exception e) {
       e.printStackTrace();
       return formatHTTP(value);
@@ -138,7 +129,7 @@ public final class DateTimeHelper {
   /**
    * 默认格式为：yyyy-MM-dd。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
    *   helper.datetime.local.date = "****"
    * </pre>
@@ -146,13 +137,13 @@ public final class DateTimeHelper {
    */
   public static String formatDate(Date value) {
     Preconditions.checkNotNull(value);
-    return DATE_FORMAT_LOCAL_DATE.get().format(value);
+    return LOCAL_DATE.get().format(value);
   }
 
   /**
    * 默认格式为：HH:mm:ss。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
    *   helper.datetime.local.time = "****"
    * </pre>
@@ -160,7 +151,7 @@ public final class DateTimeHelper {
    */
   public static String formatTime(Date value) {
     Preconditions.checkNotNull(value);
-    return DATE_FORMAT_LOCAL_TIME.get().format(value);
+    return LOCAL_TIME.get().format(value);
   }
 
   /**
@@ -174,7 +165,7 @@ public final class DateTimeHelper {
   /**
    * 默认解析：yyyy-MM-dd HH:mm:ss, Locale.getDefault() and TimeZone.getDefault().
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
    *   helper.datetime.local.datetime = "****"
    * </pre>
@@ -186,7 +177,7 @@ public final class DateTimeHelper {
   public static Date parse(String source) {
     Preconditions.checkNotNull(source);
     try {
-      return DATE_FORMAT_LOCAL_DATETIME.get().parse(source);
+      return LOCAL_DATETIME.get().parse(source);
     } catch (ParseException e) {
       e.printStackTrace();
       return parseHTTP(source);
@@ -217,7 +208,7 @@ public final class DateTimeHelper {
    * </pre>
    * 注意：如果这个日期在未来，则显示“未知”。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容
+   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
    *   helper.until.unknown = "unknown"
    * </pre>
@@ -230,45 +221,45 @@ public final class DateTimeHelper {
     Preconditions.checkNotNull(value);
 
     if (value.after(new Date())) {
-      return FORMAT_UNTIL_UNKNOWN;
+      return UNTIL_UNKNOWN;
     }
     LocalDateTime dateTime = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
     LocalDateTime now = LocalDateTime.now();
     long seconds = dateTime.until(now, ChronoUnit.SECONDS);
     if (seconds == 0) {
-      return FORMAT_UNTIL_NOW;
+      return UNTIL_NOW;
     }
     long minutes = dateTime.until(now, ChronoUnit.MINUTES);
     if (minutes == 0) {
-      return String.format(FORMAT_UNTIL_SECONDS, seconds);
+      return String.format(UNTIL_SECONDS, seconds);
     }
     long hours = dateTime.until(now, ChronoUnit.HOURS);
     if (hours == 0) {
-      return String.format(FORMAT_UNTIL_MINUTES, minutes);
+      return String.format(UNTIL_MINUTES, minutes);
     }
     long days = dateTime.until(now, ChronoUnit.DAYS);
     if (days == 0) {
-      return String.format(FORMAT_UNTIL_HOURS, hours);
+      return String.format(UNTIL_HOURS, hours);
     }
     long months = dateTime.until(now, ChronoUnit.MONTHS);
     if (months == 0) {
-      return String.format(FORMAT_UNTIL_DAYS, days);
+      return String.format(UNTIL_DAYS, days);
     }
     long years = dateTime.until(now, ChronoUnit.YEARS);
     if (years == 0) {
-      return String.format(FORMAT_UNTIL_MONTHS, months);
+      return String.format(UNTIL_MONTHS, months);
     }
-    return String.format(FORMAT_UNTIL_YEARS, years);
+    return String.format(UNTIL_YEARS, years);
   }
 
   /**
    * 显示某个日期的特定时间格式。
    * <p>
-   * 1. 如果是未来，则显示 helper.datetime.local.datetime 设定的值
+   * 1. 如果是未来，则显示 local.datetime 设定的格式。
    * <p>
-   * 2. 如果是现在（今天），则显示 helper.datetime.local.time 设定的值
+   * 2. 如果是现在（今天），则显示 local.time 设定的格式。
    * <p>
-   * 3. 如果是过去，则显示 helper.datetime.local.date 设定的值
+   * 3. 如果是过去，则根据 display.range 设定的范围显示对应的 display.prefix 前缀格式。
    *
    * @param value 某个日期。
    * @return 格式化的时间字符串。
@@ -285,6 +276,11 @@ public final class DateTimeHelper {
     if (days == 0) {
       // HH:mm:ss
       return formatTime(value);
+    }
+    if (days <= DISPLAY_RANGE) {
+      int index = (int) days - 1;
+      // 昨天/前天 HH:mm:ss
+      return String.format(DISPALY_PREFIX.get(index), formatTime(value));
     }
     // yyyy-MM-dd
     return formatDate(value);
