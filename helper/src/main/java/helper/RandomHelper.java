@@ -164,7 +164,7 @@ public final class RandomHelper {
 
     StringBuilder builder = new StringBuilder(length);
     // 第一个数字不为 0
-    builder.append(NUMBER.substring(1).charAt(RANDOM.get().nextInt(NUMBER.length())));
+    builder.append(NUMBER.substring(1).charAt(RANDOM.get().nextInt(NUMBER.length() - 1)));
     for (int i = 1; i < length; i++) {
       builder.append(NUMBER.charAt(RANDOM.get().nextInt(NUMBER.length())));
     }

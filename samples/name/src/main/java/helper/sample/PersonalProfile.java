@@ -22,7 +22,6 @@ import javax.swing.WindowConstants;
  */
 public final class PersonalProfile extends Application {
   private JPanel panelBase;
-  private JPanel panelAvatar;
   private JLabel labelNickname;
   private JLabel labelRealName;
   private JRadioButton radioBtnNickname;
@@ -32,30 +31,42 @@ public final class PersonalProfile extends Application {
   private JSpinner spinnerRealNameMin;
   private JSpinner spinnerRealNameMax;
   private JButton btnGenerate;
-
-  private CircleAvatar avatar;
+  private JLabel labelColor;
+  private JLabel labelFirst;
+  private JPanel panelColor;
 
   @Override public void init() throws Exception {
     super.init();
-    avatar = new CircleAvatar();
-    panelAvatar.add(avatar);
-
     SpinnerNumberModel numberModel = new SpinnerNumberModel();
     numberModel.setStepSize(1);
+    numberModel.setMaximum(10);
     numberModel.setValue(1);
-    numberModel.setMaximum(3);
     numberModel.setMinimum(1);
     spinnerNicknameMin.setModel(numberModel);
+    numberModel = new SpinnerNumberModel();
+    numberModel.setStepSize(1);
+    numberModel.setMaximum(10);
+    numberModel.setValue(10);
+    numberModel.setMinimum(1);
     spinnerNicknameMax.setModel(numberModel);
+    numberModel = new SpinnerNumberModel();
+    numberModel.setStepSize(1);
     numberModel.setMaximum(2);
+    numberModel.setValue(1);
+    numberModel.setMinimum(1);
     spinnerRealNameMin.setModel(numberModel);
+    numberModel = new SpinnerNumberModel();
+    numberModel.setStepSize(1);
+    numberModel.setMaximum(2);
+    numberModel.setValue(2);
+    numberModel.setMinimum(1);
     spinnerRealNameMax.setModel(numberModel);
 
     btnGenerate.addActionListener(e -> {
       if (radioBtnNickname.isSelected()) {
         int min = (int) spinnerNicknameMin.getValue();
         int max = (int) spinnerNicknameMax.getValue();
-        String text = RandomHelper.getString(min, max);
+        String text = RandomHelper.getUpperCase(min, max);
         if (NameHelper.checkName(text, min, max)) {
           updateInfo(text, labelNickname);
           return;
@@ -65,20 +76,21 @@ public final class PersonalProfile extends Application {
         int min = (int) spinnerRealNameMin.getValue();
         int max = (int) spinnerRealNameMax.getValue();
         String text = RandomHelper.getSurname() + RandomHelper.getChinese(min, max);
-        if (NameHelper.checkChinese(text, min, max)) {
+        if (NameHelper.checkChinese(text, min - 1, max + 1)) {
           updateInfo(text, labelRealName);
           return;
         }
-        labelNickname.setText("Error！");
+        labelRealName.setText("Error！");
       }
     });
   }
 
   private void updateInfo(String text, JLabel labelNickname) {
     labelNickname.setText(text);
-    avatar.showTitle = NameHelper.firstLetter(text);
-    avatar.color = Color.getColor(NameHelper.color(text));
-    avatar.repaint();
+    labelFirst.setText(NameHelper.firstLetter(text));
+    String color = NameHelper.color(text);
+    labelColor.setText(color);
+    panelColor.setBackground(Color.decode(color));
   }
 
   @Override public void stop() throws Exception {

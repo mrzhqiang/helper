@@ -69,8 +69,8 @@ import javax.annotation.Nullable;
  * 通常我们希望看到本地时间，而 HTTP 以及数据库传递的是 GMT 时间，也就是 0 时区的时间，这样我们需要
  * 先得到本地时区，才能够计算出希望显示的时间。
  * <p>
- * 关于中文：
- * 目前没有做国际化规范，这个日期时间助手也只是简单的工具，所以将就着用吧。
+ * 关于语言：
+ * 目前没有做国际化规范，但你可以通过配置文件设定你希望使用的显示格式。
  * <p>
  * 另外：
  * 如果你已抛弃 {@link Date Date}，那么 {@link java.time.format.DateTimeFormatter DateTimeFormatter}
@@ -86,12 +86,15 @@ public final class DateTimeHelper {
   private static final Config CONFIG = ConfigFactory.load().getConfig("helper.datetime");
 
   private static final Config LOCAL = CONFIG.getConfig("local");
+  private static final String DATETIME = LOCAL.getString("datetime");
+  private static final String DATE = LOCAL.getString("date");
+  private static final String TIME = LOCAL.getString("time");
   private static final ThreadLocal<DateFormat> LOCAL_DATETIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(LOCAL.getString("datetime")));
+      () -> new SimpleDateFormat(DATETIME));
   private static final ThreadLocal<DateFormat> LOCAL_DATE = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(LOCAL.getString("date")));
+      () -> new SimpleDateFormat(DATE));
   private static final ThreadLocal<DateFormat> LOCAL_TIME = ThreadLocal.withInitial(
-      () -> new SimpleDateFormat(LOCAL.getString("time")));
+      () -> new SimpleDateFormat(TIME));
 
   private static final Config UNTIL = CONFIG.getConfig("until");
   private static final String UNTIL_YEARS = UNTIL.getString("years");
@@ -105,7 +108,7 @@ public final class DateTimeHelper {
 
   private static final Config DISPLAY = CONFIG.getConfig("display");
   private static final int DISPLAY_RANGE = DISPLAY.getInt("range");
-  private static final List<String> DISPALY_PREFIX = DISPLAY.getStringList("prefix");
+  private static final List<String> DISPLAY_PREFIX = DISPLAY.getStringList("prefix");
 
   /**
    * 默认格式为：yyyy-MM-dd HH:mm:ss。
@@ -280,7 +283,7 @@ public final class DateTimeHelper {
     if (days <= DISPLAY_RANGE) {
       int index = (int) days - 1;
       // 昨天/前天 HH:mm:ss
-      return String.format(DISPALY_PREFIX.get(index), formatTime(value));
+      return String.format(DISPLAY_PREFIX.get(index), formatTime(value));
     }
     // yyyy-MM-dd
     return formatDate(value);

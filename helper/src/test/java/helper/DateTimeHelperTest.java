@@ -30,7 +30,6 @@ public final class DateTimeHelperTest {
   private Instant monthInstant;
   private Instant yearInstant;
 
-  private Config config;
   private Config local;
   private Config until;
   private Config display;
@@ -47,7 +46,7 @@ public final class DateTimeHelperTest {
     monthInstant = nowInstant.minus(Duration.ofDays(62));
     yearInstant = nowInstant.minus(Duration.ofDays(365));
 
-    config = ConfigFactory.load().getConfig("helper.datetime");
+    Config config = ConfigFactory.load().getConfig("helper.datetime");
     local = config.getConfig("local");
     until = config.getConfig("until");
     display = config.getConfig("display");
