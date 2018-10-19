@@ -100,9 +100,9 @@ public final class NameHelper {
   /**
    * 检查 Username 是否为字母或数字，并位于指定范围内。
    *
-   * @param min 最小长度。<= 0 表示不做长度检测。
-   * @param max 最大长度。<= 0 表示不做长度检测，并且必须 >= min。
    * @param value Username，如果是 Null 或者空串则返回 false。
+   * @param min 最小长度。小于等于 0 表示不做长度检测。
+   * @param max 最大长度。小于等于 0 表示不做长度检测，并且必须大于等于 min。
    * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
    */
   public static boolean checkName(@Nullable String value, int min, int max) {
@@ -138,8 +138,8 @@ public final class NameHelper {
    * 检查 Username 是否为中文，并且是否在指定长度范围内。
    *
    * @param value Username，如果是 Null 或者空串则返回 false。
-   * @param min 最小长度。<= 0 表示不做长度检测。
-   * @param max 最大长度。<= 0 表示不做长度检测，并且必须 >= min。
+   * @param min 最小长度。小于等于 0 表示不做长度检测。
+   * @param max 最大长度。小于等于 0 表示不做长度检测，并且必须大于等于 min。
    * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
    */
   public static boolean checkChinese(@Nullable String value, int min, int max) {
@@ -151,8 +151,8 @@ public final class NameHelper {
    *
    * @param regex 正则表达式。
    * @param value Username，如果是 Null 或者空串则返回 false。
-   * @param min 最小长度。<= 0 表示不做长度检测。
-   * @param max 最大长度。<= 0 表示不做长度检测，并且必须 >= min。
+   * @param min 最小长度。小于等于 0 表示不做长度检测。
+   * @param max 最大长度。小于等于 0 表示不做长度检测，并且必须大于等于 min。
    * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
    */
   public static boolean checkString(@RegEx String regex, @Nullable String value, int min, int max) {

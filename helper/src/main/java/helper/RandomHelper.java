@@ -90,8 +90,8 @@ public final class RandomHelper {
   /**
    * 通过指定最小长度和最大长度范围，生成随机字符序列。
    *
-   * @param min 最小长度，必须 > 0。
-   * @param max 最大长度，必须 > 0，并且必须 >= min。
+   * @param min 最小长度，必须大于 0。
+   * @param max 最大长度，必须大于 0，并且必须大于等于 min。
    * @return 随机字符串，范围：大小写字母，数字，特殊字符。
    */
   public static String getString(int min, int max) {
@@ -127,8 +127,8 @@ public final class RandomHelper {
   /**
    * 通过指定最小长度和最大长度范围，生成随机汉字序列。
    *
-   * @param min 最小长度，必须 > 0。
-   * @param max 最大长度，必须 > 0，并且必须 >= min。
+   * @param min 最小长度，必须大于 0。
+   * @param max 最大长度，必须大于 0，并且必须大于等于 min。
    * @return 随机汉字，范围：常用汉字 3500 个。
    */
   public static String getChinese(int min, int max) {
@@ -155,7 +155,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机数字序列的字符串。
    *
-   * @param length 指定长度，必须 > 0。
+   * @param length 指定长度，必须大于 0。
    * @return 随机字符串，仅包含：数字。
    */
   public static String getNumber(int length) {
@@ -174,8 +174,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机数字序列的字符串。
    *
-   * @param min 最小长度，必须 > 0。
-   * @param max 最大长度，必须 > 0，并且必须 >= min。
+   * @param min 最小长度，必须大于 0。
+   * @param max 最大长度，必须大于 0，并且必须大于等于 min。
    * @return 随机字符串，仅包含：数字。
    */
   public static String getNumber(int min, int max) {
@@ -193,7 +193,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机小写字母序列的字符串。
    *
-   * @param length 指定长度，必须 > 0。
+   * @param length 指定长度，必须大于 0。
    * @return 随机字符串，仅包含：小写字母。
    */
   public static String getLowerCase(int length) {
@@ -210,8 +210,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机小写字母序列的字符串。
    *
-   * @param min 最小长度，必须 > 0。
-   * @param max 最大长度，必须 > 0，并且必须 >= min。
+   * @param min 最小长度，必须大于 0。
+   * @param max 最大长度，必须大于 0，并且必须大于等于 min。
    * @return 随机字符串，仅包含：小写字母。
    */
   public static String getLowerCase(int min, int max) {
@@ -229,7 +229,7 @@ public final class RandomHelper {
   /**
    * 通过指定长度，生成随机大写字母序列的字符串。
    *
-   * @param length 指定长度，必须 > 0。
+   * @param length 指定长度，必须大于 0。
    * @return 随机字符串，仅包含：大写字母。
    */
   public static String getUpperCase(int length) {
@@ -246,8 +246,8 @@ public final class RandomHelper {
   /**
    * 通过指定长度范围，生成随机大写字母序列的字符串。
    *
-   * @param min 最小长度，必须 > 0。
-   * @param max 最大长度，必须 > 0，并且必须 >= min。
+   * @param min 最小长度，必须大于 0。
+   * @param max 最大长度，必须大于 0，并且必须大于等于 min。
    * @return 随机字符串，仅包含：大写字母。
    */
   public static String getUpperCase(int min, int max) {

@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 /**
  * 日期时间助手。
  * <p>
- * 这是为了兼容与 {@link Date 日期类} 相关的逻辑，比如数据库时间戳。
+ * 这是为了兼容与 {@link Date Date} 相关的逻辑，比如数据库时间戳。
  * <p>
  * 关于格式化：
- * 习惯上，我们使用 <code>yyyy-MM-dd HH:mm:ss</code> 格式，通过 {@link Config 安全配置}
+ * 习惯上，我们使用 yyyy-MM-dd HH:mm:ss 格式，通过 {@link Config Config}
  * 你将获得更加灵活的格式设定，另外还可以格式化为：仅日期、仅时间、仅 HTTP，等等。
  * <p>
  * 关于解析：
@@ -111,13 +111,18 @@ public final class DateTimeHelper {
   private static final List<String> DISPLAY_PREFIX = DISPLAY.getStringList("prefix");
 
   /**
-   * 默认格式为：yyyy-MM-dd HH:mm:ss。
+   * 格式化日期时间方法。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
+   * 默认为 yyyy-MM-dd HH:mm:ss 格式，比如 1970-01-01 00:00:00。
+   * <p>
+   * 通过在 resources 目录下添加 reference.conf 文件，并增加以下内容：
    * <pre>
    *   helper.datetime.local.datetime = "****"
    * </pre>
-   * 来修改默认的日期时间格式。
+   * 即可修改为你希望的日期时间格式。
+   *
+   * @param value {@link Date Date}，非 Null。
+   * @return 格式化后的字符串。
    */
   public static String format(Date value) {
     Preconditions.checkNotNull(value);
@@ -130,13 +135,18 @@ public final class DateTimeHelper {
   }
 
   /**
-   * 默认格式为：yyyy-MM-dd。
+   * 格式化日期方法。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
+   * 默认为 yyyy-MM-dd 格式，比如：1970-01-01。
+   * <p>
+   * 通过在 resources 目录下添加 reference.conf 文件，并增加以下内容：
    * <pre>
    *   helper.datetime.local.date = "****"
    * </pre>
-   * 来修改默认的日期格式。
+   * 即可修改为你希望的日期格式。
+   *
+   * @param value {@link Date Date}，非 Null。
+   * @return 格式化后的字符串。
    */
   public static String formatDate(Date value) {
     Preconditions.checkNotNull(value);
@@ -144,13 +154,18 @@ public final class DateTimeHelper {
   }
 
   /**
-   * 默认格式为：HH:mm:ss。
+   * 格式化时间方法。
    * <p>
-   * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
+   * 默认为 HH:mm:ss 格式，比如：00:00:00。
+   * <p>
+   * 通过在 resources 目录下添加 reference.conf 文件，并增加以下内容：
    * <pre>
    *   helper.datetime.local.time = "****"
    * </pre>
-   * 来修改默认的时间格式。
+   * 即可修改为你希望的时间格式。
+   *
+   * @param value {@link Date Date}，非 Null。
+   * @return 格式化后的字符串。
    */
   public static String formatTime(Date value) {
     Preconditions.checkNotNull(value);
@@ -158,7 +173,14 @@ public final class DateTimeHelper {
   }
 
   /**
-   * HTTP 日期 + 时间，比如：Thu, 05 Jul 2018 14:50:45 GMT
+   * 格式化 HTTP 日期时间方法。
+   * <p>
+   * 默认为 EEE, dd MMM yyyy HH:mm:ss 'GMT' 格式，比如：Thu, 05 Jul 2018 14:50:45 GMT。
+   * <p>
+   * 这个方法拷贝自 okhttp，因此不具备从配置文件修改的能力。
+   *
+   * @param value {@link Date Date}，非 Null。
+   * @return 格式化后的字符串。
    */
   public static String formatHTTP(Date value) {
     Preconditions.checkNotNull(value);
@@ -166,7 +188,9 @@ public final class DateTimeHelper {
   }
 
   /**
-   * 默认解析：yyyy-MM-dd HH:mm:ss, Locale.getDefault() and TimeZone.getDefault().
+   * 解析时间日期方法。
+   * <p>
+   * 格式：yyyy-MM-dd HH:mm:ss，默认使用系统语言和系统时区。
    * <p>
    * 可以通过在 resources 目录下添加 reference.conf 文件，并设置以下内容：
    * <pre>
@@ -174,7 +198,10 @@ public final class DateTimeHelper {
    * </pre>
    * 来修改默认的日期时间格式。
    * <p>
-   * 如果失败，尝试使用 HTTP 格式进行解析。
+   * 注意：首次解析失败将尝试使用 HTTP 格式进行解析，以降低返回 Null 值的可能。
+   *
+   * @param source 字符串表示的时间。
+   * @return {@link Date Date}，如果解析失败则返回 Null。
    */
   @Nullable
   public static Date parse(String source) {
@@ -189,6 +216,9 @@ public final class DateTimeHelper {
 
   /**
    * Returns the date for {@code value}. Returns null if the value couldn't be parsed.
+   *
+   * @param value 字符串表示的时间。
+   * @return {@link Date Date}，如果解析失败则返回 Null。
    */
   @Nullable
   public static Date parseHTTP(String value) {
