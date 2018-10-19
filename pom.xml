@@ -4,21 +4,14 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
-  </parent>
-
   <groupId>com.github.mrzhqiang.helper</groupId>
   <artifactId>helper-parent</artifactId>
-  <version>2018.2.1</version>
-  <packaging>pom</packaging>
+  <version>2018.1.0</version>
+  <packaging>jar</packaging>
 
   <name>Helper (Parent)</name>
   <url>https://github.com/mrzhqiang/helper</url>
-  <description>An helper tools for Java and Android.</description>
-
+  <description>An helper tools for Java.</description>
   <inceptionYear>2018</inceptionYear>
 
   <organization>
@@ -39,10 +32,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/mrzhqiang/helper</url>
+    <url>https://github.com/mrzhqiang/helper/tree/master</url>
     <connection>scm:git:https://github.com/mrzhqiang/helper.git</connection>
     <developerConnection>scm:git:git@github.com:mrzhqiang/helper.git</developerConnection>
-    <tag>HEAD</tag>
   </scm>
 
   <developers>
@@ -54,6 +46,17 @@
       <timezone>+8</timezone>
     </developer>
   </developers>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <modules>
     <module>helper</module>
@@ -148,6 +151,18 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
