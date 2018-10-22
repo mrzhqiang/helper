@@ -15,6 +15,7 @@
 
   <modules>
     <module>helper</module>
+    <module>database</module>
     <module>samples</module>
   </modules>
 
@@ -22,13 +23,22 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
 
-    <!-- JDK -->
-    <java.version>1.8</java.version>
-
-    <guava.version>22.0</guava.version>
-    <config.version>1.3.3</config.version>
     <!-- Test Dependencies -->
     <junit.version>4.12</junit.version>
+    <!-- JDK -->
+    <java.version>1.8</java.version>
+    <!-- Base helper -->
+    <guava.version>22.0</guava.version>
+    <config.version>1.3.3</config.version>
+    <!-- Database helper -->
+    <log4j.version>2.11.1</log4j.version>
+    <guice.version>4.2.1</guice.version>
+    <jedis.version>2.9.0</jedis.version>
+    <ebean.version>11.22.9</ebean.version>
+    <ebean-test-config.version>11.21.1</ebean-test-config.version>
+    <mysql.version>8.0.11</mysql.version>
+    <cassandra-driver.version>3.6.0</cassandra-driver.version>
+    <elasticsearch-client.version>5.5.3</elasticsearch-client.version>
   </properties>
 
   <scm>
@@ -66,23 +76,89 @@
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
       <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>3.0.2</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
       <!-- https://mvnrepository.com/artifact/com.typesafe/config -->
       <dependency>
         <groupId>com.typesafe</groupId>
         <artifactId>config</artifactId>
         <version>${config.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+      <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>${jedis.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/io.ebean/ebean -->
+      <dependency>
+        <groupId>io.ebean</groupId>
+        <artifactId>ebean</artifactId>
+        <version>${ebean.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/io.ebean.test/ebean-test-config -->
+      <dependency>
+        <groupId>io.ebean.test</groupId>
+        <artifactId>ebean-test-config</artifactId>
+        <version>${ebean-test-config.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-core</artifactId>
+        <version>${cassandra-driver.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-mapping -->
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-mapping</artifactId>
+        <version>${cassandra-driver.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-extras -->
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-extras</artifactId>
+        <version>${cassandra-driver.version}</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/rest -->
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>rest</artifactId>
+        <version>${elasticsearch-client.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
