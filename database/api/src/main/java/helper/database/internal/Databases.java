@@ -40,7 +40,7 @@ public final class Databases {
     try {
       return supplier.get();
     } catch (Exception e) {
-      LOGGER.error("create error, cause: %s", e.getMessage());
+      LOGGER.error("create error, cause: {}", e.getMessage());
       throw new DatabaseException("database create failed!", e);
     }
   }
@@ -58,7 +58,7 @@ public final class Databases {
     try {
       consumer.accept(entity);
     } catch (Exception e) {
-      LOGGER.error("execute %s error, cause: %s", entity, e.getMessage());
+      LOGGER.error("execute {} error, cause: {}", entity, e.getMessage());
       throw new DatabaseException("database execute failed!", e);
     }
   }
@@ -78,7 +78,7 @@ public final class Databases {
     try {
       return Optional.ofNullable(function.apply(primary));
     } catch (Exception e) {
-      LOGGER.error("find %s error, cause: %s", primary, e.getMessage());
+      LOGGER.error("find {} error, cause: {}", primary, e.getMessage());
       throw new DatabaseException("database find failed!", e);
     }
   }

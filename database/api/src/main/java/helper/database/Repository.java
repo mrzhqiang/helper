@@ -48,17 +48,17 @@ public interface Repository<E> {
    * @param index 页面序列号。
    * @param size 页面数量。
    * @param clause 查询子句。可以为 Null。
-   * @return 分页接口。永不为 Null。
+   * @return 分页接口。不为 Null。
    */
   Paging<E> page(int index, int size, @Nullable Map<String, Object> clause);
 
   /**
-   * 获取仓库的所有数据。
+   * 获取仓库的最新数据。
    * <p>
-   * 注意：如果数量太多，有可能导致查询超时，请慎用。
+   * 通常只查询前 10 条数据，这是为了保证服务器性能。
    *
    * @param clause where 查询子句。可以为 Null。
-   * @return 所有数据的列表。永不为 Null，有可能为 Empty。
+   * @return 数据列表。不为 Null，有可能为 Empty。
    */
   List<E> list(@Nullable Map<String, Object> clause);
 }

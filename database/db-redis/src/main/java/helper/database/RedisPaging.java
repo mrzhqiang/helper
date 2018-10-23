@@ -7,8 +7,6 @@ import javax.annotation.Nullable;
 
 /**
  * 基于 Redis 客户端的分页。
- * <p>
- * 分页类应该始终可以进行 Json 序列化。
  *
  * @author mrzhqiang
  */
@@ -19,15 +17,6 @@ public final class RedisPaging<T> implements Paging<T> {
     paging.index = index < 0 ? 0 : index;
     paging.count = count < 0 ? 0 : count;
     paging.resources = resources == null ? Collections.emptyList() : resources;
-    return paging;
-  }
-
-  static <T> Paging<T> ofEmpty() {
-    RedisPaging<T> paging = new RedisPaging<>();
-    paging.total = 0;
-    paging.index = 0;
-    paging.count = 0;
-    paging.resources = Collections.emptyList();
     return paging;
   }
 

@@ -6,11 +6,14 @@ import java.util.List;
  * 分页。
  * <p>
  * 一旦数据积累到足够的量，则每次查询所有结果将占据大量服务器资源，为此增加分页功能。
+ * <p>
+ * 分页扩展类应该始终可以进行 Json 序列化。
  *
  * @param <E> 资源映射的实体类型。
  * @author mrzhqiang
  */
 public interface Paging<E> {
+
   /**
    * 资源的总数量。
    *

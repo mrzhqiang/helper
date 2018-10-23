@@ -15,12 +15,21 @@
 
   <dependencies>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.github.mrzhqiang.helper.database</groupId>
       <artifactId>api</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>

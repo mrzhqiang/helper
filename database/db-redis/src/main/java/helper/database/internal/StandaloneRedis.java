@@ -1,10 +1,10 @@
-package helper.database;
+package helper.database.internal;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import helper.database.internal.Databases;
+import helper.database.Redis;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -14,6 +14,7 @@ import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Protocol;
 
 /**
@@ -21,7 +22,8 @@ import redis.clients.jedis.Protocol;
  *
  * @author mrzhqiang
  */
-@Singleton final class StandaloneRedis implements Redis {
+@Singleton
+public final class StandaloneRedis implements Redis {
   private static final Logger LOGGER = LogManager.getLogger("database");
 
   private static final String ROOT_PATH = "redis";
@@ -81,6 +83,20 @@ import redis.clients.jedis.Protocol;
     }
   }
 
+  @Override public void pipelined(Consumer<Pipeline> consumer) {
+    if (!enabled) {
+      LOGGER.warn("Redis is disabled.");
+      return;
+    }
+
+    Preconditions.checkNotNull(consumer);
+    try (Jedis resource = jedisPool.getResource()) {
+      Pipeline pipelined = resource.pipelined();
+      Databases.execute(pipelined, consumer);
+      pipelined.sync();
+    }
+  }
+
   @Override public <T> Optional<T> find(Function<Jedis, T> function) {
     if (!enabled) {
       LOGGER.warn("Redis is disabled.");
@@ -89,7 +105,7 @@ import redis.clients.jedis.Protocol;
 
     Preconditions.checkNotNull(function);
     try (Jedis resource = jedisPool.getResource()) {
-      return Databases.create(() -> Optional.ofNullable(function.apply(resource)));
+      return Databases.find(resource, function);
     }
   }
 }
