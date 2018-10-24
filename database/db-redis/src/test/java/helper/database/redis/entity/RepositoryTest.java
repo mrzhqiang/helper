@@ -1,12 +1,12 @@
-package helper.database.entity;
+package helper.database.redis.entity;
 
 import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import helper.database.BaseEntity;
-import helper.database.Redis;
-import helper.database.RedisRepository;
+import helper.database.redis.RedisEntity;
+import helper.database.redis.Redis;
+import helper.database.redis.RedisRepository;
 import helper.database.Repository;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +52,7 @@ public final class RepositoryTest {
     });
   }
 
-  private static final class TestEntity extends BaseEntity {
+  private static final class TestEntity extends RedisEntity {
     String name;
 
     @Override public int hashCode() {
@@ -104,8 +104,8 @@ public final class RepositoryTest {
     }
 
     @Override protected TestEntity transform(Object primaryKey, Map<String, String> contentValue) {
-      String json = BaseEntity.GSON.toJson(contentValue);
-      TestEntity entity = BaseEntity.GSON.fromJson(json, TestEntity.class);
+      String json = RedisEntity.GSON.toJson(contentValue);
+      TestEntity entity = RedisEntity.GSON.fromJson(json, TestEntity.class);
       entity.setId(primaryKey);
       return entity;
     }

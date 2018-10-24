@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="300">
+<Configuration status="DEBUG" monitorInterval="300">
   <properties>
     <property name="LOG_HOME">./logs</property>
-    <property name="DATABASE">database</property>
+    <property name="DATABASE">redis</property>
   </properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
-    <RollingRandomAccessFile name="Database" fileName="${LOG_HOME}/${DATABASE}.log"
+    <RollingRandomAccessFile name="Redis" fileName="${LOG_HOME}/${DATABASE}.log"
         filePattern="${LOG_HOME}/$${date:yyyy-MM}/${DATABASE}-%d{yyyy-MM-dd HH-mm}-%i.log">
       <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
       <Policies>
@@ -19,11 +19,8 @@
     </RollingRandomAccessFile>
   </Appenders>
   <Loggers>
-    <Logger name="database" level="warn" additivity="false">
-      <AppenderRef ref="Database"/>
+    <Logger name="redis" level="warn" additivity="false">
+      <AppenderRef ref="Redis"/>
     </Logger>
-    <Root level="info">
-      <AppenderRef ref="Console"/>
-    </Root>
   </Loggers>
 </Configuration>

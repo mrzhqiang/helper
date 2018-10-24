@@ -1,10 +1,11 @@
-package helper.database;
+package helper.database.redis;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import helper.database.Entity;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.Objects;
  *
  * @author mrzhqiang
  */
-public abstract class BaseEntity {
+public abstract class RedisEntity implements Entity {
   public static final Gson GSON = new GsonBuilder()
       .setDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
       .setPrettyPrinting()
@@ -42,7 +43,8 @@ public abstract class BaseEntity {
    *
    * @return 主键。不存在数据库中，则为 Null。
    */
-  public String primaryKey() {
+  @Override
+  public Object primaryKey() {
     return id;
   }
 
@@ -78,11 +80,11 @@ public abstract class BaseEntity {
       return true;
     }
 
-    if (!(obj instanceof BaseEntity)) {
+    if (!(obj instanceof RedisEntity)) {
       return false;
     }
 
-    BaseEntity other = ((BaseEntity) obj);
+    RedisEntity other = ((RedisEntity) obj);
     return Objects.equals(this.id, other.id)
         && Objects.equals(this.created, other.created)
         && Objects.equals(this.updated, other.updated);

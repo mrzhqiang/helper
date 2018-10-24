@@ -1,6 +1,7 @@
-package helper.database;
+package helper.database.redis;
 
 import com.google.common.base.MoreObjects;
+import helper.database.Paging;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -10,8 +11,9 @@ import javax.annotation.Nullable;
  *
  * @author mrzhqiang
  */
-public final class RedisPaging<T> implements Paging<T> {
-  static <T> Paging<T> of(long total, int index, int count, @Nullable List<T> resources) {
+public final class RedisPaging<T extends RedisEntity> implements Paging<T> {
+  static <T extends RedisEntity> Paging<T> of(long total, int index, int count,
+      @Nullable List<T> resources) {
     RedisPaging<T> paging = new RedisPaging<>();
     paging.total = total < 0 ? (resources != null ? resources.size() : 0) : total;
     paging.index = index < 0 ? 0 : index;

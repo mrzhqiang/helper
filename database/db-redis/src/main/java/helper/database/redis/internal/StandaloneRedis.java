@@ -1,21 +1,24 @@
-package helper.database.internal;
+package helper.database.redis.internal;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import helper.database.Redis;
+import helper.database.Databases;
+import helper.database.redis.Redis;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Protocol;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 /**
  * 单机版 Redis 客户端。
@@ -24,7 +27,7 @@ import redis.clients.jedis.Protocol;
  */
 @Singleton
 public final class StandaloneRedis implements Redis {
-  private static final Logger LOGGER = LogManager.getLogger("database");
+  private static final Logger LOGGER = LoggerFactory.getLogger("redis");
 
   private static final String ROOT_PATH = "redis";
   private static final String HOST = "host";
@@ -52,7 +55,7 @@ public final class StandaloneRedis implements Redis {
     Config root = config.getConfig(ROOT_PATH);
     enabled = root.hasPath(ENABLED) && root.getBoolean(ENABLED);
     if (!enabled) {
-      LOGGER.info("Redis is not enabled.");
+      LOGGER.warn("Redis is not enabled.");
       return;
     }
 
@@ -67,13 +70,13 @@ public final class StandaloneRedis implements Redis {
         new JedisPool(new JedisPoolConfig(), host, port, timeout, password, database));
     LOGGER.info("Redis create successful.");
     find(BinaryJedis::ping)
-        .ifPresent(s -> LOGGER.info("Redis connect status: {}", "PONG".equals(s)));
+        .ifPresent(s -> LOGGER.debug("Redis connect status: {}", "PONG".equals(s)));
     LOGGER.info("Redis is normal.");
   }
 
   @Override public void execute(Consumer<Jedis> consumer) {
     if (!enabled) {
-      LOGGER.warn("Redis is disabled.");
+      LOGGER.error("Redis is disabled.");
       return;
     }
 
@@ -85,7 +88,7 @@ public final class StandaloneRedis implements Redis {
 
   @Override public void pipelined(Consumer<Pipeline> consumer) {
     if (!enabled) {
-      LOGGER.warn("Redis is disabled.");
+      LOGGER.error("Redis is disabled.");
       return;
     }
 
@@ -99,13 +102,18 @@ public final class StandaloneRedis implements Redis {
 
   @Override public <T> Optional<T> find(Function<Jedis, T> function) {
     if (!enabled) {
-      LOGGER.warn("Redis is disabled.");
+      LOGGER.error("Redis is disabled.");
       return Optional.empty();
     }
 
     Preconditions.checkNotNull(function);
     try (Jedis resource = jedisPool.getResource()) {
-      return Databases.find(resource, function);
+      return Optional.ofNullable(Databases.map(resource, function));
     }
+  }
+
+  @Override
+  public <T> Optional<Response<T>> multi(Function<Transaction, T> function, String... watchs) {
+    return Optional.empty();
   }
 }

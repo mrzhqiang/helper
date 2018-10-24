@@ -12,6 +12,7 @@
 
   <artifactId>datetime</artifactId>
   <name>Sample: DateTime</name>
+  <url>https://github.com/mrzhqiang/helper</url>
 
   <dependencies>
     <dependency>

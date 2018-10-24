@@ -12,6 +12,7 @@
 
   <artifactId>helper</artifactId>
   <name>Helper</name>
+  <url>https://github.com/mrzhqiang/helper</url>
 
   <dependencies>
     <dependency>

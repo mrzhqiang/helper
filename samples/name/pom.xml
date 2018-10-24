@@ -12,6 +12,7 @@
 
   <artifactId>name</artifactId>
   <name>Sample: Name</name>
+  <url>https://github.com/mrzhqiang/helper</url>
 
   <dependencies>
     <dependency>

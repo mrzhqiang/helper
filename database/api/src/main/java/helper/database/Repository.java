@@ -10,10 +10,10 @@ import javax.annotation.Nullable;
  * <p>
  * 定义通用的 CURD 操作。
  *
- * @param <E> 仓库的实体类型。
+ * @param <E> 实体类型。
  * @author qiang.zhang
  */
-public interface Repository<E> {
+public interface Repository<E extends Entity> {
 
   /**
    * 保存实体。
@@ -37,28 +37,26 @@ public interface Repository<E> {
   /**
    * 通过主键获取实体数据。
    *
-   * @param primaryKeys 主键对象集合。
-   * @return 可选的实体。如果存在，找到；不存在，则没有找到。
+   * @param primaryKeys 主键对象集合。这是因为在 CQL 数据库中，一般是 主键 + 分区键 的形式。
+   * @return 可选的实体。如果不存在，则表示需要返回 NotFound 状态。
    */
   Optional<E> get(Object... primaryKeys);
 
   /**
    * 获取仓库的分页数据。
    *
-   * @param index 页面序列号。
-   * @param size 页面数量。
-   * @param clause 查询子句。可以为 Null。
-   * @return 分页接口。不为 Null。
+   * @param index 页面序号。
+   * @param size 查询大小。
+   * @param clause 查询子句。允许为 Null。
+   * @return 分页接口。非 Null。
    */
   Paging<E> page(int index, int size, @Nullable Map<String, Object> clause);
 
   /**
    * 获取仓库的最新数据。
-   * <p>
-   * 通常只查询前 10 条数据，这是为了保证服务器性能。
    *
-   * @param clause where 查询子句。可以为 Null。
-   * @return 数据列表。不为 Null，有可能为 Empty。
+   * @param clause where 查询子句。允许为 Null。
+   * @return 数据列表。非 Null，但有可能为 Empty 状态。
    */
   List<E> list(@Nullable Map<String, Object> clause);
 }

@@ -11,6 +11,7 @@
 
   <artifactId>random</artifactId>
   <name>Sample: Random</name>
+  <url>https://github.com/mrzhqiang/helper</url>
 
   <dependencies>
     <dependency>

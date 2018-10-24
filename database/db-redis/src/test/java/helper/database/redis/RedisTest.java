@@ -1,6 +1,7 @@
-package helper.database;
+package helper.database.redis;
 
 import com.google.inject.Guice;
+import helper.database.redis.Redis;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

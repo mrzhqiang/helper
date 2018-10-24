@@ -1,6 +1,7 @@
-package helper.database;
+package helper.database.redis;
 
-import helper.database.internal.Util;
+import helper.database.Paging;
+import helper.database.Repository;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
  *
  * @author mrzhqiang
  */
-public abstract class RedisRepository<E extends BaseEntity> implements Repository<E> {
+public abstract class RedisRepository<E extends RedisEntity> implements Repository<E> {
   private static final int DEFAULT_SCAN_PARAM_COUNT = 2000;
 
   /**
@@ -125,7 +126,7 @@ public abstract class RedisRepository<E extends BaseEntity> implements Repositor
     entity.updated = new Date();
     redis().pipelined(pipeline -> {
       pipeline.hmset(key(entity.primaryKey()), entity.contentValue());
-      pipeline.zadd(key(KEY_ALL), entity.updated.getTime(), entity.primaryKey());
+      pipeline.zadd(key(KEY_ALL), entity.updated.getTime(), String.valueOf(entity.primaryKey()));
     });
   }
 
@@ -145,13 +146,13 @@ public abstract class RedisRepository<E extends BaseEntity> implements Repositor
 
   @Override public Paging<E> page(int index, int size, @Nullable Map<String, Object> clause) {
     String key = key(KEY_ALL);
-    int maxRows = Util.computeMaxRows(size);
+    int maxRows = Paging.computeMaxRows(size);
     long total = redis().find(jedis -> jedis.zcard(key)).orElse(-1L);
-    int count = Util.computePageCount(total, maxRows);
+    int count = Paging.computePageCount(total, maxRows);
 
     List<E> resources;
     if (clause == null) {
-      int start = Util.computeFirstRow(index, maxRows) - 1;
+      int start = Paging.computeFirstRow(index, maxRows) - 1;
       int end = (start + maxRows) - 1;
       resources = redis().find(jedis ->
           jedis.zrevrange(key, start, end)

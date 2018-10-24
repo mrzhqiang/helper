@@ -12,8 +12,10 @@
 
   <artifactId>api</artifactId>
   <name>Database: API</name>
+  <url>https://github.com/mrzhqiang/helper</url>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.github.mrzhqiang.helper/helper -->
     <dependency>
       <groupId>com.github.mrzhqiang.helper</groupId>
       <artifactId>helper</artifactId>
@@ -21,14 +23,10 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
 </project>
