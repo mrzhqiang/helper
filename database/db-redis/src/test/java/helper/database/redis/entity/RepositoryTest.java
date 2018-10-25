@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import helper.database.DatabaseException;
 import helper.database.redis.RedisEntity;
 import helper.database.redis.Redis;
 import helper.database.redis.RedisRepository;
@@ -50,6 +51,15 @@ public final class RepositoryTest {
       LoggerFactory.getLogger("redis").info("delete：" + testEntity);
       repository.delete(testEntity.primaryKey());
     });
+  }
+
+  @Test
+  public void testDatabaseException() {
+    try {
+      repository.delete(null);
+    } catch (DatabaseException e) {
+      LoggerFactory.getLogger("database").info("error successful!", e);
+    }
   }
 
   private static final class TestEntity extends RedisEntity {

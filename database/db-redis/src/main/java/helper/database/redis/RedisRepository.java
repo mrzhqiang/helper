@@ -151,9 +151,9 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   @Override public void delete(Object... primaryKeys) {
-    // 通常 Key 只取第一个，除非是 CQL 数据库，由于分区键的存在，必须设定主键数组
-    String primaryKey = String.valueOf(primaryKeys[0]);
     redis().pipelined(pipeline -> {
+      // 通常 Key 只取第一个，除非是 CQL 数据库，由于分区键的存在，必须设定主键数组
+      String primaryKey = String.valueOf(primaryKeys[0]);
       pipeline.del(key(primaryKey));
       pipeline.zrem(key(KEY_ALL), primaryKey);
     });
