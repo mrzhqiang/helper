@@ -29,6 +29,7 @@
     <appender-ref ref="STDOUT"/>
   </appender>
 
+  <logger name="database" level="INFO"/>
   <logger name="redis" level="INFO"/>
 
   <root level="WARN">
