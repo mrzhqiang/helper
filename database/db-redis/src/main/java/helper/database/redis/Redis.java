@@ -2,7 +2,6 @@ package helper.database.redis;
 
 import com.google.inject.ImplementedBy;
 import helper.database.redis.internal.StandaloneRedis;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -47,8 +46,10 @@ public interface Redis {
    * <p>
    * 此方法自动同步流水线，并释放 {@link Jedis} 资源，使用者应该专注于逻辑的实现。
    * <p>
-   * 通过使用流水线执行多个命令（必须是结果不敏感的命令），可以降低与 Redis 之间通信的往返次数，
+   * 通过使用流水线执行多个命令（结果不敏感），可以降低与 Redis 之间通信的往返次数，
    * 它所提升的性能，在《Redis 实战》这本书中有提到，大概是逐个执行命令的 4--5 倍。
+   * <p>
+   * 提示：一般来说，流水线执行的是一系列命令，它们互相之间可以没有关联，因此用不到事务。
    *
    * @param consumer 包裹 {@link Pipeline} 的消费者对象。
    */
@@ -62,25 +63,27 @@ public interface Redis {
    * 返回类型是可选的，这意味着有可能不存在返回值，所以需要检查一下状态。
    *
    * @param function 包裹 {@link Jedis} 的函数对象。
+   * @param <R> 返回类型。
    * @return 可选的结果对象。
    */
-  <T> Optional<T> find(Function<Jedis, T> function);
+  <R> Optional<R> find(Function<Jedis, R> function);
 
   /**
    * 事务查询某个对象。
    * <p>
    * 此方法自动提交事务，并释放 {@link Jedis} 资源，使用者应该专注于逻辑的实现。
    * <p>
-   * 通过使用事务执行多个命令（限一个查询命令），可以在提升性能的同时，保证操作对象的前后一致性，
-   * 特别是加入监视键功能后，一旦监视的键被修改，则事务提交不成功。
+   * 通过使用事务执行多个命令，可以在提升性能的同时，保证操作对象的前后一致性，
+   * 特别是加入监视键功能后，一旦监视的键被修改，则事务不会提交成功。
    * <p>
    * 返回类型是可选的，这意味着有可能不存在返回值，所以需要检查一下状态。
    * <p>
-   * 注意：如果不需要结果，请使用 {@link #pipelined(Consumer)}，它的性能比事务要好一些。
+   * 提示：一般来说，事务提交的是多个互相之间强关联的命令，比如商品交易的进出项。
    *
    * @param function 包裹 {@link Transaction} 的函数对象。
-   * @param watchs 监视键的数组。
+   * @param watchKeys 监视键的数组。
+   * @param <R> 返回类型。
    * @return 可选的响应结果对象。
    */
-  <T> Optional<Response<T>> multi(Function<Transaction, T> function, String... watchs);
+  <R> Optional<Response<R>> multi(Function<Transaction, Response<R>> function, String... watchKeys);
 }

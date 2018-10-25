@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import helper.database.Entity;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public abstract class RedisEntity implements Entity {
   private static final Type MAP_TYPE = new TypeToken<HashMap<String, String>>() {
   }.getType();
 
-  transient private String id;
+  private String id;
   Date created;
   Date updated;
 
@@ -46,6 +47,14 @@ public abstract class RedisEntity implements Entity {
   @Override
   public Object primaryKey() {
     return id;
+  }
+
+  @Override public Instant created() {
+    return created.toInstant();
+  }
+
+  @Override public Instant modified() {
+    return updated.toInstant();
   }
 
   /**

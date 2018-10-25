@@ -1,7 +1,7 @@
-package helper.database;
+package helper.database.internal;
 
 import com.google.common.base.Preconditions;
-import java.util.Optional;
+import helper.database.DatabaseException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -12,13 +12,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 数据库工具。
- * <p>
- * 这是为了将底层异常一网打尽，记录到日志中并抛出同类型异常，以便应用程序全局捕捉。
  *
  * @author qiang.zhang
  */
-public final class Databases {
-  private Databases() {
+public final class Util {
+  private Util() {
     throw new AssertionError("No instance.");
   }
 
@@ -79,7 +77,7 @@ public final class Databases {
   }
 
   /**
-   * 映射方法。
+   * 转换方法。
    *
    * @param input 输入对象。
    * @param function 功能对象。
@@ -88,14 +86,14 @@ public final class Databases {
    * @return 返回对象，可能为 Null。
    * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
    */
-  public static @Nullable <I, R> R map(I input, Function<I, R> function) {
+  public static @Nullable <I, R> R transform(I input, Function<I, R> function) {
     Preconditions.checkNotNull(input);
     Preconditions.checkNotNull(function);
     try {
       return function.apply(input);
     } catch (Exception e) {
-      LOGGER.error("map {} error, cause: {}", input, e.getMessage());
-      throw new DatabaseException("map failed!", e);
+      LOGGER.error("transform {} error, cause: {}", input, e.getMessage());
+      throw new DatabaseException("transform failed!", e);
     }
   }
 }

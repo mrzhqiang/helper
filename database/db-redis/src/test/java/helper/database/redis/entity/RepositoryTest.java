@@ -10,11 +10,11 @@ import helper.database.redis.RedisRepository;
 import helper.database.Repository;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.*;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 
 import static org.junit.Assert.*;
@@ -47,7 +47,7 @@ public final class RepositoryTest {
 
     List<TestEntity> search = repository.search(0, System.currentTimeMillis());
     search.forEach(testEntity -> {
-      System.out.println("delete：" + testEntity);
+      LoggerFactory.getLogger("redis").info("delete：" + testEntity);
       repository.delete(testEntity.primaryKey());
     });
   }
@@ -92,6 +92,7 @@ public final class RepositoryTest {
 
     @Inject
     private TestRedisRepository(Redis redis) {
+      super(TestEntity.class);
       this.redis = redis;
     }
 
@@ -103,19 +104,12 @@ public final class RepositoryTest {
       return "helper:db-redis:test:";
     }
 
-    @Override protected TestEntity transform(Object primaryKey, Map<String, String> contentValue) {
-      String json = RedisEntity.GSON.toJson(contentValue);
-      TestEntity entity = RedisEntity.GSON.fromJson(json, TestEntity.class);
-      entity.setId(primaryKey);
-      return entity;
-    }
-
     @Override public List<TestEntity> search(long startTime, long endTime) {
       return redis().find(jedis ->
           jedis.zrevrangeWithScores(key(KEY_ALL), startTime, endTime)
               .stream()
               .map(Tuple::getElement)
-              .map(s -> transform(s, jedis.hgetAll(key(s))))
+              .map(s -> transform(jedis.hgetAll(key(s))))
               .collect(Collectors.toList())
       ).orElse(Collections.emptyList());
     }

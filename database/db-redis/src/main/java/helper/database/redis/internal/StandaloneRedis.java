@@ -4,21 +4,22 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Singleton;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import helper.database.Databases;
+import helper.database.internal.Util;
 import helper.database.redis.Redis;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Protocol;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
+
+import static redis.clients.jedis.Protocol.*;
+import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.*;
 
 /**
  * 单机版 Redis 客户端。
@@ -30,18 +31,14 @@ public final class StandaloneRedis implements Redis {
   private static final Logger LOGGER = LoggerFactory.getLogger("redis");
 
   private static final String ROOT_PATH = "redis";
+
+  private static final String ENABLED = "enabled";
   private static final String HOST = "host";
   private static final String PORT = "port";
   private static final String TIMEOUT = "timeout";
   private static final String PASSWORD = "password";
   private static final String DATABASE = "database";
-  private static final String ENABLED = "enabled";
-
-  private static final String DEFAULT_HOST = Protocol.DEFAULT_HOST;
-  private static final int DEFAULT_PORT = Protocol.DEFAULT_PORT;
-  private static final int DEFAULT_TIMEOUT = Protocol.DEFAULT_TIMEOUT;
-  private static final String DEFAULT_PASSWORD = null;
-  private static final int DEFAULT_DATABASE = Protocol.DEFAULT_DATABASE;
+  private static final String CONNECT_COUNT = "connect-count";
 
   private boolean enabled = false;
   private JedisPool jedisPool;
@@ -55,39 +52,43 @@ public final class StandaloneRedis implements Redis {
     Config root = config.getConfig(ROOT_PATH);
     enabled = root.hasPath(ENABLED) && root.getBoolean(ENABLED);
     if (!enabled) {
-      LOGGER.warn("Redis is not enabled.");
+      LOGGER.error("you want use Redis but it not be enabled.");
       return;
     }
 
     String host = root.hasPath(HOST) ? root.getString(HOST) : DEFAULT_HOST;
     int port = root.hasPath(PORT) ? root.getInt(PORT) : DEFAULT_PORT;
     int timeout = root.hasPath(TIMEOUT) ? root.getInt(TIMEOUT) : DEFAULT_TIMEOUT;
-    boolean b = root.hasPathOrNull(PASSWORD) && !root.getIsNull(PASSWORD);
-    String password = b ? root.getString(PASSWORD) : DEFAULT_PASSWORD;
+    String password = root.hasPathOrNull(PASSWORD) && !root.getIsNull(PASSWORD)
+        ? root.getString(PASSWORD) : null;
     int database = root.hasPath(DATABASE) ? root.getInt(DATABASE) : DEFAULT_DATABASE;
+    int connectCount = root.hasPath(CONNECT_COUNT)
+        ? root.getInt(CONNECT_COUNT) : DEFAULT_MAX_TOTAL;
 
-    jedisPool = Databases.create(() ->
-        new JedisPool(new JedisPoolConfig(), host, port, timeout, password, database));
+    JedisPoolConfig poolConfig = new JedisPoolConfig();
+    poolConfig.setMaxTotal(connectCount);
+
+    jedisPool = Util.create(() ->
+        new JedisPool(poolConfig, host, port, timeout, password, database));
     LOGGER.info("Redis create successful.");
-    find(BinaryJedis::ping)
-        .ifPresent(s -> LOGGER.debug("Redis connect status: {}", "PONG".equals(s)));
-    LOGGER.info("Redis is normal.");
+    Boolean status = find(jedis -> "PONG".equalsIgnoreCase(jedis.ping())).orElse(false);
+    LOGGER.debug("Redis connect status: {}", status);
   }
 
   @Override public void execute(Consumer<Jedis> consumer) {
-    if (!enabled) {
+    if (!enabled || jedisPool == null) {
       LOGGER.error("Redis is disabled.");
       return;
     }
 
     Preconditions.checkNotNull(consumer);
     try (Jedis resource = jedisPool.getResource()) {
-      Databases.execute(resource, consumer);
+      Util.execute(resource, consumer);
     }
   }
 
   @Override public void pipelined(Consumer<Pipeline> consumer) {
-    if (!enabled) {
+    if (!enabled || jedisPool == null) {
       LOGGER.error("Redis is disabled.");
       return;
     }
@@ -95,25 +96,43 @@ public final class StandaloneRedis implements Redis {
     Preconditions.checkNotNull(consumer);
     try (Jedis resource = jedisPool.getResource()) {
       Pipeline pipelined = resource.pipelined();
-      Databases.execute(pipelined, consumer);
+      Util.execute(pipelined, consumer);
       pipelined.sync();
     }
   }
 
   @Override public <T> Optional<T> find(Function<Jedis, T> function) {
-    if (!enabled) {
+    if (!enabled || jedisPool == null) {
       LOGGER.error("Redis is disabled.");
       return Optional.empty();
     }
 
     Preconditions.checkNotNull(function);
     try (Jedis resource = jedisPool.getResource()) {
-      return Optional.ofNullable(Databases.map(resource, function));
+      return Optional.ofNullable(Util.transform(resource, function));
     }
   }
 
   @Override
-  public <T> Optional<Response<T>> multi(Function<Transaction, T> function, String... watchs) {
-    return Optional.empty();
+  public <R> Optional<Response<R>> multi(Function<Transaction, Response<R>> function,
+      String... watchKeys) {
+    if (!enabled || jedisPool == null) {
+      LOGGER.error("Redis is disabled.");
+      return Optional.empty();
+    }
+
+    Preconditions.checkNotNull(function);
+    boolean isWatch = watchKeys != null && watchKeys.length > 0;
+    try (Jedis resource = jedisPool.getResource()) {
+      if (isWatch) {
+        // 提交事务时，自动取消观察
+        resource.watch(watchKeys);
+      }
+      Transaction multi = resource.multi();
+      Response<R> response = function.apply(multi);
+      // 必须在返回之前执行事务
+      multi.exec();
+      return Optional.ofNullable(response);
+    }
   }
 }

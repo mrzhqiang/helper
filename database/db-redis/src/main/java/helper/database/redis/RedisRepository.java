@@ -2,6 +2,7 @@ package helper.database.redis;
 
 import helper.database.Paging;
 import helper.database.Repository;
+import helper.database.internal.Util;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.Tuple;
@@ -23,6 +26,8 @@ import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
  * @author mrzhqiang
  */
 public abstract class RedisRepository<E extends RedisEntity> implements Repository<E> {
+  private static final Logger LOGGER = LoggerFactory.getLogger("redis");
+
   private static final int DEFAULT_SCAN_PARAM_COUNT = 2000;
 
   /**
@@ -59,6 +64,12 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
    */
   public static final String KEY_NEXT_ID = "nextId";
 
+  private Class<E> entityClass;
+
+  protected RedisRepository(Class<E> entityClass) {
+    this.entityClass = entityClass;
+  }
+
   /**
    * Redis 客户端。
    * <p>
@@ -80,7 +91,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
    * <p>
    * 如果主键不存在，则生成全新的主键，以备 save 方法插入数据。
    *
-   * @param primaryKey 主键。通常是字符串，这里为了兼容 Repository 接口而设计为 Object。
+   * @param primaryKey 主键。通常是字符串，这里为了兼容 Repository 接口而设计为 Object。非 Null。
    * @return 字符串。Redis 的 Key 值。
    */
   protected String key(Object primaryKey) {
@@ -90,11 +101,13 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   /**
    * 将主键和内容转换为实体。
    *
-   * @param primaryKey 主键。
    * @param contentValue 内容。
    * @return 实体对象。
    */
-  abstract protected E transform(Object primaryKey, Map<String, String> contentValue);
+  protected E transform(Map<String, String> contentValue) {
+    return Util.create(
+        () -> RedisEntity.GSON.fromJson(RedisEntity.GSON.toJson(contentValue), entityClass));
+  }
 
   /**
    * 将条件子句和页面大小转换为扫描参数。
@@ -119,15 +132,22 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   @Override public void save(E entity) {
-    if (entity.primaryKey() == null) {
-      entity.setId(redis().find(jedis -> jedis.incr(key(KEY_NEXT_ID))).orElse(null));
+    Object primaryKey = entity.primaryKey();
+    if (primaryKey == null) {
+      primaryKey = redis().find(jedis -> jedis.incr(key(KEY_NEXT_ID))).orElse(null);
+      entity.setId(primaryKey);
       entity.created = new Date();
     }
     entity.updated = new Date();
-    redis().pipelined(pipeline -> {
-      pipeline.hmset(key(entity.primaryKey()), entity.contentValue());
-      pipeline.zadd(key(KEY_ALL), entity.updated.getTime(), String.valueOf(entity.primaryKey()));
-    });
+    // 需要监视的键，以防止期间有其他改动
+    String key = key(primaryKey);
+    redis().multi(transaction -> {
+      transaction.hmset(key, entity.contentValue());
+      long score = entity.updated.getTime();
+      String member = String.valueOf(entity.primaryKey());
+      return transaction.zadd(key(KEY_ALL), score, member);
+    }, key).ifPresent(response ->
+        LOGGER.info("Save entity {} status {}", entity, response.get() > 0));
   }
 
   @Override public void delete(Object... primaryKeys) {
@@ -141,7 +161,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
 
   @Override public Optional<E> get(Object... primaryKeys) {
     String primaryKey = String.valueOf(primaryKeys[0]);
-    return redis().find(jedis -> transform(primaryKey, jedis.hgetAll(key(primaryKey))));
+    return redis().find(jedis -> transform(jedis.hgetAll(key(primaryKey))));
   }
 
   @Override public Paging<E> page(int index, int size, @Nullable Map<String, Object> clause) {
@@ -157,7 +177,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
       resources = redis().find(jedis ->
           jedis.zrevrange(key, start, end)
               .stream()
-              .map(s -> transform(s, jedis.hgetAll(key(s))))
+              .map(s -> transform(jedis.hgetAll(key(s))))
               .collect(Collectors.toList()))
           .orElse(Collections.emptyList());
     } else {
@@ -171,7 +191,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
         return scanResult.getResult()
             .stream()
             .map(Tuple::getElement)
-            .map(s -> transform(s, jedis.hgetAll(key(s))))
+            .map(s -> transform(jedis.hgetAll(key(s))))
             .collect(Collectors.toList());
       }).orElse(Collections.emptyList());
     }
@@ -179,12 +199,11 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   @Override public List<E> list(@Nullable Map<String, Object> clause) {
-    String key = key(KEY_ALL);
     return redis().find(jedis ->
-        jedis.zscan(key, SCAN_POINTER_START, ofParams(clause, 10)).getResult()
+        jedis.zscan(key(KEY_ALL), SCAN_POINTER_START, ofParams(clause, 10)).getResult()
             .stream()
             .map(Tuple::getElement)
-            .map(s -> transform(s, jedis.hgetAll(key(s))))
+            .map(s -> transform(jedis.hgetAll(key(s))))
             .collect(Collectors.toList()))
         .orElse(Collections.emptyList());
   }
