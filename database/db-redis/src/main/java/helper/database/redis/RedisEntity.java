@@ -2,15 +2,9 @@ package helper.database.redis;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import helper.database.Entity;
-import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -21,52 +15,9 @@ import java.util.Objects;
  * @author mrzhqiang
  */
 public abstract class RedisEntity implements Entity {
-  protected static final Gson GSON = new GsonBuilder()
-      .setDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-      .setPrettyPrinting()
-      .create();
-  private static final Type MAP_TYPE = new TypeToken<HashMap<String, String>>() {
-  }.getType();
-
   private String id;
-  Date created;
-  Date updated;
-
-  protected void setId(Object id) {
-    Preconditions.checkNotNull(id);
-    this.id = String.valueOf(id);
-  }
-
-  /**
-   * 获得主键。
-   * <p>
-   * 如果实体是由系统创建的，那么主键不存在，则返回 Null 值。
-   *
-   * @return 主键。不存在数据库中，则为 Null。
-   */
-  @Override
-  public Object primaryKey() {
-    return id;
-  }
-
-  @Override public Instant created() {
-    return created.toInstant();
-  }
-
-  @Override public Instant modified() {
-    return updated.toInstant();
-  }
-
-  /**
-   * 获得内容。
-   * <p>
-   * 通过 Json 序列化对象为字符串，再解析为 Map 类型。
-   *
-   * @return 内容。
-   */
-  Map<String, String> contentValue() {
-    return GSON.fromJson(GSON.toJson(this), MAP_TYPE);
-  }
+  private Date created;
+  private Date modified;
 
   /**
    * toString 的辅助方法。
@@ -77,11 +28,49 @@ public abstract class RedisEntity implements Entity {
     return MoreObjects.toStringHelper(this)
         .add("id", id)
         .add("created", created)
-        .add("updated", updated);
+        .add("modified", modified);
+  }
+
+  @Override
+  public Object primaryKey() {
+    return id;
+  }
+
+  @Override public void setPrimaryKey(Object primaryKey) {
+    Preconditions.checkNotNull(primaryKey);
+    this.id = String.valueOf(primaryKey);
+  }
+
+  @Override public Instant created() {
+    return created.toInstant();
+  }
+
+  @Override public void setCreated(Date created) {
+    Preconditions.checkNotNull(created);
+    this.created = created;
+  }
+
+  @Override public void setCreated(Instant created) {
+    Preconditions.checkNotNull(created);
+    this.created = Date.from(created);
+  }
+
+  @Override public Instant modified() {
+    return modified.toInstant();
+  }
+
+  @Override public void setModified(Date modified) {
+    Preconditions.checkNotNull(modified);
+    this.modified = modified;
+  }
+
+  @Override public void setModified(Instant modified) {
+    Preconditions.checkNotNull(modified);
+    this.modified = Date.from(modified);
   }
 
   @Override public int hashCode() {
-    return Objects.hash(id, created, updated);
+    return Objects.hash(id, created, modified);
   }
 
   @Override public boolean equals(Object obj) {
@@ -96,6 +85,6 @@ public abstract class RedisEntity implements Entity {
     RedisEntity other = ((RedisEntity) obj);
     return Objects.equals(this.id, other.id)
         && Objects.equals(this.created, other.created)
-        && Objects.equals(this.updated, other.updated);
+        && Objects.equals(this.modified, other.modified);
   }
 }

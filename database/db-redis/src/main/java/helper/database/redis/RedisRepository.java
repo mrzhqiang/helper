@@ -1,10 +1,16 @@
 package helper.database.redis;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import helper.database.Entity;
 import helper.database.Paging;
 import helper.database.Repository;
 import helper.database.internal.Util;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,10 +31,16 @@ import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
  *
  * @author mrzhqiang
  */
-public abstract class RedisRepository<E extends RedisEntity> implements Repository<E> {
+public abstract class RedisRepository<E extends Entity> implements Repository<E> {
   private static final Logger LOGGER = LoggerFactory.getLogger("redis");
 
   private static final int DEFAULT_SCAN_PARAM_COUNT = 2000;
+  private static final Gson GSON = new GsonBuilder()
+      .setDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+      .setPrettyPrinting()
+      .create();
+  private static final Type TYPE_HASH_MAP = new TypeToken<HashMap<String, String>>() {
+  }.getType();
 
   /**
    * 条件子句匹配键值。
@@ -64,8 +76,13 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
    */
   public static final String KEY_NEXT_ID = "nextId";
 
-  private Class<E> entityClass;
+  private final Class<E> entityClass;
 
+  /**
+   * 由实体类型构造的 Redis 仓库。
+   *
+   * @param entityClass 实体类型。
+   */
   protected RedisRepository(Class<E> entityClass) {
     this.entityClass = entityClass;
   }
@@ -99,23 +116,19 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   /**
-   * 将主键和内容转换为实体。
+   * 将 Redis 中的哈希表内容转换为实体。
    *
-   * @param contentValue 内容。
+   * @param contentValue 哈希表内容。
    * @return 实体对象。
    */
   protected E transform(Map<String, String> contentValue) {
-    return Util.create(
-        () -> RedisEntity.GSON.fromJson(RedisEntity.GSON.toJson(contentValue), entityClass));
+    return Util.create(() -> GSON.fromJson(GSON.toJson(contentValue), entityClass));
   }
 
-  /**
-   * 将条件子句和页面大小转换为扫描参数。
-   *
-   * @param clause 条件子句。
-   * @param size 页面大小。
-   * @return 扫描参数。
-   */
+  private Map<String, String> contentValue(E entity) {
+    return Util.create(() -> GSON.fromJson(GSON.toJson(entity), TYPE_HASH_MAP));
+  }
+
   private ScanParams ofParams(@Nullable Map<String, Object> clause, int size) {
     ScanParams params = new ScanParams();
     if (clause != null) {
@@ -135,14 +148,14 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
     Object primaryKey = entity.primaryKey();
     if (primaryKey == null) {
       primaryKey = redis().find(jedis -> jedis.incr(key(KEY_NEXT_ID))).orElse(null);
-      entity.setId(primaryKey);
-      entity.created = new Date();
+      entity.setPrimaryKey(primaryKey);
+      entity.setCreated(new Date());
     }
     // 需要监视的键，以防止期间有其他改动
-    String key = key(primaryKey);
+    String key = key(entity.primaryKey());
     redis().multi(transaction -> {
-      entity.updated = new Date();
-      transaction.hmset(key, entity.contentValue());
+      entity.setModified(new Date());
+      transaction.hmset(key, contentValue(entity));
       long score = entity.modified().toEpochMilli();
       String member = String.valueOf(entity.primaryKey());
       return transaction.zadd(key(KEY_ALL), score, member);

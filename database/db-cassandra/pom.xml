@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.github.mrzhqiang.helper.database</groupId>
+    <artifactId>database-parent</artifactId>
+    <version>2018.1.0</version>
+  </parent>
+
+  <artifactId>db-cassandra</artifactId>
+  <name>Database: Cassandra</name>
+  <url>https://github.com/mrzhqiang/helper</url>
+
+
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.mrzhqiang.helper.database</groupId>
+      <artifactId>api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.typesafe/config -->
+    <dependency>
+      <groupId>com.typesafe</groupId>
+      <artifactId>config</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
+    <dependency>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-core</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-mapping -->
+    <dependency>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-mapping</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-extras -->
+    <dependency>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-extras</artifactId>
+    </dependency>
+  </dependencies>
+</project>

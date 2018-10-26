@@ -18,6 +18,7 @@
   <modules>
     <module>api</module>
     <module>db-redis</module>
+    <module>db-cassandra</module>
   </modules>
 
   <build>
