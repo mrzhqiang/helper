@@ -21,7 +21,7 @@ import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
 /**
  * 基于 Redis 的仓库。
  * <p>
- * Redis 作为数据库也是可行的。
+ * Redis 作为持久化数据库也是可行的。
  *
  * @author mrzhqiang
  */
@@ -138,12 +138,12 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
       entity.setId(primaryKey);
       entity.created = new Date();
     }
-    entity.updated = new Date();
     // 需要监视的键，以防止期间有其他改动
     String key = key(primaryKey);
     redis().multi(transaction -> {
+      entity.updated = new Date();
       transaction.hmset(key, entity.contentValue());
-      long score = entity.updated.getTime();
+      long score = entity.modified().toEpochMilli();
       String member = String.valueOf(entity.primaryKey());
       return transaction.zadd(key(KEY_ALL), score, member);
     }, key).ifPresent(response ->
@@ -183,7 +183,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
     } else {
       ScanParams scanParams = ofParams(clause, maxRows);
       resources = redis().find(jedis -> {
-        // 注意：这里扫描到的是从小到大的序列，如果不符合期望，则 clause 应该传递 Null 值。
+        // 注意：这里扫描到的是从小到大的序列，如果不符合期望，则 clause 应该传递 Null 值
         ScanResult<Tuple> scanResult = jedis.zscan(key, SCAN_POINTER_START, scanParams);
         for (int i = 1; i < index; i++) {
           scanResult = jedis.zscan(key, scanResult.getStringCursor(), scanParams);
@@ -199,6 +199,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   @Override public List<E> list(@Nullable Map<String, Object> clause) {
+    // 只列出前 10 个实体，不保证顺序
     return redis().find(jedis ->
         jedis.zscan(key(KEY_ALL), SCAN_POINTER_START, ofParams(clause, 10)).getResult()
             .stream()

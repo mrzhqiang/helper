@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author mrzhqiang
  */
 public abstract class RedisEntity implements Entity {
-  public static final Gson GSON = new GsonBuilder()
+  protected static final Gson GSON = new GsonBuilder()
       .setDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
       .setPrettyPrinting()
       .create();
@@ -32,7 +32,7 @@ public abstract class RedisEntity implements Entity {
   Date created;
   Date updated;
 
-  public void setId(Object id) {
+  protected void setId(Object id) {
     Preconditions.checkNotNull(id);
     this.id = String.valueOf(id);
   }
