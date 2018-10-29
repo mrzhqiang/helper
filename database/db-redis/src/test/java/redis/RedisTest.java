@@ -1,4 +1,4 @@
-package helper.database.redis;
+package redis;
 
 import com.google.inject.Guice;
 import helper.database.redis.Redis;

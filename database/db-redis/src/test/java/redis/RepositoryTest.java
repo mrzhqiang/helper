@@ -1,10 +1,11 @@
-package helper.database.redis.entity;
+package redis;
 
 import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import helper.database.DatabaseException;
+import helper.database.Paging;
 import helper.database.redis.RedisEntity;
 import helper.database.redis.Redis;
 import helper.database.redis.RedisRepository;
@@ -42,23 +43,40 @@ public final class RepositoryTest {
     entity.name = "测试实体";
     repository.save(entity);
 
-    Optional<TestEntity> optionalEntity = repository.get(entity.primaryKey());
+    Optional<TestEntity> optionalEntity = repository.get(entity.id);
     assertTrue(optionalEntity.isPresent());
     assertEquals(entity, optionalEntity.get());
 
     List<TestEntity> search = repository.search(0, System.currentTimeMillis());
     search.forEach(testEntity -> {
       LoggerFactory.getLogger("redis").info("delete：" + testEntity);
-      repository.delete(testEntity.primaryKey());
+      repository.delete(testEntity.id);
     });
   }
 
   @Test
   public void testDatabaseException() {
     try {
-      repository.delete(null);
+      repository.delete((Object) null);
     } catch (DatabaseException e) {
       LoggerFactory.getLogger("database").info("error successful!", e);
+    }
+  }
+
+  @Test
+  public void testPaging() {
+    for (int i = 0; i < 100; i++) {
+      TestEntity entity = new TestEntity();
+      entity.name = "测试实体" + i;
+      repository.save(entity);
+    }
+
+    Paging<TestEntity> page = repository.list(2, 20, null);
+    System.out.println(page);
+
+    for (int i = 0; i < 100; i++) {
+      repository.search(0, System.currentTimeMillis())
+          .forEach(testEntity -> repository.delete(testEntity.id));
     }
   }
 
@@ -110,7 +128,7 @@ public final class RepositoryTest {
       return redis;
     }
 
-    @Override protected String keyPrefix() {
+    @Override protected String keyspace() {
       return "helper:db-redis:test:";
     }
 

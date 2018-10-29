@@ -1,9 +1,6 @@
 package helper.database.redis;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
-import helper.database.Entity;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,10 +11,10 @@ import java.util.Objects;
  *
  * @author mrzhqiang
  */
-public abstract class RedisEntity implements Entity {
-  private String id;
-  private Date created;
-  private Date modified;
+public abstract class RedisEntity {
+  public String id;
+  public Date created;
+  public Date modified;
 
   /**
    * toString 的辅助方法。
@@ -29,44 +26,6 @@ public abstract class RedisEntity implements Entity {
         .add("id", id)
         .add("created", created)
         .add("modified", modified);
-  }
-
-  @Override
-  public Object primaryKey() {
-    return id;
-  }
-
-  @Override public void setPrimaryKey(Object primaryKey) {
-    Preconditions.checkNotNull(primaryKey);
-    this.id = String.valueOf(primaryKey);
-  }
-
-  @Override public Instant created() {
-    return created.toInstant();
-  }
-
-  @Override public void setCreated(Date created) {
-    Preconditions.checkNotNull(created);
-    this.created = created;
-  }
-
-  @Override public void setCreated(Instant created) {
-    Preconditions.checkNotNull(created);
-    this.created = Date.from(created);
-  }
-
-  @Override public Instant modified() {
-    return modified.toInstant();
-  }
-
-  @Override public void setModified(Date modified) {
-    Preconditions.checkNotNull(modified);
-    this.modified = modified;
-  }
-
-  @Override public void setModified(Instant modified) {
-    Preconditions.checkNotNull(modified);
-    this.modified = Date.from(modified);
   }
 
   @Override public int hashCode() {

@@ -1,12 +1,13 @@
 package helper.database.cassandra;
 
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.schemabuilder.Create;
+import com.datastax.driver.core.schemabuilder.SchemaBuilder;
 import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.annotations.Column;
 import com.google.common.base.MoreObjects;
-import helper.database.Entity;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -16,17 +17,44 @@ import java.util.Objects;
  *
  * @author mrzhqiang
  */
-public abstract class CassandraEntity implements Entity {
-  public static final String COL_COMMON_CREATED = "created";
-  public static final String COL_COMMON_MODIFIED = "modified";
-  public static final String COL_COMMON_DESCRIPTION = "description";
+public abstract class CassandraEntity {
+  protected static final String COL_COMMON_CREATED = "created";
+  protected static final String COL_COMMON_MODIFIED = "modified";
+  protected static final String COL_COMMON_DESCRIPTION = "description";
 
   @Column(name = COL_COMMON_CREATED, codec = InstantCodec.class)
-  public Instant created;
+  public Instant created = Instant.now();
   @Column(name = COL_COMMON_MODIFIED, codec = InstantCodec.class)
-  public Instant modified;
+  public Instant modified = Instant.now();
   @Column(name = COL_COMMON_DESCRIPTION)
   public String description;
+
+  /**
+   * 返回秘钥空间名字。
+   *
+   * @return 秘钥空间名字。
+   */
+  abstract public String keyspaceName();
+
+  /**
+   * 返回表名。
+   *
+   * @return 表名。
+   */
+  abstract public String tableName();
+
+  /**
+   * 返回创建语句，用来检查表是否已创建。
+   *
+   * @return CQL 语句类。
+   */
+  public Create createCQL() {
+    return SchemaBuilder.createTable(keyspaceName(), tableName())
+        .ifNotExists()
+        .addColumn(COL_COMMON_CREATED, DataType.timestamp())
+        .addColumn(COL_COMMON_MODIFIED, DataType.timestamp())
+        .addColumn(COL_COMMON_DESCRIPTION, DataType.text());
+  }
 
   /**
    * toString 的辅助方法。
@@ -38,46 +66,6 @@ public abstract class CassandraEntity implements Entity {
         .add("created", created)
         .add("modified", modified)
         .add("description", description);
-  }
-
-  @Override public Object primaryKey() {
-    throw new AssertionError("No primary key");
-  }
-
-  @Override public void setPrimaryKey(Object primaryKey) {
-    throw new AssertionError("No primary key");
-  }
-
-  @Override public Instant created() {
-    return created;
-  }
-
-  @Override public void setCreated(Date created) {
-    this.created = created.toInstant();
-  }
-
-  @Override public void setCreated(Instant created) {
-    this.created = created;
-  }
-
-  @Override public Instant modified() {
-    return modified;
-  }
-
-  @Override public void setModified(Date modified) {
-    this.modified = modified.toInstant();
-  }
-
-  @Override public void setModified(Instant modified) {
-    this.modified = modified;
-  }
-
-  @Override public String description() {
-    return description;
-  }
-
-  @Override public void setDescription(String description) {
-    this.description = description;
   }
 
   @Override public int hashCode() {

@@ -12,8 +12,10 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import helper.database.cassandra.Cassandra;
 import helper.database.internal.Util;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +36,9 @@ public final class StandaloneCassandra implements Cassandra {
   private static final String ENABLED = "enabled";
   private static final String HOST = "host";
   private static final String PORT = "port";
-  private static final String MAX_SECONDS = "maxSeconds";
+  private static final String MAX_SECONDS = "max-seconds";
 
-  private static final String DEFAULT_HOST = "localhost";
-  private static final String CLUSTER_NAME = "cluster_name";
-  private static final String RELEASE_VERSION = "release_version";
+  private static final String LOCALHOST = "localhost";
 
   private boolean enabled = false;
   private Cluster cluster;
@@ -50,17 +50,17 @@ public final class StandaloneCassandra implements Cassandra {
       return;
     }
 
-    Config rootConfig = config.getConfig(ROOT_PATH);
-    enabled = rootConfig.hasPath(ENABLED) && rootConfig.getBoolean(ENABLED);
+    Config root = config.getConfig(ROOT_PATH);
+    enabled = root.hasPath(ENABLED) && root.getBoolean(ENABLED);
     if (!enabled) {
-      LOGGER.info("you want use Cassandra but it not be enabled.");
+      LOGGER.error("you want use Cassandra but it not be enabled.");
       return;
     }
 
-    String host = rootConfig.hasPath(HOST) ? rootConfig.getString(HOST) : DEFAULT_HOST;
-    int port = rootConfig.hasPath(PORT) ? rootConfig.getInt(PORT) : DEFAULT_PORT;
-    int maxSeconds = rootConfig.hasPath(MAX_SECONDS) ?
-        rootConfig.getInt(MAX_SECONDS) : DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
+    String host = root.hasPath(HOST) ? root.getString(HOST) : LOCALHOST;
+    int port = root.hasPath(PORT) ? root.getInt(PORT) : DEFAULT_PORT;
+    int maxSeconds = root.hasPath(MAX_SECONDS) ? root.getInt(MAX_SECONDS)
+        : DEFAULT_MAX_SCHEMA_AGREEMENT_WAIT_SECONDS;
 
     cluster = Util.create(() -> Cluster.builder()
         .addContactPoint(host)
@@ -71,16 +71,17 @@ public final class StandaloneCassandra implements Cassandra {
     mappingManager = Util.create(() -> new MappingManager(cluster.newSession()));
     LOGGER.info("Cassandra create successful.");
 
+    Config check = root.getConfig("check");
     execute(session -> {
-      Row row = session.execute(
-          select(CLUSTER_NAME, RELEASE_VERSION)
-              .from("system", "local")
-      ).one();
-      LOGGER.info("Cassandra cluster_name:{} release_version:{}.",
-          row.getString(CLUSTER_NAME),
-          row.getString(RELEASE_VERSION));
+      List<String> columns = check.getStringList("columns");
+      String keyspace = check.getString("keyspace");
+      String table = check.getString("table");
+      Row row = session.execute(select(columns.toArray()).from(keyspace, table)).one();
+      String status = columns.stream()
+          .map(s -> s + ":" + row.getObject(s))
+          .collect(Collectors.toList()).toString();
+      LOGGER.info("Cassandra check:{}", status);
     });
-    LOGGER.info("Cassandra is normal.");
   }
 
   @Override public void execute(Consumer<Session> consumer) {

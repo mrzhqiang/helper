@@ -19,6 +19,8 @@
     <module>api</module>
     <module>db-redis</module>
     <module>db-cassandra</module>
+    <module>db-elasticsearch</module>
+    <module>db-mysql</module>
   </modules>
 
   <build>
