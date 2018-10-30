@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.github.mrzhqiang.helper.sample</groupId>
     <artifactId>sample-parent</artifactId>
-    <version>2018.1.0</version>
+    <version>2018.1.1</version>
   </parent>
 
   <artifactId>datetime</artifactId>
