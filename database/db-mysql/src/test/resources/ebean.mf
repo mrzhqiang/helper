@@ -1,2 +1,3 @@
 entity-packages: mysql
+transactional-packages: mysql
 querybean-packages: mysql
