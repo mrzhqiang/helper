@@ -45,6 +45,7 @@ public final class Util {
    * 创建方法。
    *
    * @param supplier 供应商对象。
+   * @param <T> 目标类型。
    * @return 目标对象，可能为 Null。
    * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
    */
@@ -62,6 +63,7 @@ public final class Util {
    * 执行方法。
    *
    * @param target 目标对象。
+   * @param <T> 目标类型。
    * @param consumer 消费者对象。
    * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
    */
