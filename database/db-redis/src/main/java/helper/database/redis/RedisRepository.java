@@ -1,6 +1,7 @@
 package helper.database.redis;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -123,10 +124,18 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
    * @param contentValue 哈希表内容。
    * @return 实体对象。
    */
-  protected E transform(Map<String, String> contentValue) {
+  protected @Nullable E transform(Map<String, String> contentValue) {
     Preconditions.checkNotNull(contentValue);
-
-    return Util.create(() -> GSON.fromJson(GSON.toJson(contentValue), entityClass));
+    if (contentValue.isEmpty()) {
+      return null;
+    }
+    return Util.create(() -> {
+      E entity = GSON.fromJson(GSON.toJson(contentValue), entityClass);
+      if (Strings.isNullOrEmpty(entity.id)) {
+        return null;
+      }
+      return entity;
+    });
   }
 
   private Map<String, String> contentValue(E entity) {
@@ -188,8 +197,11 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
     Preconditions.checkArgument(primaryKeys.length > 0);
 
     LOGGER.debug("Get primary key: {}", Arrays.toString(primaryKeys));
-    String primaryKey = String.valueOf(primaryKeys[0]);
-    return redis().find(jedis -> transform(jedis.hgetAll(key(primaryKey))));
+    if (primaryKeys[0] != null) {
+      String primaryKey = String.valueOf(primaryKeys[0]);
+      return redis().find(jedis -> transform(jedis.hgetAll(key(primaryKey))));
+    }
+    return Optional.empty();
   }
 
   @Override public Paging<E> list(int index, int size, @Nullable Map<String, Object> clause) {
