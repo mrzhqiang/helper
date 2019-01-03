@@ -182,7 +182,7 @@ public abstract class CassandraRepository<E extends CassandraEntity> implements 
     int maxRows = Paging.computeMaxRows(size);
     return cassandra().mapper(entityClass)
         .map(mapper -> countAll(mapper, ofMap(clause)))
-        .filter(total -> total > 0 && firstRow < total)
+        .filter(total -> total > 0 && firstRow <= total)
         .map(total -> {
           int count = Paging.computePageCount(total, maxRows);
           List<E> resources = cassandra().mapper(entityClass)
