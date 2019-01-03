@@ -16,7 +16,7 @@ public interface Repository<E> {
 
   /**
    * 保存实体。
-   *
+   * todo 拆分为 insert 和 update 方法，但保留当前方法，被用于能接受的 insert 操作
    * @param entity 实体。
    */
   void save(E entity);
