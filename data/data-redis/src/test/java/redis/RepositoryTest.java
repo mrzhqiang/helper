@@ -4,12 +4,12 @@ import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import helper.database.DatabaseException;
-import helper.database.Paging;
-import helper.database.redis.RedisEntity;
-import helper.database.redis.Redis;
-import helper.database.redis.RedisRepository;
-import helper.database.Repository;
+import helper.data.DataException;
+import helper.data.Paging;
+import helper.data.redis.RedisEntity;
+import helper.data.redis.Redis;
+import helper.data.redis.RedisRepository;
+import helper.data.Repository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -43,14 +43,14 @@ public final class RepositoryTest {
     entity.name = "测试实体";
     repository.save(entity);
 
-    Optional<TestEntity> optionalEntity = repository.get(entity.id);
+    Optional<TestEntity> optionalEntity = repository.get(entity.getId());
     assertTrue(optionalEntity.isPresent());
     assertEquals(entity, optionalEntity.get());
 
     List<TestEntity> search = repository.search(0, System.currentTimeMillis());
     search.forEach(testEntity -> {
       LoggerFactory.getLogger("redis").info("delete：" + testEntity);
-      repository.delete(testEntity.id);
+      repository.delete(testEntity.getId());
     });
   }
 
@@ -58,7 +58,7 @@ public final class RepositoryTest {
   public void testDatabaseException() {
     try {
       repository.delete((Object) null);
-    } catch (DatabaseException e) {
+    } catch (DataException e) {
       LoggerFactory.getLogger("database").info("error successful!", e);
     }
   }
@@ -76,7 +76,7 @@ public final class RepositoryTest {
 
     for (int i = 0; i < 100; i++) {
       repository.search(0, System.currentTimeMillis())
-          .forEach(testEntity -> repository.delete(testEntity.id));
+          .forEach(testEntity -> repository.delete(testEntity.getId()));
     }
   }
 

@@ -1,13 +1,13 @@
-package helper.database.redis;
+package helper.data.redis;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import helper.database.Paging;
-import helper.database.Repository;
-import helper.database.internal.Util;
+import helper.data.Paging;
+import helper.data.Repository;
+import helper.data.Util;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,8 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.Tuple;
@@ -33,8 +32,8 @@ import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
  *
  * @author mrzhqiang
  */
+@Slf4j
 public abstract class RedisRepository<E extends RedisEntity> implements Repository<E> {
-  private static final Logger LOGGER = LoggerFactory.getLogger("redis");
 
   /**
    * 条件子句匹配键值。
@@ -161,11 +160,11 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   @Override public void save(E entity) {
     Preconditions.checkNotNull(entity);
 
-    LOGGER.debug("Save entity: {}", entity);
+    log.debug("Save entity: {}", entity);
     Object id = entity.id;
     if (id == null) {
       id = redis().find(jedis -> jedis.incr(key(KEY_NEXT_ID))).orElse(null);
-      LOGGER.debug("Create entity id: {}", id);
+      log.debug("Create entity id: {}", id);
       entity.id = String.valueOf(id);
       entity.created = new Date();
     }
@@ -176,14 +175,14 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
       transaction.hmset(key, contentValue(entity));
       return transaction.zadd(key(KEY_ALL), entity.modified.getTime(), entity.id);
     }, key).ifPresent(
-        response -> LOGGER.debug("Save entity {} status {}", entity, response.get() > 0));
+        response -> log.debug("Save entity {} status {}", entity, response.get() > 0));
   }
 
   @Override public void delete(Object... primaryKeys) {
     Preconditions.checkNotNull(primaryKeys);
     Preconditions.checkArgument(primaryKeys.length > 0);
 
-    LOGGER.debug("Delete primary key: {}", Arrays.toString(primaryKeys));
+    log.debug("Delete primary key: {}", Arrays.toString(primaryKeys));
     redis().pipelined(pipeline -> {
       // 通常 Key 只取第一个，除非是 CQL 数据库，由于分区键的存在，必须设定主键数组
       String primaryKey = String.valueOf(primaryKeys[0]);
@@ -196,7 +195,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
     Preconditions.checkNotNull(primaryKeys);
     Preconditions.checkArgument(primaryKeys.length > 0);
 
-    LOGGER.debug("Get primary key: {}", Arrays.toString(primaryKeys));
+    log.debug("Get primary key: {}", Arrays.toString(primaryKeys));
     if (primaryKeys[0] != null) {
       String primaryKey = String.valueOf(primaryKeys[0]);
       return redis().find(jedis -> transform(jedis.hgetAll(key(primaryKey))));
@@ -205,7 +204,7 @@ public abstract class RedisRepository<E extends RedisEntity> implements Reposito
   }
 
   @Override public Paging<E> list(int index, int size, @Nullable Map<String, Object> clause) {
-    LOGGER.debug("List index: {} size: {} clause: {}", index, size, clause);
+    log.debug("List index: {} size: {} clause: {}", index, size, clause);
     String key = key(KEY_ALL);
     long total = redis().find(jedis -> jedis.zcard(key)).orElse(-1L);
     if (total <= 0) {

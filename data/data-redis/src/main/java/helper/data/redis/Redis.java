@@ -1,7 +1,7 @@
-package helper.database.redis;
+package helper.data.redis;
 
 import com.google.inject.ImplementedBy;
-import helper.database.redis.internal.StandaloneRedis;
+import helper.data.redis.internal.StandaloneRedis;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
