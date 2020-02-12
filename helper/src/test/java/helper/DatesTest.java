@@ -10,7 +10,8 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import static helper.DateTimeHelper.*;
+import static helper.Dates.display;
+import static helper.Dates.untilNow;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author mrzhqiang
  */
-public final class DateTimeHelperTest {
+public final class DatesTest {
   private Instant instant;
 
   private Instant nowInstant;
@@ -55,14 +56,14 @@ public final class DateTimeHelperTest {
   @Test
   public void format() {
     try {
-      String format = DateTimeHelper.format(null);
+      String format = Dates.format(null);
       // 如果没有抛出空指针异常，那么下面这个检查会抛出 AssertionError 异常
       assertNotNull(format);
     } catch (NullPointerException ignore) {
     }
     String expected = DateTimeFormatter.ofPattern(local.getString("datetime"))
         .format(instant.atZone(ZoneId.systemDefault()));
-    String actual = DateTimeHelper.format(Date.from(instant));
+    String actual = Dates.format(Date.from(instant));
     assertEquals(expected, actual);
   }
 
@@ -70,7 +71,7 @@ public final class DateTimeHelperTest {
   public void formatDate() {
     String expected = DateTimeFormatter.ofPattern(local.getString("date"))
         .format(instant.atZone(ZoneId.systemDefault()));
-    String format = DateTimeHelper.formatDate(Date.from(instant));
+    String format = Dates.formatDate(Date.from(instant));
     assertEquals(expected, format);
   }
 
@@ -78,19 +79,19 @@ public final class DateTimeHelperTest {
   public void formatTime() {
     String expected = DateTimeFormatter.ofPattern(local.getString("time"))
         .format(instant.atZone(ZoneId.systemDefault()));
-    String format = DateTimeHelper.formatTime(Date.from(instant));
+    String format = Dates.formatTime(Date.from(instant));
     assertEquals(expected, format);
   }
 
   @Test
   public void formatHTTP() {
-    String format = DateTimeHelper.formatHTTP(Date.from(instant));
+    String format = Dates.formatHTTP(Date.from(instant));
     assertEquals("Tue, 23 Jun 2009 14:05:30 GMT", format);
   }
 
   @Test
   public void parse() {
-    Date normalDate = DateTimeHelper.parse(
+    Date normalDate = Dates.parse(
         DateTimeFormatter.ofPattern(local.getString("datetime"))
             .format(instant.atZone(ZoneId.systemDefault())));
     // Instant 是一个瞬间时刻，而 DateTimeHelper.parse 方法只解析到秒，所以要进行比较必须截断到秒
@@ -100,7 +101,7 @@ public final class DateTimeHelperTest {
   @Test
   public void parseHTTP() {
     Date date =
-        DateTimeHelper.parseHTTP(RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.systemDefault())));
+        Dates.parseHTTP(RFC_1123_DATE_TIME.format(instant.atZone(ZoneId.systemDefault())));
     assertEquals(Date.from(instant.truncatedTo(SECONDS)), date);
   }
 
@@ -117,20 +118,20 @@ public final class DateTimeHelperTest {
 
   @Test
   public void showTime() {
-    assertEquals(DateTimeHelper.formatTime(Date.from(nowInstant)),
+    assertEquals(Dates.formatTime(Date.from(nowInstant)),
         display(Date.from(nowInstant)));
-    assertEquals(DateTimeHelper.formatTime(Date.from(secondsInstant)),
+    assertEquals(Dates.formatTime(Date.from(secondsInstant)),
         display(Date.from(secondsInstant)));
-    assertEquals(DateTimeHelper.formatTime(Date.from(minutesInstant)),
+    assertEquals(Dates.formatTime(Date.from(minutesInstant)),
         display(Date.from(minutesInstant)));
-    assertEquals(DateTimeHelper.formatTime(Date.from(hoursInstant)),
+    assertEquals(Dates.formatTime(Date.from(hoursInstant)),
         display(Date.from(hoursInstant)));
     String expected = String.format(display.getStringList("prefix").get(0),
-        DateTimeHelper.formatTime(Date.from(dayInstant)));
+        Dates.formatTime(Date.from(dayInstant)));
     assertEquals(expected, display(Date.from(dayInstant)));
-    assertEquals(DateTimeHelper.formatDate(Date.from(monthInstant)),
+    assertEquals(Dates.formatDate(Date.from(monthInstant)),
         display(Date.from(monthInstant)));
-    assertEquals(DateTimeHelper.formatDate(Date.from(yearInstant)),
+    assertEquals(Dates.formatDate(Date.from(yearInstant)),
         display(Date.from(yearInstant)));
   }
 }

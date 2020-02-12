@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 
 /**
- * 名字助手。
+ * 用户名工具。
  * <p>
  * 有时候，检查一个账号或者昵称只能判断是否为 Null or Empty，为了改变这种情况，增加了名字助手类。
  * <p>
@@ -32,10 +32,8 @@ import javax.annotation.RegEx;
  *
  * @author mrzhqiang
  */
-public final class NameHelper {
-  private NameHelper() {
-    throw new AssertionError("No instance.");
-  }
+public enum UserNames {
+  ;
 
   private static final Config CONFIG = ConfigFactory.load().getConfig("helper.name");
 
@@ -110,14 +108,13 @@ public final class NameHelper {
     if (!Strings.isNullOrEmpty(value)) {
       if (CharMatcher.javaLetterOrDigit().matchesAllOf(value)) {
         isValid = true;
-        int length = value.length();
         if (min > 0) {
-          isValid = length >= min;
+          isValid = value.length() >= min;
         }
         if (max > 0) {
           Preconditions.checkArgument(max >= min,
               "max length: %s must be >= min length: %s", max, min);
-          isValid = length <= max;
+          isValid = value.length() <= max;
         }
       }
     }
@@ -161,14 +158,13 @@ public final class NameHelper {
       Preconditions.checkArgument(!Strings.isNullOrEmpty(regex),
           "invalid regex: %s", regex);
       if (Pattern.matches(regex, value)) {
-        int length = value.length();
         if (min > 0) {
-          isValid = length >= min;
+          isValid = value.length() >= min;
         }
         if (max > 0) {
           Preconditions.checkArgument(max >= min,
               "max length: %s must be >= min length: %s", max, min);
-          isValid = length <= max;
+          isValid = value.length() <= max;
         }
       }
     }

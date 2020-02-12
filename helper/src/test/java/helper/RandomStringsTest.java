@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author mrzhqiang
  */
-public final class RandomHelperTest {
+public final class RandomStringsTest {
 
   private Config chinese;
 
@@ -23,77 +23,77 @@ public final class RandomHelperTest {
 
   @Test
   public void usernameOf() {
-    String s = RandomHelper.getString(32);
+    String s = RandomStrings.ofLength(32);
     assertEquals(32, s.length());
     System.out.println(s);
   }
 
   @Test
   public void usernameOf1() {
-    String s = RandomHelper.getString(5, 10);
+    String s = RandomStrings.ofLength(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void chineseOf() {
-    String chinese = RandomHelper.getChinese(5);
+    String chinese = RandomStrings.ofChinese(5);
     assertEquals(5, chinese.length());
     System.out.println(chinese);
   }
 
   @Test
   public void chineseOf1() {
-    String s = RandomHelper.getChinese(5, 10);
+    String s = RandomStrings.ofChinese(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void surname() {
-    String surname = RandomHelper.getSurname();
+    String surname = RandomStrings.ofSurname();
     List<String> strings = chinese.getStringList("surname");
     assertTrue(strings.contains(surname));
   }
 
   @Test
   public void numberOf() {
-    String s = RandomHelper.getNumber(5);
+    String s = RandomStrings.ofNumber(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void numberOf1() {
-    String s = RandomHelper.getNumber(5, 10);
+    String s = RandomStrings.ofNumber(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void lowerCaseOf() {
-    String s = RandomHelper.getLowerCase(5);
+    String s = RandomStrings.ofLowerCase(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void lowerCaseOf1() {
-    String s = RandomHelper.getLowerCase(5, 10);
+    String s = RandomStrings.ofLowerCase(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }
 
   @Test
   public void upperCaseOf() {
-    String s = RandomHelper.getUpperCase(5);
+    String s = RandomStrings.ofUpperCase(5);
     assertEquals(5, s.length());
     System.out.println(s);
   }
 
   @Test
   public void upperCaseOf1() {
-    String s = RandomHelper.getUpperCase(5, 10);
+    String s = RandomStrings.ofUpperCase(5, 10);
     assertTrue(s.length() >= 5 && s.length() < 10);
     System.out.println(s);
   }

@@ -10,42 +10,42 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author mrzhqiang
  */
-public final class NameHelperTest {
+public final class UserNamesTest {
   @Test
   public void firstLetter() {
-    String defaultLetter = NameHelper.firstLetter("");
+    String defaultLetter = UserNames.firstLetter("");
     assertNotNull(defaultLetter);
     assertEquals("m", defaultLetter);
 
-    String mrzhqiang = NameHelper.firstLetter("play-home");
+    String mrzhqiang = UserNames.firstLetter("play-home");
     assertNotNull(mrzhqiang);
     assertEquals("p", mrzhqiang);
   }
 
   @Test
   public void color() {
-    String color = NameHelper.color("mrzhqiang");
+    String color = UserNames.color("mrzhqiang");
     // 0xff3d00
     assertEquals("0xff3d00", color);
   }
 
   @Test
   public void checkName() {
-    assertTrue(NameHelper.checkName("中2"));
+    assertTrue(UserNames.checkName("中2"));
   }
 
   @Test
   public void checkNameAndLength() {
-    assertTrue(NameHelper.checkName("中国No1", 2, 10));
+    assertTrue(UserNames.checkName("中国No1", 2, 10));
   }
 
   @Test
   public void checkChinese() {
-    assertFalse(NameHelper.checkChinese("false"));
+    assertFalse(UserNames.checkChinese("false"));
   }
 
   @Test
   public void checkChineseAndLength() {
-    assertFalse(NameHelper.checkChinese("中华人民共和国", 1, 4));
+    assertFalse(UserNames.checkChinese("中华人民共和国", 1, 4));
   }
 }

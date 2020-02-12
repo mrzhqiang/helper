@@ -17,7 +17,7 @@ import java.util.TimeZone;
 import javax.annotation.Nullable;
 
 /**
- * 日期时间助手。
+ * 日期工具。
  * <p>
  * 这是为了兼容与 {@link Date Date} 相关的逻辑，比如数据库时间戳。
  * <p>
@@ -74,14 +74,12 @@ import javax.annotation.Nullable;
  * <p>
  * 另外：
  * 如果你已抛弃 {@link Date Date}，那么 {@link java.time.format.DateTimeFormatter DateTimeFormatter}
- * 的相关常量解析器将是你最好的助手。
+ * 的相关常量解析器将是你最好的工具。
  *
  * @author mrzhqiang
  */
-public final class DateTimeHelper {
-  private DateTimeHelper() {
-    throw new AssertionError("No instance.");
-  }
+public enum Dates {
+  ;
 
   private static final Config CONFIG = ConfigFactory.load().getConfig("helper.datetime");
 
