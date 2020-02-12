@@ -14,7 +14,7 @@
   <modules>
     <module>helper</module>
     <module>helper-javafx</module>
-    <module>data</module>
+    <module>helper-data</module>
     <module>samples</module>
   </modules>
 
@@ -62,12 +62,6 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${slf4j.version}</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logback.version}</version>
       </dependency>
       <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
       <dependency>
