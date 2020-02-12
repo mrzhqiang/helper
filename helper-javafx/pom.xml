@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>helper-javafx</artifactId>
+  <name>Helper JavaFX</name>
 
   <dependencies>
     <dependency>

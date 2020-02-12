@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>helper</artifactId>
+  <name>Helper JRE</name>
 
   <dependencies>
     <dependency>

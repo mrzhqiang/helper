@@ -1,7 +1,6 @@
-package helper.database.internal;
+package helper.data;
 
 import com.google.common.base.Preconditions;
-import helper.database.DatabaseException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,7 +28,7 @@ public final class Util {
    * @param predicate 断言对象。
    * @param <T> 目标类型。
    * @return true 检测通过；false 检测不通过。
-   * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
+   * @throws DataException 统一化的数据库异常，更容易被捕捉。
    */
   public static <T> boolean check(T target, Predicate<T> predicate) {
     Preconditions.checkNotNull(predicate);
@@ -37,7 +36,7 @@ public final class Util {
       return predicate.test(target);
     } catch (Exception e) {
       LOGGER.error("check error, cause: {}", e.getMessage());
-      throw new DatabaseException("check failed!", e);
+      throw new DataException("check failed!", e);
     }
   }
 
@@ -47,7 +46,7 @@ public final class Util {
    * @param supplier 供应商对象。
    * @param <T> 目标类型。
    * @return 目标对象，可能为 Null。
-   * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
+   * @throws DataException 统一化的数据库异常，更容易被捕捉。
    */
   public static @Nullable <T> T create(Supplier<T> supplier) {
     Preconditions.checkNotNull(supplier);
@@ -55,7 +54,7 @@ public final class Util {
       return supplier.get();
     } catch (Exception e) {
       LOGGER.error("create error, cause: {}", e.getMessage());
-      throw new DatabaseException("create failed!", e);
+      throw new DataException("create failed!", e);
     }
   }
 
@@ -65,7 +64,7 @@ public final class Util {
    * @param target 目标对象。
    * @param <T> 目标类型。
    * @param consumer 消费者对象。
-   * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
+   * @throws DataException 统一化的数据库异常，更容易被捕捉。
    */
   public static <T> void execute(T target, Consumer<T> consumer) {
     Preconditions.checkNotNull(target);
@@ -74,7 +73,7 @@ public final class Util {
       consumer.accept(target);
     } catch (Exception e) {
       LOGGER.error("execute {} error, cause: {}", target, e.getMessage());
-      throw new DatabaseException("execute failed!", e);
+      throw new DataException("execute failed!", e);
     }
   }
 
@@ -86,7 +85,7 @@ public final class Util {
    * @param <I> 输入类型。
    * @param <R> 返回类型。
    * @return 返回对象，可能为 Null。
-   * @throws DatabaseException 统一化的数据库异常，更容易被捕捉。
+   * @throws DataException 统一化的数据库异常，更容易被捕捉。
    */
   public static @Nullable <I, R> R transform(I input, Function<I, R> function) {
     Preconditions.checkNotNull(input);
@@ -95,7 +94,7 @@ public final class Util {
       return function.apply(input);
     } catch (Exception e) {
       LOGGER.error("transform {} error, cause: {}", input, e.getMessage());
-      throw new DatabaseException("transform failed!", e);
+      throw new DataException("transform failed!", e);
     }
   }
 }

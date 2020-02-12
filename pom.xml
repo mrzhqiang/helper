@@ -9,10 +9,12 @@
   <version>2020.1.0</version>
   <packaging>pom</packaging>
 
+  <name>Helper</name>
+
   <modules>
     <module>helper</module>
     <module>helper-javafx</module>
-    <module>database</module>
+    <module>data</module>
     <module>samples</module>
   </modules>
 
@@ -140,6 +142,7 @@
         <groupId>io.ebean.test</groupId>
         <artifactId>ebean-test-config</artifactId>
         <version>${ebean-test-config.version}</version>
+        <scope>test</scope>
       </dependency>
       <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
       <dependency>

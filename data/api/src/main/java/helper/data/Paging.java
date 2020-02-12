@@ -1,10 +1,9 @@
-package helper.database;
+package helper.data;
 
-import com.google.common.base.MoreObjects;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.Nullable;
+import lombok.Data;
 
 /**
  * 分页。
@@ -14,6 +13,7 @@ import javax.annotation.Nullable;
  * @param <R> 资源类型。
  * @author mrzhqiang
  */
+@Data
 public final class Paging<R> {
   /**
    * 根据指定参数生成分页。
@@ -28,8 +28,8 @@ public final class Paging<R> {
   public static <R> Paging<R> of(long total, int index, int count, @Nullable List<R> resources) {
     Paging<R> paging = new Paging<>();
     paging.total = total < 0 ? (resources != null ? resources.size() : 0) : total;
-    paging.index = index < 1 ? 1 : index;
-    paging.count = count < 0 ? 0 : count;
+    paging.index = Math.max(index, 1);
+    paging.count = Math.max(count, 0);
     paging.resources = resources == null ? Collections.emptyList() : resources;
     return paging;
   }
@@ -45,58 +45,6 @@ public final class Paging<R> {
    */
   public static <R> Paging<R> ofEmpty(int index) {
     return of(0, index, 0, null);
-  }
-
-  /**
-   * 总数量。
-   * <p>
-   * 数据库中可查到的统计数量。
-   */
-  public long total;
-  /**
-   * 页面序号。
-   * <p>
-   * 从 1 开始到 count 结束。
-   */
-  public int index;
-  /**
-   * 页面数量。
-   * <p>
-   * 总共划分多少个页面。
-   */
-  public int count;
-  /**
-   * 资源列表。
-   */
-  public List<R> resources;
-
-  @Override public int hashCode() {
-    return Objects.hash(total, index, count, resources);
-  }
-
-  @Override public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-
-    if (!(obj instanceof Paging)) {
-      return false;
-    }
-
-    Paging other = (Paging) obj;
-    return Objects.equals(total, other.total)
-        && Objects.equals(index, other.index)
-        && Objects.equals(count, other.count)
-        && Objects.equals(resources, other.resources);
-  }
-
-  @Override public String toString() {
-    return MoreObjects.toStringHelper(this)
-        .add("total", total)
-        .add("index", index)
-        .add("count", count)
-        .add("resources", resources)
-        .toString();
   }
 
   /**
@@ -134,4 +82,27 @@ public final class Paging<R> {
       return (int) (((total - 1) / maxRows) + 1);
     }
   }
+
+  /**
+   * 总数量。
+   * <p>
+   * 数据库中可查到的统计数量。
+   */
+  private long total;
+  /**
+   * 页面序号。
+   * <p>
+   * 从 1 开始到 count 结束。
+   */
+  private int index;
+  /**
+   * 页面数量。
+   * <p>
+   * 总共划分多少个页面。
+   */
+  private int count;
+  /**
+   * 资源列表。
+   */
+  private List<R> resources;
 }
