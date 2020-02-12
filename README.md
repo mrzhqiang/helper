@@ -9,18 +9,18 @@
 
 
 ## 简介
-- [x] helper 模块：JVM 辅助工具，项目依赖包含 [Guava][1] 库（谷歌开源的辅助工具），[Config][2] 库（加载默认参数常量）。 
+- [x] helper-jre 模块：JVM 辅助工具，项目依赖包含 [Guava][1] 库（谷歌开源的辅助工具），[Config][2] 库（加载默认参数常量）。 
 - [ ] helper-javafx 模块：JavaFX 辅助工具，利用 [RxJavaFx][3] 库实现 MVVM 架构更方便。
-- [x] data 模块：提供数据相关辅助工具，使用 [Guice][5] 依赖注入实例。
-    - [x] data-api 模块：定义基本的数据接口，比如 `Repository`、`Paging` 等。
-    - [x] data-redis 模块：简化 [Jedis][4] 的使用。
-    - [x] data-ebean 模块：简化 [EBean][6] 的使用（主要基于 MySQL 数据库）。
-    - [x] data-cassandra 模块：简化 [Cassandra-driver-core][7] 的使用。
-    - [x] data-elasticsearch 模块：简化 Elastic Search 客户端 [rest][8] 的使用。
+- [x] helper-data 模块：提供数据相关辅助工具，使用 [Guice][5] 依赖注入实例。
+    - [x] helper-data-api 模块：定义基本的数据接口，比如 `Repository`、`Paging` 等。
+    - [x] helper-data-redis 模块：简化 [Jedis][4] 的使用。
+    - [x] helper-data-ebean 模块：简化 [EBean][6] 的使用（主要基于 MySQL 数据库）。
+    - [x] helper-data-cassandra 模块：简化 [Cassandra-driver-core][7] 的使用。
+    - [x] helper-data-elasticsearch 模块：简化 Elastic Search 客户端 [rest][8] 的使用。
 
 ## 使用
 1. 访问 [jitpack.io][9]，添加本仓库的 URL 以获取依赖。
-2. 参考 [samples][10] 模块，获取更详细的使用方法。
+2. 参考 [helper-sample][10] 模块，获取更详细的使用方法。
 
 
 # Licenses
@@ -50,4 +50,4 @@
 [7]:https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core
 [8]:https://mvnrepository.com/artifact/org.elasticsearch.client/rest
 [9]:https://jitpack.io/#mrzhqiang/helper
-[10]:https://github.com/mrzhqiang/helper/tree/master/samples
+[10]:https://github.com/mrzhqiang/helper/tree/master/helper-sample

@@ -6,7 +6,7 @@
 
   <parent>
     <groupId>com.github.mrzhqiang</groupId>
-    <artifactId>helper-data-parent</artifactId>
+    <artifactId>helper-data</artifactId>
     <version>2020.1.0</version>
   </parent>
 
@@ -21,6 +21,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -36,7 +37,6 @@
     <dependency>
       <groupId>org.elasticsearch.client</groupId>
       <artifactId>rest</artifactId>
-      <version>${elasticsearch-client.version}</version>
     </dependency>
   </dependencies>
 </project>

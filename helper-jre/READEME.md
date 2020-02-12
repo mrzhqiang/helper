@@ -1,7 +1,7 @@
-# helper
-[![Release](https://jitpack.io/v/mrzhqiang/helper.svg)](https://jitpack.io/#mrzhqiang/helper)
+# helper-jre
+[![Release](https://jitpack.io/v/mrzhqiang/helper/helper-jre.svg)](https://jitpack.io/#mrzhqiang/helper/helper-jre)
 
-`helper` 是 JVM 辅助工具。
+`helper-jre` 是 JVM 辅助工具。
 
 
 ## 简介
@@ -13,7 +13,7 @@
 - [x] UserNames：账号检测。
 
 ## 使用
-参考单元测试或 [samples][10] 模块。
+参考单元测试或 [sample][10] 模块。
 
 
-[10]:https://github.com/mrzhqiang/helper/tree/master/samples
+[10]:https://github.com/mrzhqiang/helper/tree/master/helper-sample

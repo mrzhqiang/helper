@@ -10,26 +10,17 @@
     <version>2020.1.0</version>
   </parent>
 
-  <artifactId>helper-data-parent</artifactId>
+  <artifactId>helper-data</artifactId>
   <packaging>pom</packaging>
   <name>Helper Data</name>
 
   <modules>
-    <module>api</module>
-    <module>redis</module>
-    <module>ebean</module>
-    <module>cassandra</module>
-    <module>elasticsearch</module>
+    <module>helper-data-api</module>
+    <module>helper-data-redis</module>
+    <module>helper-data-ebean</module>
+    <module>helper-data-cassandra</module>
+    <module>helper-data-elasticsearch</module>
   </modules>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.github.mrzhqiang</groupId>
-      <artifactId>helper</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 
   <build>
     <plugins>
