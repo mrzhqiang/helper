@@ -1,4 +1,4 @@
-package helper.database.mysql;
+package helper.data.mysql;
 
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
@@ -7,6 +7,8 @@ import java.time.Instant;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * EBean 基础模型。
@@ -16,14 +18,16 @@ import javax.persistence.Version;
  * @author mrzhqiang
  */
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 public abstract class EBeanModel extends Model {
   @Id
-  public Long id;
+  protected Long id;
   @Version
-  public Long version;
+  protected Long version;
   @WhenCreated
-  public Instant created;
+  protected Instant created;
   @WhenModified
-  public Instant modified;
+  protected Instant modified;
 }

@@ -1,10 +1,10 @@
-package helper.database.mysql;
+package helper.data.mysql;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import helper.database.Paging;
-import helper.database.Repository;
-import helper.database.internal.Util;
+import helper.data.Paging;
+import helper.data.Repository;
+import helper.data.Util;
 import io.ebean.ExpressionList;
 import io.ebean.Finder;
 import io.ebean.Model;

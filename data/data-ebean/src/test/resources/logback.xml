@@ -47,7 +47,7 @@
   <logger name="io.ebean.cache.COLL" level="TRACE"/>
   <logger name="io.ebean.cache.NATKEY" level="TRACE"/>
 
-  <root level="WARN">
+  <root level="INFO">
     <appender-ref ref="ASYNCFILE"/>
     <appender-ref ref="ASYNCSTDOUT"/>
   </root>
