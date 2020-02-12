@@ -1,6 +1,4 @@
 # helper-jre
-[![Release](https://jitpack.io/v/mrzhqiang/helper/helper-jre.svg)](https://jitpack.io/#mrzhqiang/helper/helper-jre)
-
 `helper-jre` 是 JVM 辅助工具。
 
 
