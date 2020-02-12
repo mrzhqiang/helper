@@ -71,7 +71,7 @@ public final class StandaloneRedis implements Redis {
 
     jedisPool = Util.create(() ->
         new JedisPool(poolConfig, host, port, timeout, password, database));
-    log.info("Redis create successful.");
+    log.info("Jedis drive create successful.");
     Boolean status = find(jedis -> "PONG".equalsIgnoreCase(jedis.ping())).orElse(false);
     log.debug("Redis connect status: {}", status);
   }
