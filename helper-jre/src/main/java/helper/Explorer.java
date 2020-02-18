@@ -12,12 +12,12 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * IO 工具。
+ * 资源管理器。
  *
  * @author mrzhqiang
  */
 @Slf4j
-public enum InputOuts {
+public enum Explorer {
   ;
 
   public static void mkdir(Path path) {
@@ -26,7 +26,7 @@ public enum InputOuts {
       Files.createDirectories(path);
       log.info("创建新目录：{}", path);
     } catch (IOException e) {
-      throw new InputOutException(String.format("创建所有目录 [%s] 失败", path), e);
+      throw new ExplorerException(String.format("创建所有目录 [%s] 失败", path), e);
     }
   }
 
@@ -36,7 +36,7 @@ public enum InputOuts {
       Files.createFile(path);
       log.info("创建新文件：{}", path);
     } catch (IOException e) {
-      throw new InputOutException(String.format("创建失败 [%s]", path), e);
+      throw new ExplorerException(String.format("创建失败 [%s]", path), e);
     }
   }
 
@@ -47,7 +47,7 @@ public enum InputOuts {
       Files.delete(path);
       log.info("已删除：{}", path);
     } catch (IOException e) {
-      throw new InputOutException(String.format("删除 [%s] 失败", path), e);
+      throw new ExplorerException(String.format("删除 [%s] 失败", path), e);
     }
   }
 
@@ -63,7 +63,7 @@ public enum InputOuts {
         }
       });
     } catch (IOException e) {
-      throw new InputOutException(String.format("删除 [%s] 失败", path), e);
+      throw new ExplorerException(String.format("删除 [%s] 失败", path), e);
     }
   }
 
@@ -73,7 +73,7 @@ public enum InputOuts {
     try {
       Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
     } catch (IOException e) {
-      throw new InputOutException(String.format("无法写入到 [%s]", path), e);
+      throw new ExplorerException(String.format("无法写入到 [%s]", path), e);
     }
   }
 
@@ -83,7 +83,7 @@ public enum InputOuts {
     try {
       Files.write(path, content.getBytes(), StandardOpenOption.APPEND);
     } catch (IOException e) {
-      throw new InputOutException(String.format("无法写入到 [%s]", path), e);
+      throw new ExplorerException(String.format("无法写入到 [%s]", path), e);
     }
   }
 
@@ -92,7 +92,7 @@ public enum InputOuts {
     try {
       return Files.readAllLines(path);
     } catch (IOException e) {
-      throw new InputOutException(String.format("无法读取文件内容 [%s]", path), e);
+      throw new ExplorerException(String.format("无法读取文件内容 [%s]", path), e);
     }
   }
 }

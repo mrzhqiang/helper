@@ -42,7 +42,7 @@ public enum Compressor {
       log.warn("ZIP 压缩目标文件 {} 已存在！", destinationPath);
       return;
     }
-    InputOuts.mkdir(destinationPath);
+    Explorer.mkdir(destinationPath);
 
     try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(destination))) {
       compress(sourcePath.toFile(), zos, "");
