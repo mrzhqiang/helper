@@ -45,9 +45,7 @@ public enum Applications {
     } catch (Exception e) {
       Alert alert = Dialogs.error(e);
       alert.setWidth(primaryStage.getWidth());
-      alert.setOnCloseRequest(event -> {
-        Platform.exit();
-      });
+      alert.setOnCloseRequest(event -> Platform.exit());
       alert.show();
       log.error("启动 JavaFX 程序出错！", e);
     }
