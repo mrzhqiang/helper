@@ -23,8 +23,10 @@ public enum Explorer {
   public static void mkdir(Path path) {
     Preconditions.checkNotNull(path, "path == null");
     try {
-      Files.createDirectories(path);
-      log.info("创建新目录：{}", path);
+      if (Files.notExists(path)) {
+        Files.createDirectories(path);
+        log.info("创建新目录：{}", path);
+      }
     } catch (IOException e) {
       throw new ExplorerException(String.format("创建所有目录 [%s] 失败", path), e);
     }
@@ -33,8 +35,10 @@ public enum Explorer {
   public static void create(Path path) {
     Preconditions.checkNotNull(path, "path == null");
     try {
-      Files.createFile(path);
-      log.info("创建新文件：{}", path);
+      if (Files.notExists(path)) {
+        Files.createFile(path);
+        log.info("创建新文件：{}", path);
+      }
     } catch (IOException e) {
       throw new ExplorerException(String.format("创建失败 [%s]", path), e);
     }
@@ -44,7 +48,9 @@ public enum Explorer {
     Preconditions.checkNotNull(path, "path == null");
     try {
       // 目录必须为空，否则将抛出 DirectoryNotEmptyException
-      Files.delete(path);
+      if (Files.exists(path)) {
+        Files.delete(path);
+      }
       log.info("已删除：{}", path);
     } catch (IOException e) {
       throw new ExplorerException(String.format("删除 [%s] 失败", path), e);
