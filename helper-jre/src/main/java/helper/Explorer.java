@@ -61,6 +61,9 @@ public enum Explorer {
   public static void deleteAll(Path path) {
     Preconditions.checkNotNull(path, "path == null");
     try {
+      if (Files.notExists(path)) {
+        return;
+      }
       Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
         @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
           Explorer.delete(file);
