@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,7 +97,11 @@ public enum Explorer {
   public static List<String> lines(Path path) {
     Preconditions.checkNotNull(path, "path == null");
     try {
-      return Files.readAllLines(path);
+      if (Files.exists(path)) {
+        return Files.readAllLines(path);
+      } else {
+        return Collections.emptyList();
+      }
     } catch (IOException e) {
       throw new ExplorerException(String.format("无法读取文件内容 [%s]", path), e);
     }
