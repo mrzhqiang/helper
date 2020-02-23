@@ -62,10 +62,8 @@ public enum Explorer {
     Preconditions.checkNotNull(path, "path == null");
     try {
       Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-        @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-            throws IOException {
-          Files.delete(file);
-          log.info("已删除：{}", file);
+        @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+          Explorer.delete(file);
           return FileVisitResult.CONTINUE;
         }
       });
