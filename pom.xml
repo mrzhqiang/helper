@@ -37,7 +37,7 @@
     <jedis.version>2.9.0</jedis.version>
     <ebean.version>11.22.9</ebean.version>
     <ebean-test-config.version>11.21.1</ebean-test-config.version>
-    <mysql.version>8.0.11</mysql.version>
+    <mysql.version>8.0.16</mysql.version>
     <cassandra-driver.version>3.6.0</cassandra-driver.version>
     <elasticsearch-client.version>5.5.3</elasticsearch-client.version>
   </properties>
