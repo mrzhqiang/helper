@@ -49,7 +49,7 @@ public class DatesSample extends Application {
         .map(aLong -> Dates.format(new Date()))
         .observeOn(JavaFxScheduler.platform())
         .doOnNext(systemTime -> systemTimeLabel.setText(systemTime))
-        .map(Dates::parse)
+        .map(this::parseDate)
         .map(date -> String.format("解析启动：%s", date))
         .doOnNext(console::log)
         .map(s -> String.format("%s | %s",
@@ -58,8 +58,13 @@ public class DatesSample extends Application {
         .map(s -> Dates.untilNow(startTime))
         .doOnNext(s -> durationLabel.setText(s))
         .map(s -> startTime.toInstant().minus(1, ChronoUnit.DAYS))
-        .map(instant -> Dates.display(Date.from(instant)))
-        .map(s -> String.format("显示昨天：%s%s", s, System.lineSeparator()))
+        .map(instant ->
+            String.format("显示昨天：%s%s", Dates.display(Date.from(instant)), System.lineSeparator()))
         .subscribe(console::log));
+  }
+
+  private Date parseDate(String source) {
+    Date parse = Dates.parse(source);
+    return parse != null ? parse : new Date();
   }
 }

@@ -3,6 +3,8 @@ package helper;
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -78,6 +80,7 @@ import javax.annotation.Nullable;
  *
  * @author mrzhqiang
  */
+@Slf4j
 public enum Dates {
   ;
 
@@ -127,7 +130,7 @@ public enum Dates {
     try {
       return LOCAL_DATETIME.get().format(value);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("format {} failed: {}, try format with http...", value, e.getMessage());
       return formatHTTP(value);
     }
   }
@@ -207,7 +210,7 @@ public enum Dates {
     try {
       return LOCAL_DATETIME.get().parse(source);
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error("parse {} failed: {}, try parse with http...", source, e.getMessage());
       return parseHTTP(source);
     }
   }
