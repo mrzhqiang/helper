@@ -1,5 +1,5 @@
-package helper;
-import static helper.UppcHelper.*;
+package helper.uppc;
+import static helper.uppc.UppcHelper.*;
 
 public class UppcSample {
     public static void main(String[] args) {
