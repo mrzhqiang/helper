@@ -10,7 +10,7 @@
 
 ## 简介
 - [x] helper-jre 模块：JVM 辅助工具，项目依赖包含 [Guava][1] 库（谷歌开源的辅助工具），[Config][2] 库（加载默认参数常量）。 
-- [ ] helper-javafx 模块：JavaFX 辅助工具，利用 [RxJavaFx][3] 库实现 MVVM 架构更方便。
+- [x] helper-javafx 模块：JavaFX 辅助工具，利用 [RxJavaFx][3] 库实现 MVVM 架构更方便。
 - [x] helper-data 模块：提供数据相关辅助工具，使用 [Guice][5] 依赖注入实例。
     - [x] helper-data-api 模块：定义基本的数据接口，比如 `Repository`、`Paging` 等。
     - [x] helper-data-redis 模块：简化 [Jedis][4] 的使用。
@@ -21,6 +21,14 @@
 ## 使用
 1. 访问 [jitpack.io][9]，添加本仓库的 URL 以获取依赖。
 2. 参考 [helper-sample][10] 模块，获取更详细的使用方法。
+
+## 计划
+- 【文档处理模块】Excel 表格、Word 文档、PDF 文档：简历、报表、文件
+- 【支付集成】：支付宝、微信、第三方及第四方支付
+- 【IM 集成】：xmpp 协议、腾讯云 IM、极光推送 IM
+- 【短信集成】：暴风短信、阿里云短信、腾讯云短信、网易云短信、华为云短信、极光短信、第三方短信
+- 【直播集成】：三体云语音视频聊天、极光语音视频聊天、腾讯云视频直播
+- 【视频点播】：腾讯云短视频、OSS 对象存储付费功能
 
 
 # Licenses
