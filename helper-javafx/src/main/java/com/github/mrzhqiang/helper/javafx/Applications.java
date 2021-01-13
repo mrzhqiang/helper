@@ -74,7 +74,7 @@ public enum Applications {
 
         Class<? extends Application> applicationClass = application.getClass();
         String name = Namings.ofSimple(applicationClass, ".fxml");
-        return Optional.ofNullable(applicationClass.getResource("./" + name));
+        return Optional.ofNullable(applicationClass.getResource(name));
     }
 
     public static Optional<URL> css(Application application) {
@@ -82,6 +82,6 @@ public enum Applications {
 
         Class<? extends Application> applicationClass = application.getClass();
         String name = Namings.ofSimple(applicationClass, ".css");
-        return Optional.ofNullable(applicationClass.getResource("./" + name));
+        return Optional.ofNullable(applicationClass.getResource(name));
     }
 }
