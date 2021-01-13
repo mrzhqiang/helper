@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.mrzhqiang.helper</groupId>
+        <artifactId>helper-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../helper-parent</relativePath>
+    </parent>
 
-  <parent>
-    <groupId>com.github.mrzhqiang</groupId>
-    <artifactId>helper-parent</artifactId>
-    <version>2020.1.0</version>
-  </parent>
+    <artifactId>helper-data</artifactId>
+    <packaging>pom</packaging>
+    <name>Helper Data</name>
+    <description>Helper Data</description>
 
-  <artifactId>helper-data</artifactId>
-  <packaging>pom</packaging>
-  <name>Helper Data</name>
+    <modules>
+        <module>helper-data-api</module>
+        <module>helper-data-redis</module>
+        <module>helper-data-ebean</module>
+        <module>helper-data-cassandra</module>
+        <module>helper-data-elasticsearch</module>
+    </modules>
 
-  <modules>
-    <module>helper-data-api</module>
-    <module>helper-data-redis</module>
-    <module>helper-data-ebean</module>
-    <module>helper-data-cassandra</module>
-    <module>helper-data-elasticsearch</module>
-  </modules>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <forceCreation>true</forceCreation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

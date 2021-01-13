@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.mrzhqiang.helper</groupId>
+        <artifactId>helper-data</artifactId>
+        <version>${revision}</version>
+    </parent>
 
-  <parent>
-    <groupId>com.github.mrzhqiang</groupId>
-    <artifactId>helper-data</artifactId>
-    <version>2020.1.0</version>
-  </parent>
+    <artifactId>helper-data-ebean</artifactId>
+    <name>Helper Data EBean</name>
+    <description>Helper Data EBean</description>
 
-  <artifactId>helper-data-ebean</artifactId>
-  <name>Helper Data EBean</name>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean.test</groupId>
+            <artifactId>ebean-test-config</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.github.mrzhqiang</groupId>
-      <artifactId>helper-data-api</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>ebean</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.ebean.test</groupId>
-      <artifactId>ebean-test-config</artifactId>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>com.github.mrzhqiang.helper</groupId>
+            <artifactId>helper-data-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,54 +1,54 @@
 <configuration>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
-    </encoder>
-  </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
+        </encoder>
+    </appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${application.home:-.}/logs/mysql.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- Daily rollover with compression -->
-      <fileNamePattern>${application.home:-.}/logs/mysql-log-%d{yyyy-MM-dd}.gz
-      </fileNamePattern>
-      <!-- keep 30 days worth of history -->
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from [%logger] in %thread -
-        %message%n%xException
-      </pattern>
-    </encoder>
-  </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${application.home:-.}/logs/mysql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Daily rollover with compression -->
+            <fileNamePattern>${application.home:-.}/logs/mysql-log-%d{yyyy-MM-dd}.gz
+            </fileNamePattern>
+            <!-- keep 30 days worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from [%logger] in %thread -
+                %message%n%xException
+            </pattern>
+        </encoder>
+    </appender>
 
-  <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="FILE"/>
-  </appender>
+    <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
 
-  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="STDOUT"/>
-  </appender>
+    <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
 
-  <logger name="database" level="INFO"/>
-  <logger name="mysql" level="INFO"/>
+    <logger name="database" level="INFO"/>
+    <logger name="mysql" level="INFO"/>
 
-  <!-- Testing with Docker containers -->
-  <logger name="io.ebean.docker" level="TRACE"/>
+    <!-- Testing with Docker containers -->
+    <logger name="io.ebean.docker" level="TRACE"/>
 
-  <logger name="io.ebean.DDL" level="TRACE"/>
+    <logger name="io.ebean.DDL" level="TRACE"/>
 
-  <logger name="io.ebean.SQL" level="TRACE"/>
-  <logger name="io.ebean.TXN" level="TRACE"/>
-  <logger name="io.ebean.SUM" level="TRACE"/>
+    <logger name="io.ebean.SQL" level="TRACE"/>
+    <logger name="io.ebean.TXN" level="TRACE"/>
+    <logger name="io.ebean.SUM" level="TRACE"/>
 
-  <!-- L2 cache logging -->
-  <logger name="io.ebean.cache.QUERY" level="TRACE"/>
-  <logger name="io.ebean.cache.BEAN" level="TRACE"/>
-  <logger name="io.ebean.cache.COLL" level="TRACE"/>
-  <logger name="io.ebean.cache.NATKEY" level="TRACE"/>
+    <!-- L2 cache logging -->
+    <logger name="io.ebean.cache.QUERY" level="TRACE"/>
+    <logger name="io.ebean.cache.BEAN" level="TRACE"/>
+    <logger name="io.ebean.cache.COLL" level="TRACE"/>
+    <logger name="io.ebean.cache.NATKEY" level="TRACE"/>
 
-  <root level="INFO">
-    <appender-ref ref="ASYNCFILE"/>
-    <appender-ref ref="ASYNCSTDOUT"/>
-  </root>
+    <root level="INFO">
+        <appender-ref ref="ASYNCFILE"/>
+        <appender-ref ref="ASYNCSTDOUT"/>
+    </root>
 </configuration>
