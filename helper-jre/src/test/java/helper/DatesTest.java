@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -45,7 +46,7 @@ public final class DatesTest {
     hoursInstant = nowInstant.minus(Duration.ofHours(1));
     dayInstant = nowInstant.minus(Duration.ofDays(1));
     monthInstant = nowInstant.minus(Duration.ofDays(62));
-    yearInstant = nowInstant.minus(Duration.ofDays(365));
+    yearInstant = nowInstant.minus(Duration.ofDays(366));
 
     Config config = ConfigFactory.load().getConfig("helper.datetime");
     local = config.getConfig("local");
