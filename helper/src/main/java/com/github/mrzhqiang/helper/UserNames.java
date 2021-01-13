@@ -57,7 +57,8 @@ public enum UserNames {
      * @return 传入字符串的首字母，如果传入一个空串，将使用 {@link #DEFAULT_FIRST}。
      */
     public static String firstLetter(String value) {
-        Preconditions.checkNotNull(value);
+        Preconditions.checkNotNull(value, "value == null");
+
         for (Character c : value.toCharArray()) {
             if (CharMatcher.javaLetterOrDigit().matches(c)) {
                 return c.toString();
