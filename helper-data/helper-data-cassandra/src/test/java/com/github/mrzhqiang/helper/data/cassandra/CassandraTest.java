@@ -62,7 +62,7 @@ public class CassandraTest {
         mapper.delete(testTable);
     }
 
-    static final class TestKeyspace {
+    public static final class TestKeyspace {
         private static final String NAME = "cassandra";
         static final Statement CREATE =
                 SchemaBuilder.createKeyspace(NAME).ifNotExists()
@@ -74,7 +74,7 @@ public class CassandraTest {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @Table(keyspace = TestKeyspace.NAME, name = TestTable.NAME)
-    static final class TestTable extends BaseCassandraEntity {
+    public static final class TestTable extends BaseCassandraEntity {
         private static final String NAME = "cassandra";
 
         @PartitionKey
