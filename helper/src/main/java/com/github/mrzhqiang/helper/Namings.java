@@ -9,7 +9,11 @@ public enum Namings {
     ;
 
     /**
-     * com.randall.FssdApplication, {".qing",".chun"} ==> com-randall-fssd-application.qing.chun
+     * com.randall.FssdApplication, {".qing",".chun"} == com-randall-fssdapplication.qing.chun
+     *
+     * @param clazz 任意类的描述对象。
+     * @param more  更多的后缀数组。
+     * @return 按照类全名拼接好的字符串，同时替换小数点为破折号。
      */
     public static String ofCanonical(Class<?> clazz, String... more) {
         String first = clazz.getCanonicalName().toLowerCase().replaceAll("[.$]", "-");
@@ -21,7 +25,11 @@ public enum Namings {
     }
 
     /**
-     * NamingsTest, {"1","2","3"} ==> namings-test123
+     * NamingsTest, {"1","2","3"} == namings-test123
+     *
+     * @param clazz 任意类的描述对象。
+     * @param more  更多的后缀数组。
+     * @return 按照简单类名拼接好的字符串，同时将驼峰命名改为破折号连接。
      */
     public static String ofSimple(Class<?> clazz, String... more) {
         String first = ofCamel(clazz.getSimpleName());
@@ -33,7 +41,10 @@ public enum Namings {
     }
 
     /**
-     * CamelString ==> camel-string
+     * CamelString == camel-string
+     *
+     * @param camel 驼峰字符串。
+     * @return 修改驼峰字符串为破折号连接。
      */
     public static String ofCamel(String camel) {
         Preconditions.checkNotNull(camel, "camel == null");
