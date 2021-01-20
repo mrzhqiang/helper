@@ -10,7 +10,7 @@
     <name>Helper Build</name>
     <description>Helper Build</description>
     <properties>
-        <revision>2021.1.2</revision>
+        <revision>2021.1.3</revision>
     </properties>
     <modules>
         <module>helper-dependencies</module>
