@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mrzhqiang.helper</groupId>
-    <artifactId>helper-root</artifactId>
+    <artifactId>helper-build</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-    <name>Helper Root</name>
-    <description>Helper Root</description>
+    <name>Helper Build</name>
+    <description>Helper Build</description>
     <properties>
-        <revision>2021.1.0</revision>
+        <revision>2021.1.2</revision>
     </properties>
     <modules>
         <module>helper-dependencies</module>
