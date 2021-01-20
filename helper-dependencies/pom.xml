@@ -383,7 +383,7 @@
                         <configuration>
                             <updatePomFile>false</updatePomFile>
                             <outputDirectory>${project.build.directory}/effective-pom</outputDirectory>
-                            <flattenedPomFilename>spring-boot-dependencies.xml</flattenedPomFilename>
+                            <flattenedPomFilename>helper-dependencies.xml</flattenedPomFilename>
                             <flattenMode>oss</flattenMode>
                             <pomElements>
                                 <dependencyManagement>expand</dependencyManagement>
@@ -488,7 +488,7 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>${project.build.directory}/effective-pom/spring-boot-dependencies.xml</file>
+                                    <file>${project.build.directory}/effective-pom/helper-dependencies.xml</file>
                                     <type>effective-pom</type>
                                 </artifact>
                             </artifacts>
