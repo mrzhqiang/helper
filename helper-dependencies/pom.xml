@@ -46,14 +46,21 @@
         <sqlite-jdbc.version>3.28.0</sqlite-jdbc.version>
         <testfx-junit.version>4.0.15-alpha</testfx-junit.version>
         <!-- Plugin versions -->
+        <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
         <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
         <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
+        <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -302,6 +309,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>${maven-install-plugin.version}</version>
                 </plugin>
@@ -325,7 +337,165 @@
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${maven-source-plugin.version}</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build-helper-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>xml-maven-plugin</artifactId>
+                    <version>${xml-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Create an effective POM (with versions expanded) for the CLI and
+                            documentation -->
+                        <id>flatten-effective-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>false</updatePomFile>
+                            <outputDirectory>${project.build.directory}/effective-pom</outputDirectory>
+                            <flattenedPomFilename>spring-boot-dependencies.xml</flattenedPomFilename>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <dependencyManagement>expand</dependencyManagement>
+                                <pluginManagement>expand</pluginManagement>
+                                <properties>remove</properties>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Flatten and simplify our own POM for install/deploy -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>bom</flattenMode>
+                            <pomElements>
+                                <pluginManagement>keep</pluginManagement>
+                                <properties>keep</properties>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Cleanup the effective POM -->
+                        <id>post-process-effective-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                        <configuration>
+                            <transformationSets>
+                                <transformationSet>
+                                    <dir>${project.build.directory}/effective-pom</dir>
+                                    <outputDir>${project.build.directory}/effective-pom</outputDir>
+                                    <stylesheet>src/main/xslt/post-process-flattened-pom.xsl</stylesheet>
+                                    <outputProperties>
+                                        <outputProperty>
+                                            <name>indent</name>
+                                            <value>yes</value>
+                                        </outputProperty>
+                                    </outputProperties>
+                                </transformationSet>
+                            </transformationSets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Cleanup the flattened project POM -->
+                        <id>post-process-flattened-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                        <configuration>
+                            <transformationSets>
+                                <transformationSet>
+                                    <dir>${project.basedir}</dir>
+                                    <outputDir>${project.basedir}</outputDir>
+                                    <includes>.flattened-pom.xml</includes>
+                                    <stylesheet>src/main/xslt/post-process-flattened-pom.xsl</stylesheet>
+                                    <outputProperties>
+                                        <outputProperty>
+                                            <name>indent</name>
+                                            <value>yes</value>
+                                        </outputProperty>
+                                    </outputProperties>
+                                </transformationSet>
+                            </transformationSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Attach effective POM -->
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/effective-pom/spring-boot-dependencies.xml</file>
+                                    <type>effective-pom</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

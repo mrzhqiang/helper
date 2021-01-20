@@ -5,3 +5,5 @@ out
 target
 build
 logs
+
+.flattened-pom.xml
