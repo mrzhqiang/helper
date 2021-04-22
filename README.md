@@ -43,7 +43,10 @@
 
 # 鸣谢
 
-[![JetBrains](https://raw.githubusercontent.com/mrzhqiang/helper/master/images/jetbrains.png)](https://www.jetbrains.com/community/opensource/#support)
+<a href="https://www.jetbrains.com/community/opensource/#support">
+  <img src="https://raw.githubusercontent.com/mrzhqiang/helper/master/images/jetbrains.png" alt="JetBrains Logo"
+    width="10%" height="10%">
+</a>
 
 # Licenses
 
