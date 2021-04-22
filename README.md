@@ -42,7 +42,8 @@
 - 【视频点播】：腾讯云短视频、OSS 对象存储付费功能
 
 # 鸣谢
-感谢 [JetBrains 开源开发许可证](https://www.jetbrains.com/community/opensource/#support) 为本项目提供的支持。
+
+[![JetBrains](https://raw.githubusercontent.com/mrzhqiang/helper/master/images/jetbrains.png)](https://www.jetbrains.com/community/opensource/#support)
 
 # Licenses
 
