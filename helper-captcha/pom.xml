@@ -3,6 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>helper-captcha-api</module>
+        <module>helper-captcha-simple</module>
+    </modules>
 
     <parent>
         <groupId>com.github.mrzhqiang.helper</groupId>
@@ -11,18 +15,10 @@
         <relativePath>../helper-parent</relativePath>
     </parent>
 
-    <artifactId>helper-data</artifactId>
+    <artifactId>helper-captcha</artifactId>
     <packaging>pom</packaging>
-    <name>Helper Data</name>
-    <description>Helper Data</description>
-
-    <modules>
-        <module>helper-data-api</module>
-        <module>helper-data-redis</module>
-        <module>helper-data-ebean</module>
-        <module>helper-data-cassandra</module>
-        <module>helper-data-elasticsearch</module>
-    </modules>
+    <name>Helper Captcha</name>
+    <description>Helper Captcha</description>
 
     <build>
         <plugins>

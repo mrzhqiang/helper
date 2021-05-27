@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.helper;
+package com.github.mrzhqiang.helper.text;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;

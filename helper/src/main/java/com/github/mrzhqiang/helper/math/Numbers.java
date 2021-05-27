@@ -10,6 +10,18 @@ import java.math.BigDecimal;
 public enum Numbers {
     ;
 
+    public static int ofPositiveInt(String number, int defaultValue) {
+        if (Strings.isNullOrEmpty(number)) {
+            return defaultValue;
+        }
+
+        int positiveInt = ofInt(number);
+        if (positiveInt < 1) {
+            throw new NumberFormatException("number < 1 or can not format: " + number);
+        }
+        return positiveInt;
+    }
+
     /**
      * <pre>
      *     ofInt(null) == 0

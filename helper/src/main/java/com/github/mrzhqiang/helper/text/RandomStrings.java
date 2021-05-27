@@ -1,5 +1,6 @@
-package com.github.mrzhqiang.helper;
+package com.github.mrzhqiang.helper.text;
 
+import com.github.mrzhqiang.helper.math.RandomNumbers;
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -53,7 +54,7 @@ import java.util.Random;
  * @author mrzhqiang
  */
 public enum RandomStrings {
-    ;
+    INSTANCE;
 
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.random");
 
@@ -68,7 +69,7 @@ public enum RandomStrings {
     private static final List<String> NORMAL = CHINESE.getStringList("normal");
     private static final List<String> SURNAME = CHINESE.getStringList("surname");
 
-    private static final ThreadLocal<Random> RANDOM = ThreadLocal.withInitial(SecureRandom::new);
+    private final Random random = new SecureRandom();
 
     /**
      * 通过指定长度，生成随机字符序列。
@@ -79,9 +80,10 @@ public enum RandomStrings {
     public static String ofLength(int length) {
         Preconditions.checkArgument(length > 0,
                 "length %s must be > 0.", length);
+
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(CHARS.charAt(RANDOM.get().nextInt(CHARS.length())));
+            builder.append(CHARS.charAt(INSTANCE.random.nextInt(CHARS.length())));
         }
         return builder.toString();
     }
@@ -94,14 +96,7 @@ public enum RandomStrings {
      * @return 随机字符串，范围：大小写字母，数字，特殊字符。
      */
     public static String ofLength(int min, int max) {
-        Preconditions.checkArgument(min > 0,
-                "min length %s must be > 0.", min);
-        Preconditions.checkArgument(max > 0,
-                "max length %s must be > 0.", max);
-        Preconditions.checkArgument(max >= min,
-                "max length %s must be >= min length %s.", max, min);
-
-        int length = Math.max(min, RANDOM.get().nextInt(max));
+        int length = checkBound(min, max);
         return ofLength(length);
     }
 
@@ -117,7 +112,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            Integer codePoint = Integer.decode(NORMAL.get(RANDOM.get().nextInt(NORMAL.size())));
+            Integer codePoint = Integer.decode(NORMAL.get(INSTANCE.random.nextInt(NORMAL.size())));
             builder.append(Character.toChars(codePoint));
         }
         return builder.toString();
@@ -131,14 +126,7 @@ public enum RandomStrings {
      * @return 随机汉字，范围：常用汉字 3500 个。
      */
     public static String ofChinese(int min, int max) {
-        Preconditions.checkArgument(min > 0,
-                "min length %s must be > 0.", min);
-        Preconditions.checkArgument(max > 0,
-                "max length %s must be > 0.", max);
-        Preconditions.checkArgument(max >= min,
-                "max length %s must be >= min length %s.", max, min);
-
-        int length = Math.max(min, RANDOM.get().nextInt(max));
+        int length = checkBound(min, max);
         return ofChinese(length);
     }
 
@@ -148,7 +136,7 @@ public enum RandomStrings {
      * @return 随机姓氏，范围：百家姓。不区分单姓复姓。
      */
     public static String ofSurname() {
-        return String.valueOf(SURNAME.get(RANDOM.get().nextInt(SURNAME.size())));
+        return String.valueOf(SURNAME.get(INSTANCE.random.nextInt(SURNAME.size())));
     }
 
     /**
@@ -163,9 +151,9 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         // 第一个数字不为 0
-        builder.append(NUMBER.substring(1).charAt(RANDOM.get().nextInt(NUMBER.length() - 1)));
+        builder.append(NUMBER.substring(1).charAt(INSTANCE.random.nextInt(NUMBER.length() - 1)));
         for (int i = 1; i < length; i++) {
-            builder.append(NUMBER.charAt(RANDOM.get().nextInt(NUMBER.length())));
+            builder.append(NUMBER.charAt(INSTANCE.random.nextInt(NUMBER.length())));
         }
         return builder.toString();
     }
@@ -178,14 +166,7 @@ public enum RandomStrings {
      * @return 随机字符串，仅包含：数字。
      */
     public static String ofNumber(int min, int max) {
-        Preconditions.checkArgument(min > 0,
-                "min length %s must be > 0.", min);
-        Preconditions.checkArgument(max > 0,
-                "max length %s must be > 0.", max);
-        Preconditions.checkArgument(max >= min,
-                "max length %s must be >= min length %s.", max, min);
-
-        int length = Math.max(min, RANDOM.get().nextInt(max));
+        int length = checkBound(min, max);
         return ofNumber(length);
     }
 
@@ -201,7 +182,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(LOWER_CASE.charAt(RANDOM.get().nextInt(LOWER_CASE.length())));
+            builder.append(LOWER_CASE.charAt(INSTANCE.random.nextInt(LOWER_CASE.length())));
         }
         return builder.toString();
     }
@@ -214,14 +195,7 @@ public enum RandomStrings {
      * @return 随机字符串，仅包含：小写字母。
      */
     public static String ofLowerCase(int min, int max) {
-        Preconditions.checkArgument(min > 0,
-                "min length %s must be > 0.", min);
-        Preconditions.checkArgument(max > 0,
-                "max length %s must be > 0.", max);
-        Preconditions.checkArgument(max >= min,
-                "max length %s must be >= min length %s.", max, min);
-
-        int length = Math.max(min, RANDOM.get().nextInt(max));
+        int length = checkBound(min, max);
         return ofLowerCase(length);
     }
 
@@ -237,7 +211,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(UPPER_CASE.charAt(RANDOM.get().nextInt(UPPER_CASE.length())));
+            builder.append(UPPER_CASE.charAt(INSTANCE.random.nextInt(UPPER_CASE.length())));
         }
         return builder.toString();
     }
@@ -250,6 +224,36 @@ public enum RandomStrings {
      * @return 随机字符串，仅包含：大写字母。
      */
     public static String ofUpperCase(int min, int max) {
+        int length = checkBound(min, max);
+        return ofUpperCase(length);
+    }
+
+    public static String ofCustom(String custom, int length) {
+        Preconditions.checkNotNull(custom, "custom == null");
+        Preconditions.checkArgument(length > 0,
+                "length %s must be > 0.", length);
+        Preconditions.checkArgument(!custom.isEmpty(), "custom cannot be empty");
+
+        StringBuilder builder = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            builder.append(custom.charAt(INSTANCE.random.nextInt(custom.length())));
+        }
+        return builder.toString();
+    }
+
+    public static String ofCustom(List<String> customs) {
+        Preconditions.checkNotNull(customs, "customs == null");
+        Preconditions.checkArgument(!customs.isEmpty(), "customs must contain element at least one");
+
+        return customs.get(INSTANCE.random.nextInt(customs.size()));
+    }
+
+    public static String ofCustom(String custom, int min, int max) {
+        int length = checkBound(min, max);
+        return ofCustom(custom, length);
+    }
+
+    private static int checkBound(int min, int max) {
         Preconditions.checkArgument(min > 0,
                 "min length %s must be > 0.", min);
         Preconditions.checkArgument(max > 0,
@@ -257,7 +261,6 @@ public enum RandomStrings {
         Preconditions.checkArgument(max >= min,
                 "max length %s must be >= min length %s.", max, min);
 
-        int length = Math.max(min, RANDOM.get().nextInt(max));
-        return ofUpperCase(length);
+        return RandomNumbers.rangeInt(min, max);
     }
 }

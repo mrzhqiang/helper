@@ -6,15 +6,20 @@
 
     <parent>
         <groupId>com.github.mrzhqiang.helper</groupId>
-        <artifactId>helper-data</artifactId>
+        <artifactId>helper-captcha</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>helper-data-elasticsearch</artifactId>
-    <name>Helper Data Elasticsearch</name>
-    <description>Helper Data Elasticsearch</description>
+    <artifactId>helper-captcha-api</artifactId>
+    <name>Helper Captcha API</name>
+    <description>Helper Captcha API</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.mrzhqiang.helper</groupId>
+            <artifactId>helper</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -24,21 +29,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.mrzhqiang.helper</groupId>
-            <artifactId>helper-data-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>rest</artifactId>
         </dependency>
     </dependencies>
 </project>

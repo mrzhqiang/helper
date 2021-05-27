@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.sample;
 
-import com.github.mrzhqiang.helper.Dates;
+import com.github.mrzhqiang.helper.time.Dates;
 import com.github.mrzhqiang.helper.javafx.Applications;
 import com.github.mrzhqiang.helper.javafx.model.Console;
 import io.reactivex.Observable;

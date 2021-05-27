@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.github.mrzhqiang.helper</groupId>
         <artifactId>helper-parent</artifactId>
@@ -12,7 +13,7 @@
 
     <artifactId>helper</artifactId>
     <name>Helper</name>
-    <description>Helper</description>
+    <description>Helper: Common Java tools.</description>
 
     <dependencies>
         <dependency>

@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.helper;
+package com.github.mrzhqiang.helper.time;
 
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;

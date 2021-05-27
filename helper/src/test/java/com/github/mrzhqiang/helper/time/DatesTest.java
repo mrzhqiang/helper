@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.helper;
+package com.github.mrzhqiang.helper.time;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;

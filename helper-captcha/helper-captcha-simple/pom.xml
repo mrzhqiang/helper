@@ -6,15 +6,26 @@
 
     <parent>
         <groupId>com.github.mrzhqiang.helper</groupId>
-        <artifactId>helper-data</artifactId>
+        <artifactId>helper-captcha</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>helper-data-api</artifactId>
-    <name>Helper Data API</name>
-    <description>Helper Data API</description>
+    <artifactId>helper-captcha-simple</artifactId>
+    <name>Helper Captcha Simple</name>
+    <description>Helper Captcha Simple</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.mrzhqiang.helper</groupId>
+            <artifactId>helper-captcha-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>filters</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -24,15 +35,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mrzhqiang.helper</groupId>
-            <artifactId>helper</artifactId>
         </dependency>
     </dependencies>
 </project>

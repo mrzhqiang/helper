@@ -1,4 +1,4 @@
-package com.github.mrzhqiang.helper;
+package com.github.mrzhqiang.helper.io;
 
 /**
  * 资源管理器异常。

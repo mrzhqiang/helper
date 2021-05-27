@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.javafx;
 
-import com.github.mrzhqiang.helper.Namings;
+import com.github.mrzhqiang.helper.text.Namings;
 import com.github.mrzhqiang.helper.javafx.ui.Dialogs;
 import com.google.common.base.Preconditions;
 import javafx.application.Application;
