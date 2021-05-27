@@ -20,8 +20,8 @@ public enum RandomNumbers {
         if (min > max) {
             min = max;
         }
-        // Random.nextDouble == Math.random
-        return (int) (min + nextDouble() * (max - min + 1));
+        // nextInt is [0, bound)
+        return min + nextInt(max - min + 1);
     }
 
     public static long nextLong() {
