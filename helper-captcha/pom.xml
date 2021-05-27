@@ -6,6 +6,7 @@
     <modules>
         <module>helper-captcha-api</module>
         <module>helper-captcha-simple</module>
+        <module>helper-captcha-gif</module>
     </modules>
 
     <parent>
