@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.helper.math;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import java.math.BigDecimal;
@@ -16,9 +17,8 @@ public enum Numbers {
         }
 
         int positiveInt = ofInt(number);
-        if (positiveInt < 1) {
-            throw new NumberFormatException("number < 1 or can not format: " + number);
-        }
+        Preconditions.checkArgument(positiveInt > 0,
+                "number {} must be greater than 0", number);
         return positiveInt;
     }
 

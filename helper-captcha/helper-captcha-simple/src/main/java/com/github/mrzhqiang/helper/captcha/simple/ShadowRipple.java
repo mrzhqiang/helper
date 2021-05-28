@@ -3,7 +3,7 @@ package com.github.mrzhqiang.helper.captcha.simple;
 import com.github.mrzhqiang.helper.Classes;
 import com.github.mrzhqiang.helper.captcha.Noise;
 import com.github.mrzhqiang.helper.captcha.Ripple;
-import com.github.mrzhqiang.helper.math.RandomNumbers;
+import com.github.mrzhqiang.helper.random.RandomNumbers;
 import com.google.common.base.Preconditions;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.ShadowFilter;

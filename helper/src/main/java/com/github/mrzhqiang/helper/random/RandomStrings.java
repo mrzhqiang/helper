@@ -1,13 +1,10 @@
-package com.github.mrzhqiang.helper.text;
+package com.github.mrzhqiang.helper.random;
 
-import com.github.mrzhqiang.helper.math.RandomNumbers;
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 /**
  * 随机字符串工具。
@@ -54,7 +51,7 @@ import java.util.Random;
  * @author mrzhqiang
  */
 public enum RandomStrings {
-    INSTANCE;
+    ;
 
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.random");
 
@@ -69,8 +66,6 @@ public enum RandomStrings {
     private static final List<String> NORMAL = CHINESE.getStringList("normal");
     private static final List<String> SURNAME = CHINESE.getStringList("surname");
 
-    private final Random random = new SecureRandom();
-
     /**
      * 通过指定长度，生成随机字符序列。
      *
@@ -83,7 +78,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(CHARS.charAt(INSTANCE.random.nextInt(CHARS.length())));
+            builder.append(CHARS.charAt(RandomNumbers.nextInt(CHARS.length())));
         }
         return builder.toString();
     }
@@ -112,7 +107,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            Integer codePoint = Integer.decode(NORMAL.get(INSTANCE.random.nextInt(NORMAL.size())));
+            Integer codePoint = Integer.decode(NORMAL.get(RandomNumbers.nextInt(NORMAL.size())));
             builder.append(Character.toChars(codePoint));
         }
         return builder.toString();
@@ -136,7 +131,7 @@ public enum RandomStrings {
      * @return 随机姓氏，范围：百家姓。不区分单姓复姓。
      */
     public static String ofSurname() {
-        return String.valueOf(SURNAME.get(INSTANCE.random.nextInt(SURNAME.size())));
+        return String.valueOf(SURNAME.get(RandomNumbers.nextInt(SURNAME.size())));
     }
 
     /**
@@ -151,9 +146,9 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         // 第一个数字不为 0
-        builder.append(NUMBER.substring(1).charAt(INSTANCE.random.nextInt(NUMBER.length() - 1)));
+        builder.append(NUMBER.substring(1).charAt(RandomNumbers.nextInt(NUMBER.length() - 1)));
         for (int i = 1; i < length; i++) {
-            builder.append(NUMBER.charAt(INSTANCE.random.nextInt(NUMBER.length())));
+            builder.append(NUMBER.charAt(RandomNumbers.nextInt(NUMBER.length())));
         }
         return builder.toString();
     }
@@ -182,7 +177,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(LOWER_CASE.charAt(INSTANCE.random.nextInt(LOWER_CASE.length())));
+            builder.append(LOWER_CASE.charAt(RandomNumbers.nextInt(LOWER_CASE.length())));
         }
         return builder.toString();
     }
@@ -211,7 +206,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(UPPER_CASE.charAt(INSTANCE.random.nextInt(UPPER_CASE.length())));
+            builder.append(UPPER_CASE.charAt(RandomNumbers.nextInt(UPPER_CASE.length())));
         }
         return builder.toString();
     }
@@ -236,7 +231,7 @@ public enum RandomStrings {
 
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(custom.charAt(INSTANCE.random.nextInt(custom.length())));
+            builder.append(custom.charAt(RandomNumbers.nextInt(custom.length())));
         }
         return builder.toString();
     }
@@ -245,7 +240,7 @@ public enum RandomStrings {
         Preconditions.checkNotNull(customs, "customs == null");
         Preconditions.checkArgument(!customs.isEmpty(), "customs must contain element at least one");
 
-        return customs.get(INSTANCE.random.nextInt(customs.size()));
+        return customs.get(RandomNumbers.nextInt(customs.size()));
     }
 
     public static String ofCustom(String custom, int min, int max) {

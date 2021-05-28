@@ -326,9 +326,7 @@ public enum Dates {
      * Best-effort parser for HTTP dates.
      * <p>
      * Copy from：
-     * <pre>
-     *   https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java
-     * </pre>
+     * <a href="https://github.com/square/okhttp/blob/master/okhttp/src/main/java/okhttp3/internal/http/HttpDate.java">HttpDate.java</a>
      *
      * @author square/okhttp
      */

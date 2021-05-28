@@ -2,7 +2,7 @@ package com.github.mrzhqiang.helper.captcha.simple;
 
 import com.github.mrzhqiang.helper.captcha.TextProducer;
 import com.github.mrzhqiang.helper.math.Numbers;
-import com.github.mrzhqiang.helper.text.RandomStrings;
+import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 

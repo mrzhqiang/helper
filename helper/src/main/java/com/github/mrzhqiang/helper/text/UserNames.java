@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.helper.text;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
@@ -60,7 +59,7 @@ public enum UserNames {
         Preconditions.checkNotNull(value, "value == null");
 
         for (Character c : value.toCharArray()) {
-            if (CharMatcher.javaLetterOrDigit().matches(c)) {
+            if (Character.isLetterOrDigit(c)) {
                 return c.toString();
             }
         }
@@ -108,15 +107,17 @@ public enum UserNames {
     public static boolean checkName(@Nullable String value, int min, int max) {
         boolean isValid = false;
         if (!Strings.isNullOrEmpty(value)) {
-            if (CharMatcher.javaLetterOrDigit().matchesAllOf(value)) {
-                isValid = true;
-                if (min > 0) {
-                    isValid = value.length() >= min;
-                }
-                if (max > 0) {
-                    Preconditions.checkArgument(max >= min,
-                            "max length: %s must be >= min length: %s", max, min);
-                    isValid = value.length() <= max;
+            for (char c : value.toCharArray()) {
+                if (Character.isLetterOrDigit(c)) {
+                    isValid = true;
+                    if (min > 0) {
+                        isValid = value.length() >= min;
+                    }
+                    if (max > 0) {
+                        Preconditions.checkArgument(max >= min,
+                                "max length: %s must be >= min length: %s", max, min);
+                        isValid = value.length() <= max;
+                    }
                 }
             }
         }

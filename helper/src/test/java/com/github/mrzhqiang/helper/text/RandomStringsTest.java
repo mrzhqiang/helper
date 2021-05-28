@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.helper.text;
 
+import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.junit.Before;

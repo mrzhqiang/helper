@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.sample;
 
-import com.github.mrzhqiang.helper.text.RandomStrings;
+import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.github.mrzhqiang.helper.javafx.Applications;
 import com.github.mrzhqiang.helper.javafx.model.Status;
 import io.reactivex.disposables.CompositeDisposable;
