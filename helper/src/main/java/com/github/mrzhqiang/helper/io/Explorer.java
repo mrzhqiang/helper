@@ -20,6 +20,17 @@ public enum Explorer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("helper");
 
+    /**
+     * 创建目录。
+     * <p>
+     * 注意：此方法会递归操作，即父路径不存在，也会创建父路径。
+     * <p>
+     * 创建操作只会在 path 不存在的情况下执行，已存在目录将不进行任何操作。
+     *
+     * @param path 路径。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是创建目录失败。
+     */
     public static void mkdir(Path path) {
         Preconditions.checkNotNull(path, "path == null");
         try {
@@ -32,6 +43,17 @@ public enum Explorer {
         }
     }
 
+    /**
+     * 创建文件。
+     * <p>
+     * 注意：此方法将通过 org.slf4j.Logger 打印创建新文件的日志，使用的是 info 级别。
+     * <p>
+     * 创建操作只会在 path 不存在的情况下进行，已存在文件将不进行任何操作。
+     *
+     * @param path 路径。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是创建文件失败。
+     */
     public static void create(Path path) {
         Preconditions.checkNotNull(path, "path == null");
         try {
@@ -44,6 +66,19 @@ public enum Explorer {
         }
     }
 
+    /**
+     * 删除目录或文件。
+     * <p>
+     * 注意：此方法将通过 org.slf4j.Logger 打印删除的日志，使用的是 info 级别。
+     * <p>
+     * 警告：如果是删除目录，则必须是一个空目录，一旦目录下存在文件，删除操作将失败，抛出相关异常。
+     * <p>
+     * 删除操作只会在 path 存在的情况下进行，已存在文件将只打印删除日志。
+     *
+     * @param path 路径。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是删除失败，另外也可能是删除的目录非空。
+     */
     public static void delete(Path path) {
         Preconditions.checkNotNull(path, "path == null");
         try {
@@ -57,6 +92,20 @@ public enum Explorer {
         }
     }
 
+    /**
+     * 删除所有目录或文件。
+     * <p>
+     * 注意：此方法内联 {@link #delete(Path)} 方法。
+     * <p>
+     * 通过 {@link Files#walkFileTree(Path, FileVisitor)} 遍历路径下的所有目录和文件。
+     * <p>
+     * todo walkFileTree 的 API 是深度优先遍历，但没有经过测试，需要看看是否从最深处开始调用 visitFile
+     * todo 如果是这样的话，那么这个方法正常工作，否则需要另外寻找方法。
+     *
+     * @param path 路径。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是删除失败，另外也可能是删除的目录非空。
+     */
     public static void deleteAll(Path path) {
         Preconditions.checkNotNull(path, "path == null");
         try {
@@ -75,6 +124,18 @@ public enum Explorer {
         }
     }
 
+    /**
+     * 将指定内容写入到路径所代表的文件中。
+     * <p>
+     * 如果文件不存在，将自动创建。
+     * <p>
+     * 这个方法只会覆盖内容，不追加。
+     *
+     * @param path    文件路径。
+     * @param content 文件内容。
+     * @throws NullPointerException 如果传入的 path 或 content 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是写入失败。
+     */
     public static void write(Path path, String content) {
         Preconditions.checkNotNull(path, "path == null");
         Preconditions.checkNotNull(content, "content == null");
@@ -85,16 +146,36 @@ public enum Explorer {
         }
     }
 
+    /**
+     * 将指定内容追加到路径所代表的文件末尾。
+     * <p>
+     * 如果文件不存在，将自动创建。
+     * <p>
+     * 这个方法只会覆盖内容，不追加。
+     *
+     * @param path    文件路径。
+     * @param content 文件内容。
+     * @throws NullPointerException 如果传入的 path 或 content 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是写入失败。
+     */
     public static void appendWrite(Path path, String content) {
         Preconditions.checkNotNull(path, "path == null");
         Preconditions.checkNotNull(content, "content == null");
         try {
-            Files.write(path, content.getBytes(), StandardOpenOption.APPEND);
+            Files.write(path, content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new ExplorerException(String.format("无法写入到 [%s]", path), e);
         }
     }
 
+    /**
+     * 列出指定文件路径的所有内容。
+     *
+     * @param path 文件路径。
+     * @return 字符串列表。列表中的每一个字符串元素代表文件的一行。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是读取失败。
+     */
     public static List<String> lines(Path path) {
         Preconditions.checkNotNull(path, "path == null");
         try {

@@ -5,6 +5,9 @@ import com.google.common.base.Preconditions;
 
 import java.util.Objects;
 
+/**
+ * 命名工具。
+ */
 public enum Namings {
     ;
 

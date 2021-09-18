@@ -6,6 +6,11 @@ import com.google.common.base.Strings;
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * 环境变量工具。
+ * <p>
+ * 实际上可以用 Guava 的 StandardSystemProperty 类替代当前类。
+ */
 public enum Environments {
     ;
 

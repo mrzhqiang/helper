@@ -223,6 +223,13 @@ public enum RandomStrings {
         return ofUpperCase(length);
     }
 
+    /**
+     * 从自定义字符串中，生成指定长度的随机字符内容。
+     *
+     * @param custom 自定义字符串。
+     * @param length 指定长度。
+     * @return 随机字符内容，字符来自自定义字符串，随机生成的内容长度为指定长度。
+     */
     public static String ofCustom(String custom, int length) {
         Preconditions.checkNotNull(custom, "custom == null");
         Preconditions.checkArgument(length > 0,
@@ -236,6 +243,12 @@ public enum RandomStrings {
         return builder.toString();
     }
 
+    /**
+     * 从自定义的字符串列表中，返回随机选择的一项元素。
+     *
+     * @param customs 自定义的字符串列表。
+     * @return 随机一项元素。
+     */
     public static String ofCustom(List<String> customs) {
         Preconditions.checkNotNull(customs, "customs == null");
         Preconditions.checkArgument(!customs.isEmpty(), "customs must contain element at least one");
@@ -243,6 +256,14 @@ public enum RandomStrings {
         return customs.get(RandomNumbers.nextInt(customs.size()));
     }
 
+    /**
+     * 从自定义字符串中，生成指定区间的随机字符内容。
+     *
+     * @param custom 自定义字符串。
+     * @param min    最小长度。
+     * @param max    最大长度。
+     * @return 随机字符内容，长度在最小值和最大值之间。
+     */
     public static String ofCustom(String custom, int min, int max) {
         int length = checkBound(min, max);
         return ofCustom(custom, length);

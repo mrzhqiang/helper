@@ -27,6 +27,14 @@ public enum Compressor {
 
     private static final int BUFFER_SIZE = 8192;
 
+    /**
+     * 使用 zip 方式压缩文件或目录。
+     * <p>
+     * 如果是源文件不存在，或者目标文件已存在，将只生成日志警告，不执行任何操作。
+     *
+     * @param source      需要压缩的文件地址。
+     * @param destination 压缩文件存放的地址。
+     */
     public static void zipCompress(String source, String destination) {
         Preconditions.checkNotNull(source, "source == null");
         Preconditions.checkNotNull(destination, "destination == null");

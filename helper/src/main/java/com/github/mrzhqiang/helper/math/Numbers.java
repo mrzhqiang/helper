@@ -11,15 +11,20 @@ import java.math.BigDecimal;
 public enum Numbers {
     ;
 
+    /**
+     * 从一个正整数转为 int 基本类型。
+     *
+     * @param number       正整数字符串。
+     * @param defaultValue 默认值。
+     * @return int 基本类型。解析成功，返回正整数；解析失败或解析为 0 以及负整数，则返回默认值。
+     */
     public static int ofPositiveInt(String number, int defaultValue) {
         if (Strings.isNullOrEmpty(number)) {
             return defaultValue;
         }
 
         int positiveInt = ofInt(number);
-        Preconditions.checkArgument(positiveInt > 0,
-                "number {} must be greater than 0", number);
-        return positiveInt;
+        return positiveInt > 0 ? positiveInt : defaultValue;
     }
 
     /**
