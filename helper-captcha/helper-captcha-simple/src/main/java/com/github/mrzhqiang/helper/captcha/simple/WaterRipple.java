@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.TransformFilter;
 import com.jhlabs.image.WaterFilter;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,21 +15,14 @@ import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public final class WaterRipple implements Ripple {
 
-    private final Config config;
-    private final Noise defaultNoise;
-
-    public WaterRipple(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config;
-        this.defaultNoise = new SimpleNoise(config);
-    }
+    private static final Noise DEFAULT_NOISE = new SimpleNoise();
 
     @Override
     public BufferedImage distort(BufferedImage source) {
         Preconditions.checkNotNull(source, "source == null");
 
-        String noiseClass = this.config.getString("producer.noise");
-        Noise noise = Classes.ofInstance(noiseClass, defaultNoise);
+        String noiseClass = SimpleConfig.Producer.NOISE;
+        Noise noise = Classes.ofInstance(noiseClass, DEFAULT_NOISE);
         BufferedImage image = new BufferedImage(source.getWidth(), source.getHeight(), TYPE_INT_ARGB);
 
         Graphics2D graphics = (Graphics2D) image.getGraphics();

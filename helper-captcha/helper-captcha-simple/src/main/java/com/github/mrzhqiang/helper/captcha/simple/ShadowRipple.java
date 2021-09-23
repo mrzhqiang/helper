@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 import com.jhlabs.image.RippleFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.jhlabs.image.TransformFilter;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,14 +16,7 @@ import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public final class ShadowRipple implements Ripple {
 
-    private final Config config;
-    private final Noise defaultNoise;
-
-    public ShadowRipple(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config;
-        this.defaultNoise = new SimpleNoise(this.config);
-    }
+    private static final Noise DEFAULT_NOISE = new SimpleNoise();
 
     @Override
     public BufferedImage distort(BufferedImage source) {
@@ -52,8 +44,7 @@ public final class ShadowRipple implements Ripple {
         graph.drawImage(effectImage, 0, 0, null, null);
         graph.dispose();
 
-        String noiseClass = config.getString("producer.noise");
-        Noise noise = Classes.ofInstance(noiseClass, defaultNoise);
+        Noise noise = Classes.ofInstance(SimpleConfig.Producer.NOISE, DEFAULT_NOISE);
         // draw lines over the image and/or text
         noise.make(distortedImage, .1f, .1f, .25f, .25f);
         noise.make(distortedImage, .1f, .25f, .5f, .9f);

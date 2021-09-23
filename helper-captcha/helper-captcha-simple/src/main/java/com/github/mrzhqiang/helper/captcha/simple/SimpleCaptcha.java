@@ -5,7 +5,6 @@ import com.github.mrzhqiang.helper.awt.Colors;
 import com.github.mrzhqiang.helper.captcha.*;
 import com.github.mrzhqiang.helper.math.Numbers;
 import com.google.common.base.Preconditions;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -13,25 +12,15 @@ import java.awt.image.BufferedImage;
 
 public final class SimpleCaptcha implements Captcha {
 
-    private final Config config;
-    private final TextProducer defaultTextProducer;
-    private final WordRenderer defaultWordRenderer;
-    private final Ripple defaultRipple;
-    private final Background defaultBackground;
-
-    public SimpleCaptcha(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config.withFallback(Captcha.CONFIG);
-        this.defaultTextProducer = new SimpleTextProducer(this.config);
-        this.defaultWordRenderer = new SimpleWordRenderer(this.config);
-        this.defaultRipple = new WaterRipple(this.config);
-        this.defaultBackground = new SimpleBackground(this.config);
-    }
+    private static final TextProducer DEFAULT_TEXT_PRODUCER = new SimpleTextProducer();
+    private static final WordRenderer DEFAULT_WORD_RENDERER = new SimpleWordRenderer();
+    private static final Ripple DEFAULT_RIPPLE = new WaterRipple();
+    private static final Background DEFAULT_BACKGROUND = new SimpleBackground();
 
     @Override
     public String text() {
-        String textClass = config.getString("producer.text");
-        TextProducer textProducer = Classes.ofInstance(textClass, defaultTextProducer);
+        String textClass = SimpleConfig.Producer.TEXT;
+        TextProducer textProducer = Classes.ofInstance(textClass, DEFAULT_TEXT_PRODUCER);
         return textProducer.produce();
     }
 
@@ -39,25 +28,25 @@ public final class SimpleCaptcha implements Captcha {
     public BufferedImage image(String text) {
         Preconditions.checkNotNull(text, "text == null");
 
-        String wordClass = config.getString("producer.word");
-        WordRenderer wordRenderer = Classes.ofInstance(wordClass, defaultWordRenderer);
-        String imageWidth = config.getString("image.width");
+        String wordClass = SimpleConfig.Producer.WORD;
+        WordRenderer wordRenderer = Classes.ofInstance(wordClass, DEFAULT_WORD_RENDERER);
+        String imageWidth = SimpleConfig.Image.WIDTH;
         int width = Numbers.ofPositiveInt(imageWidth, 200);
-        String imageHeight = config.getString("image.height");
+        String imageHeight = SimpleConfig.Image.HEIGHT;
         int height = Numbers.ofPositiveInt(imageHeight, 50);
 
         BufferedImage bi = wordRenderer.render(text, width, height);
 
-        String rippleClass = config.getString("producer.ripple");
-        Ripple ripple = Classes.ofInstance(rippleClass, defaultRipple);
+        String rippleClass = SimpleConfig.Producer.RIPPLE;
+        Ripple ripple = Classes.ofInstance(rippleClass, DEFAULT_RIPPLE);
         bi = ripple.distort(bi);
 
-        String backgroundClass = config.getString("producer.background");
-        Background background = Classes.ofInstance(backgroundClass, defaultBackground);
+        String backgroundClass = SimpleConfig.Producer.BACKGROUND;
+        Background background = Classes.ofInstance(backgroundClass, DEFAULT_BACKGROUND);
         bi = background.add(bi);
 
         Graphics2D graphics = bi.createGraphics();
-        boolean borderEnabled = config.getBoolean("border.enabled");
+        boolean borderEnabled = SimpleConfig.Border.ENABLED;
         if (borderEnabled) {
             drawBox(graphics);
         }
@@ -66,9 +55,9 @@ public final class SimpleCaptcha implements Captcha {
     }
 
     private void drawBox(Graphics2D graphics) {
-        String borderColor = config.getString("border.color");
+        String borderColor = SimpleConfig.Border.COLOR;
         Color color = Colors.of(borderColor, Color.BLACK);
-        String borderThickness = config.getString("border.thickness");
+        String borderThickness = SimpleConfig.Border.THICKNESS;
         int thickness = Numbers.ofPositiveInt(borderThickness, 1);
 
         graphics.setColor(color);
@@ -78,9 +67,9 @@ public final class SimpleCaptcha implements Captcha {
             graphics.setStroke(stroke);
         }
 
-        String imageWidth = config.getString("image.width");
+        String imageWidth = SimpleConfig.Image.WIDTH;
         int width = Numbers.ofPositiveInt(imageWidth, 200);
-        String imageHeight = config.getString("image.height");
+        String imageHeight = SimpleConfig.Image.HEIGHT;
         int height = Numbers.ofPositiveInt(imageHeight, 50);
 
         //noinspection SuspiciousNameCombination

@@ -5,7 +5,6 @@ import com.github.mrzhqiang.helper.awt.Fonts;
 import com.github.mrzhqiang.helper.captcha.WordRenderer;
 import com.github.mrzhqiang.helper.math.Numbers;
 import com.google.common.base.Preconditions;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -19,13 +18,6 @@ import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public final class SimpleWordRenderer implements WordRenderer {
 
-    private final Config config;
-
-    public SimpleWordRenderer(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config;
-    }
-
     @Override
     public BufferedImage render(String word, int width, int height) {
         Preconditions.checkNotNull(word, "word == null");
@@ -33,7 +25,7 @@ public final class SimpleWordRenderer implements WordRenderer {
         BufferedImage image = new BufferedImage(width, height, TYPE_INT_ARGB);
         Graphics2D g2D = image.createGraphics();
 
-        String fontColor = config.getString("text.font.color");
+        String fontColor = SimpleConfig.Text.COLOR;
         Color color = Colors.of(fontColor, Color.BLACK);
         g2D.setColor(color);
 
@@ -41,9 +33,9 @@ public final class SimpleWordRenderer implements WordRenderer {
         hints.add(new RenderingHints(KEY_RENDERING, VALUE_RENDER_QUALITY));
         g2D.setRenderingHints(hints);
 
-        String fontSize = config.getString("text.font.size");
+        String fontSize = SimpleConfig.Text.SIZE;
         int size = Numbers.ofPositiveInt(fontSize, 40);
-        String fontNames = config.getString("text.font.names");
+        String fontNames = SimpleConfig.Text.NAMES;
         Font[] fonts = Fonts.of(fontNames, size, WordRenderer.DEFAULT_FONTS);
 
         int startPosY = (height - size) / 5 + size;
@@ -64,7 +56,7 @@ public final class SimpleWordRenderer implements WordRenderer {
             widthNeeded = widthNeeded + charWidths[i];
         }
 
-        String charSpace = config.getString("text.char.space");
+        String charSpace = SimpleConfig.Text.SPACE;
         int space = Numbers.ofPositiveInt(charSpace, 2);
         int startPosX = (width - widthNeeded) / 2;
         for (int i = 0; i < wordChars.length; i++) {

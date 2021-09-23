@@ -3,19 +3,11 @@ package com.github.mrzhqiang.helper.captcha.simple;
 import com.github.mrzhqiang.helper.captcha.Ripple;
 import com.github.mrzhqiang.helper.random.RandomNumbers;
 import com.google.common.base.Preconditions;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public final class FishEyeRipple implements Ripple {
-
-    private final Config config;
-
-    public FishEyeRipple(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config;
-    }
 
     @Override
     public BufferedImage distort(BufferedImage source) {

@@ -3,7 +3,6 @@ package com.github.mrzhqiang.helper.captcha.simple;
 import com.github.mrzhqiang.helper.awt.Colors;
 import com.github.mrzhqiang.helper.captcha.Noise;
 import com.google.common.base.Preconditions;
-import com.typesafe.config.Config;
 
 import java.awt.*;
 import java.awt.geom.CubicCurve2D;
@@ -17,13 +16,6 @@ import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
 public final class SimpleNoise implements Noise {
-
-    private final Config config;
-
-    public SimpleNoise(Config config) {
-        Preconditions.checkNotNull(config, "config == null");
-        this.config = config;
-    }
 
     @Override
     public void make(BufferedImage image, float factor1, float factor2, float factor3, float factor4) {
@@ -64,8 +56,7 @@ public final class SimpleNoise implements Noise {
         Graphics2D graph = (Graphics2D) image.getGraphics();
         graph.setRenderingHints(new RenderingHints(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON));
 
-        String noiseColor = config.getString("noise.color");
-        Color color = Colors.of(noiseColor, Color.BLACK);
+        Color color = Colors.of(SimpleConfig.Noise.COLOR, Color.BLACK);
         graph.setColor(color);
 
         // for the maximum 3 point change the stroke and direction
