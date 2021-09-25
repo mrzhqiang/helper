@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
-public final class WaterRipple implements Ripple {
+final class WaterRipple implements Ripple {
 
     private static final Noise DEFAULT_NOISE = new SimpleNoise();
 
@@ -21,7 +21,7 @@ public final class WaterRipple implements Ripple {
     public BufferedImage distort(BufferedImage source) {
         Preconditions.checkNotNull(source, "source == null");
 
-        String noiseClass = SimpleConfig.Producer.NOISE;
+        String noiseClass = Noise.CLASS;
         Noise noise = Classes.ofInstance(noiseClass, DEFAULT_NOISE);
         BufferedImage image = new BufferedImage(source.getWidth(), source.getHeight(), TYPE_INT_ARGB);
 

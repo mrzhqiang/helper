@@ -6,7 +6,7 @@ import com.github.mrzhqiang.helper.random.RandomStrings;
 /**
  * copy from com.github.penggle.kaptcha
  */
-public final class FiveLetterFirstNameTextProducer implements TextProducer {
+final class FiveLetterFirstNameTextProducer implements TextProducer {
 
     @Override
     public String produce() {

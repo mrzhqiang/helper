@@ -15,7 +15,7 @@ import java.util.Random;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 
-public final class SimpleNoise implements Noise {
+final class SimpleNoise implements Noise {
 
     @Override
     public void make(BufferedImage image, float factor1, float factor2, float factor3, float factor4) {

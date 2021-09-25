@@ -7,20 +7,14 @@ import com.typesafe.config.ConfigFactory;
 import java.awt.*;
 import java.util.List;
 
-public final class SimpleConfig {
+final class SimpleConfig {
     private SimpleConfig() {
         // no instance
     }
 
-    private static final Config CONFIG = ConfigFactory.load().getConfig("captcha");
+    private static final Config CONFIG = ConfigFactory.load().getConfig("captcha.simple");
 
-    public static final class Producer {
-        public static final String TEXT = CONFIG.getString("producer.text");
-        public static final String WORD = CONFIG.getString("producer.word");
-        public static final String NOISE = CONFIG.getString("producer.noise");
-        public static final String RIPPLE = CONFIG.getString("producer.ripple");
-        public static final String BACKGROUND = CONFIG.getString("producer.background");
-    }
+    public static final List<String> FIRST_NAME = CONFIG.getStringList("firstName");
 
     public static final class Border {
         public static final boolean ENABLED = CONFIG.getBoolean("border.enabled");
@@ -51,5 +45,4 @@ public final class SimpleConfig {
         public static final Color TO = Colors.of(CONFIG.getString("background.clear.to"));
     }
 
-    public static final List<String> FIRST_NAME = CONFIG.getStringList("firstName");
 }

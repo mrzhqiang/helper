@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import static java.awt.RenderingHints.*;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
-public final class SimpleBackground implements Background {
+final class SimpleBackground implements Background {
 
     @Override
     public BufferedImage add(BufferedImage background) {

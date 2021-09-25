@@ -4,7 +4,7 @@ import com.github.mrzhqiang.helper.captcha.TextProducer;
 import com.github.mrzhqiang.helper.math.Numbers;
 import com.github.mrzhqiang.helper.random.RandomStrings;
 
-public final class ChineseTextProducer implements TextProducer {
+final class ChineseTextProducer implements TextProducer {
 
     @Override
     public String produce() {

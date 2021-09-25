@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
-public final class ShadowRipple implements Ripple {
+final class ShadowRipple implements Ripple {
 
     private static final Noise DEFAULT_NOISE = new SimpleNoise();
 
@@ -44,7 +44,7 @@ public final class ShadowRipple implements Ripple {
         graph.drawImage(effectImage, 0, 0, null, null);
         graph.dispose();
 
-        Noise noise = Classes.ofInstance(SimpleConfig.Producer.NOISE, DEFAULT_NOISE);
+        Noise noise = Classes.ofInstance(Noise.CLASS, DEFAULT_NOISE);
         // draw lines over the image and/or text
         noise.make(distortedImage, .1f, .1f, .25f, .25f);
         noise.make(distortedImage, .1f, .25f, .5f, .9f);

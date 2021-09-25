@@ -17,9 +17,17 @@ public final class SimpleCaptcha implements Captcha {
     private static final Ripple DEFAULT_RIPPLE = new WaterRipple();
     private static final Background DEFAULT_BACKGROUND = new SimpleBackground();
 
+    public static Captcha of() {
+        return new SimpleCaptcha();
+    }
+
+    private SimpleCaptcha() {
+        // 隐藏构造函数
+    }
+
     @Override
     public String text() {
-        String textClass = SimpleConfig.Producer.TEXT;
+        String textClass = TextProducer.CLASS;
         TextProducer textProducer = Classes.ofInstance(textClass, DEFAULT_TEXT_PRODUCER);
         return textProducer.produce();
     }
@@ -28,7 +36,7 @@ public final class SimpleCaptcha implements Captcha {
     public BufferedImage image(String text) {
         Preconditions.checkNotNull(text, "text == null");
 
-        String wordClass = SimpleConfig.Producer.WORD;
+        String wordClass = WordRenderer.CLASS;
         WordRenderer wordRenderer = Classes.ofInstance(wordClass, DEFAULT_WORD_RENDERER);
         String imageWidth = SimpleConfig.Image.WIDTH;
         int width = Numbers.ofPositiveInt(imageWidth, 200);
@@ -37,11 +45,11 @@ public final class SimpleCaptcha implements Captcha {
 
         BufferedImage bi = wordRenderer.render(text, width, height);
 
-        String rippleClass = SimpleConfig.Producer.RIPPLE;
+        String rippleClass = Ripple.CLASS;
         Ripple ripple = Classes.ofInstance(rippleClass, DEFAULT_RIPPLE);
         bi = ripple.distort(bi);
 
-        String backgroundClass = SimpleConfig.Producer.BACKGROUND;
+        String backgroundClass = Background.CLASS;
         Background background = Classes.ofInstance(backgroundClass, DEFAULT_BACKGROUND);
         bi = background.add(bi);
 

@@ -16,7 +16,7 @@ import java.util.Random;
 import static java.awt.RenderingHints.*;
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
-public final class SimpleWordRenderer implements WordRenderer {
+final class SimpleWordRenderer implements WordRenderer {
 
     @Override
     public BufferedImage render(String word, int width, int height) {

@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public final class FishEyeRipple implements Ripple {
+final class FishEyeRipple implements Ripple {
 
     @Override
     public BufferedImage distort(BufferedImage source) {

@@ -8,7 +8,7 @@ import com.google.common.base.Strings;
 import java.security.SecureRandom;
 import java.util.Random;
 
-public final class SimpleTextProducer implements TextProducer {
+final class SimpleTextProducer implements TextProducer {
 
     @Override
     public String produce() {
