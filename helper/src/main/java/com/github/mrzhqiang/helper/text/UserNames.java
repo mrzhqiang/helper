@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.helper.text;
 
+import com.github.mrzhqiang.helper.random.RandomNumbers;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
@@ -84,6 +85,15 @@ public enum UserNames {
         // 获得 name 的 hashCode，位与 0xFFFFFFFF——即取后 8 位
         // 再根据颜色数量取模，得到下标位置，返回对应的颜色值
         return COLORS.get((int) ((value.hashCode() & 0xFFFFFFL) % COLORS.size()));
+    }
+
+    /**
+     * 随机生成一种常用的颜色。
+     *
+     * @return 颜色字符串。比如：0x202020。
+     */
+    public static String randomColor() {
+        return COLORS.get(RandomNumbers.rangeInt(0, COLORS.size() - 1));
     }
 
     /**
