@@ -7,8 +7,10 @@ import javax.annotation.Nullable;
 /**
  * Java 的类工具。
  */
-public enum Classes {
-    ; // no instance
+public final class Classes {
+    private Classes() {
+        // no instance
+    }
 
     /**
      * 从类名称生成类实例。
@@ -38,7 +40,7 @@ public enum Classes {
 
         try {
             return (T) Class.forName(className).newInstance();
-        } catch (Exception ignore) {
+        } catch (Exception ignored) {
         }
         return defaultInstance;
     }

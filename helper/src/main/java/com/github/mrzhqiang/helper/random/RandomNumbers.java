@@ -10,8 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * Use of ThreadLocalRandom is particularly appropriate when multiple tasks
  * (for example, each a ForkJoinTask) use random numbers in parallel in thread pools.
  */
-public enum RandomNumbers {
-    ;
+public final class RandomNumbers {
+    private RandomNumbers() {
+        // no instances
+    }
 
     /**
      * Next random integer value.

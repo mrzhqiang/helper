@@ -13,8 +13,10 @@ import java.util.Objects;
  * <p>
  * 当在生产环境中运行时，可以屏蔽堆栈打印，以提升性能。
  */
-public enum StackTraces {
-    ;
+public final class StackTraces {
+    private StackTraces() {
+        // no instances
+    }
 
     /**
      * 获得调用当前类时的堆栈内容。
@@ -40,6 +42,6 @@ public enum StackTraces {
         if (Environments.debug()) {
             return Throwables.getStackTraceAsString(e);
         }
-        return Objects.nonNull(e) ? e.getMessage() : "Unknown Error!";
+        return e != null ? e.getMessage() : "Unknown Error!";
     }
 }

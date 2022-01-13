@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.javafx;
 
-import com.github.mrzhqiang.helper.text.Namings;
+import com.github.mrzhqiang.helper.text.CaseFormats;
 import com.github.mrzhqiang.helper.javafx.ui.Dialogs;
 import com.google.common.base.Preconditions;
 import javafx.application.Application;
@@ -25,7 +25,7 @@ public enum Applications {
         Preconditions.checkNotNull(application, "application == null");
         Preconditions.checkNotNull(stage, "stage == null");
 
-        stage.setTitle(Namings.ofSimple(application.getClass()));
+        stage.setTitle(CaseFormats.ofSimple(application.getClass()));
         start(fxml(application).orElseThrow(() -> new RuntimeException("Not found fxml")), stage,
                 css(application).orElse(null));
     }
@@ -73,7 +73,7 @@ public enum Applications {
         Preconditions.checkNotNull(application, "application == null");
 
         Class<? extends Application> applicationClass = application.getClass();
-        String name = Namings.ofSimple(applicationClass, ".fxml");
+        String name = CaseFormats.ofSimple(applicationClass, ".fxml");
         return Optional.ofNullable(applicationClass.getResource(name));
     }
 
@@ -81,7 +81,7 @@ public enum Applications {
         Preconditions.checkNotNull(application, "application == null");
 
         Class<? extends Application> applicationClass = application.getClass();
-        String name = Namings.ofSimple(applicationClass, ".css");
+        String name = CaseFormats.ofSimple(applicationClass, ".css");
         return Optional.ofNullable(applicationClass.getResource(name));
     }
 }

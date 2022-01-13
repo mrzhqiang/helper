@@ -8,14 +8,17 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
  * UTF-8 编码器。
  * <p>
  * 实现将指定文件转为 UTF-8 编码。
  */
-public enum UTF8Encoding {
-    ; // no instance
+public final class UTF8Encoding {
+    private UTF8Encoding() {
+        // no instance
+    }
 
     /**
      * 转换指定路径为 UTF-8 编码格式。
@@ -50,7 +53,7 @@ public enum UTF8Encoding {
 
             CharBuffer decode = Charset.forName("GBK").decode(ByteBuffer.wrap(Files.readAllBytes(source)));
             writeUTF8(decode, target);
-        } catch (Exception ignore) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -80,24 +83,26 @@ public enum UTF8Encoding {
     }
 
     private static void converts(Path source, Path target) throws IOException {
-        Files.list(source).forEach(path -> {
-            Path newTarget = target.resolve(path.getFileName());
-            if (Files.isDirectory(path)) {
-                try {
-                    Files.createDirectories(newTarget);
-                    converts(path, newTarget);
-                } catch (Exception ignore) {
+        try (Stream<Path> pathStream = Files.list(source)) {
+            pathStream.forEach(path -> {
+                Path newTarget = target.resolve(path.getFileName());
+                if (Files.isDirectory(path)) {
+                    try {
+                        Files.createDirectories(newTarget);
+                        converts(path, newTarget);
+                    } catch (Exception ignored) {
+                    }
+                } else {
+                    convert(path, newTarget);
                 }
-            } else {
-                convert(path, newTarget);
-            }
-        });
+            });
+        }
     }
 
-    private static void writeUTF8(CharBuffer decode, Path target) throws IOException {
+    private static void writeUTF8(CharBuffer decode, Path target) {
         char[] chars = new char[decode.remaining()];
         decode.get(chars);
         String content = new String(chars);
-        Files.write(target, content.getBytes(StandardCharsets.UTF_8));
+        Explorer.write(target, content.getBytes(StandardCharsets.UTF_8));
     }
 }

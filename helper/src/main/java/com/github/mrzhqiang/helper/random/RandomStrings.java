@@ -22,23 +22,30 @@ import java.util.List;
  *   (常用汉字 3500 个)
  * </pre>
  * 关于长度：
+ * <p>
  * 指定单个长度，表示只希望得到固定长度的随机字符串；
- * 指定最小和最大长度，表示在长度范围内获取随机字符串。
+ * <p>
+ * 指定最小长度和最大长度，表示在长度范围内获取随机字符串。
  * <p>
  * 关于字符串：
+ * <p>
  * 通常用于游客账号、访问令牌、复杂验证码等场景。
  * <p>
  * 关于百家姓：
+ * <p>
  * 用于游戏中投骰子创建姓名的类似场景。
  * <p>
  * 关于汉字（常用）：
+ * <p>
  * 通常用于匿名用户、权限校验、汉字验证码等场景。
  * <pre>
  *   https://blog.csdn.net/u011762313/article/details/47419063
  * </pre>
  * <p>
  * 关于数字：
+ * <p>
  * 通常用于初始密码、邮箱验证、简单验证码等场景。
+ * <p>
  * 首字符永不为<code>0</code>，是为了保证可以解析为：
  * <pre>
  *   Short
@@ -46,12 +53,15 @@ import java.util.List;
  *   Long
  * </pre>
  * 关于获取大小写字母：
+ * <p>
  * 一般不常用，只适合特殊场景。
  *
  * @author mrzhqiang
  */
-public enum RandomStrings {
-    ;
+public final class RandomStrings {
+    private RandomStrings() {
+        // no instances
+    }
 
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.random");
 

@@ -5,8 +5,10 @@ import com.google.common.base.Strings;
 /**
  * 字符工具。
  */
-public enum Chars {
-    ;
+public final class Chars {
+    private Chars() {
+        //  no instances
+    }
 
     /**
      * 从指定字符串中，获取字符数组。

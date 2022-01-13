@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.helper.text;
 
 import com.github.mrzhqiang.helper.random.RandomNumbers;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
@@ -12,29 +13,36 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * 用户名工具。
+ * 名称工具。
  * <p>
  * 有时候，检查一个账号或者昵称只能判断是否为 Null or Empty，为了改变这种情况，增加了名字助手类。
  * <p>
  * 关于首字母：
+ * <p>
  * 可以处理大部分字符，通常用来生成头像标签。
  * <p>
  * 关于颜色：
+ * <p>
  * 每个字符串都对应一组不同的颜色值。
  * <p>
  * 关于默认检测：
+ * <p>
  * 判断字符串不为 Null 以及 Empty，并且属于 Java 传统意义上的字符或数字（阿拉伯数字只是其中一种）。
  * <p>
  * 关于中文检测：
+ * <p>
  * 通过 Unicode 的正则表达式范围进行判断，这个值可以从配置文件修正。
  * <p>
  * 关于字符串检测：
+ * <p>
  * 我们希望通过开放这个方法，有更灵活的检测机制。
  *
  * @author mrzhqiang
  */
-public enum UserNames {
-    ;
+public final class Names {
+    private Names() {
+        // no instances
+    }
 
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.name");
 
@@ -44,6 +52,10 @@ public enum UserNames {
     private static final String DEFAULT_COLOR = COLORS.get(COLORS.size() - 1);
 
     private static final String REGEX_CHINESE = CONFIG.getString("regex.chinese");
+
+    private static final CharMatcher LETTER_OR_DIGIT_MATCHER = CharMatcher.inRange('a', 'z')
+            .or(CharMatcher.inRange('A', 'Z'))
+            .or(CharMatcher.inRange('0', '9'));
 
     /**
      * 获取字符串的第一个字符（仅限于字母或数字，包括汉字）。
@@ -102,8 +114,8 @@ public enum UserNames {
      * @param value Username，如果是 Null 或者空串则返回 false。
      * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
      */
-    public static boolean checkName(@Nullable String value) {
-        return checkName(value, 0, 0);
+    public static boolean verify(@Nullable String value) {
+        return verify(value, 0, 0);
     }
 
     /**
@@ -114,24 +126,17 @@ public enum UserNames {
      * @param max   最大长度。小于等于 0 表示不做长度检测，并且必须大于等于 min。
      * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
      */
-    public static boolean checkName(@Nullable String value, int min, int max) {
-        boolean isValid = false;
-        if (!Strings.isNullOrEmpty(value)) {
-            for (char c : value.toCharArray()) {
-                if (Character.isLetterOrDigit(c)) {
-                    isValid = true;
-                    if (min > 0) {
-                        isValid = value.length() >= min;
-                    }
-                    if (max > 0) {
-                        Preconditions.checkArgument(max >= min,
-                                "max length: %s must be >= min length: %s", max, min);
-                        isValid = value.length() <= max;
-                    }
-                }
-            }
+    public static boolean verify(@Nullable String value, int min, int max) {
+        if (Strings.isNullOrEmpty(value)) {
+            return false;
         }
-        return isValid;
+
+        int length = value.length();
+        if ((min > 0 && length < min) || (max > 0 && length > max)) {
+            return false;
+        }
+
+        return LETTER_OR_DIGIT_MATCHER.matchesAllOf(value);
     }
 
     /**
@@ -166,21 +171,16 @@ public enum UserNames {
      * @return true 符合规则；false 字符串值为 Null 或者不符合规则。
      */
     public static boolean checkString(@RegEx String regex, @Nullable String value, int min, int max) {
-        boolean isValid = false;
-        if (!Strings.isNullOrEmpty(value)) {
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(regex),
-                    "invalid regex: %s", regex);
-            if (Pattern.matches(regex, value)) {
-                if (min > 0) {
-                    isValid = value.length() >= min;
-                }
-                if (max > 0) {
-                    Preconditions.checkArgument(max >= min,
-                            "max length: %s must be >= min length: %s", max, min);
-                    isValid = value.length() <= max;
-                }
-            }
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(regex), "invalid regex: %s", regex);
+        if (Strings.isNullOrEmpty(value)) {
+            return false;
         }
-        return isValid;
+
+        int length = value.length();
+        if ((min > 0 && length < min) || (max > 0 && length > max)) {
+            return false;
+        }
+
+        return Pattern.matches(regex, value);
     }
 }

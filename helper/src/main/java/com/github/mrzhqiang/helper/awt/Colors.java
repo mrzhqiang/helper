@@ -1,28 +1,45 @@
 package com.github.mrzhqiang.helper.awt;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
-import java.awt.*;
+import java.awt.Color;
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * 颜色工具类。
  * <p>
  * 可以通过字符串生成 java.awt.Color 类实例。
  */
-public enum Colors {
-    ; // no instance
+public final class Colors {
+    private Colors() {
+        // no instances
+    }
 
     /**
-     * 默认颜色常量，黑色-BLACK：r:0 g:0 b:0
+     * 默认颜色常量。
+     * <p>
+     * 黑色-BLACK：r:0 g:0 b:0
      */
     private static final Color DEFAULT_COLOR = Color.BLACK;
     /**
-     * 英文单词匹配，[A--Z, a--z]
+     * 英文单词匹配。
+     * <p>
+     * [A-Za-z]*
      */
-    private static final CharMatcher LETTER_MATCHER = CharMatcher.inRange('A', 'Z')
-            .or(CharMatcher.inRange('a', 'z'));
+    private static final CharMatcher LETTER_MATCHER = CharMatcher.inRange('A', 'Z').or(CharMatcher.inRange('a', 'z'));
+    /**
+     * 逗号匹配器。
+     */
+    private static final CharMatcher DOT_MATCHER = CharMatcher.is(',');
+    /**
+     * 逗号分割器。
+     * <p>
+     * 忽略空字符串，裁减返回值的前后空格。
+     */
+    private static final Splitter DOT_SPLITTER = Splitter.on(',').omitEmptyStrings().trimResults();
 
     /**
      * 通过字符串生成 awt 颜色类。
@@ -52,20 +69,21 @@ public enum Colors {
             return defaultColor;
         }
 
-        if (color.contains(",")) {
+        if (DOT_MATCHER.matchesAnyOf(color)) {
             try {
-                String[] colors = color.split(",");
-                if (colors.length >= 3) {
-                    int r = Integer.parseInt(colors[0].trim());
-                    int g = Integer.parseInt(colors[1].trim());
-                    int b = Integer.parseInt(colors[2].trim());
-                    if (colors.length == 4) {
-                        int a = Integer.parseInt(colors[3].trim());
+                // 无需裁减前后空格，分割器已自动裁减
+                List<String> colors = DOT_SPLITTER.splitToList(color);
+                if (colors.size() >= 3) {
+                    int r = Integer.parseInt(colors.get(0));
+                    int g = Integer.parseInt(colors.get(1));
+                    int b = Integer.parseInt(colors.get(2));
+                    if (colors.size() == 4) {
+                        int a = Integer.parseInt(colors.get(3));
                         return new Color(r, g, b, a);
                     }
                     return new Color(r, g, b);
                 }
-            } catch (Exception ignore) {
+            } catch (Exception ignored) {
             }
             return defaultColor;
         }
@@ -73,7 +91,7 @@ public enum Colors {
         try {
             // "0x", "0X", "#", or leading zero
             return Color.decode(color);
-        } catch (Exception ignore) {
+        } catch (Exception ignored) {
             if (LETTER_MATCHER.matchesAnyOf(color)) {
                 return ofConstant(color);
             }
@@ -111,7 +129,7 @@ public enum Colors {
             Field field = Class.forName("java.awt.Color").getField(color);
             // 如果底层字段是静态字段，则忽略 obj 参数；它可以为空。
             return (Color) field.get(null);
-        } catch (Exception ignore) {
+        } catch (Exception ignored) {
         }
         return defaultColor;
     }

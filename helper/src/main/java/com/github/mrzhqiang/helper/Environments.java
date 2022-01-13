@@ -11,8 +11,10 @@ import java.util.Objects;
  * <p>
  * 实际上可以用 Guava 的 StandardSystemProperty 类替代当前类。
  */
-public enum Environments {
-    ;
+public final class Environments {
+    private Environments() {
+        // no instance
+    }
 
     public static final String INTELLIJ_DEBUG_AGENT = "intellij.debug.agent";
 

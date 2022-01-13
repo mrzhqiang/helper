@@ -1,18 +1,23 @@
 package com.github.mrzhqiang.helper.text;
 
-import com.google.common.base.Ascii;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
-
-import java.util.Objects;
+import com.google.common.base.Strings;
 
 /**
- * 命名工具。
+ * 大小写格式转换工具。
  */
-public enum Namings {
-    ;
+public final class CaseFormats {
+    private CaseFormats() {
+        // no instances
+    }
 
     /**
-     * com.randall.FssdApplication, {".qing",".chun"} == com-randall-fssdapplication.qing.chun
+     * 从类文件转换为带 - 符号的名称。
+     * <p>
+     * com.randall.FssdApplication, [".qing", ".chun"] == com-randall-fssd-application.qing.chun
+     * <p>
+     * 需要将驼峰命名转为小写字母，中间用 - 符号分离，或者其他类似的操作，推荐使用 {@link CaseFormat} 工具。
      *
      * @param clazz 任意类的描述对象。
      * @param more  更多的后缀数组。
@@ -22,13 +27,13 @@ public enum Namings {
         String first = clazz.getCanonicalName().toLowerCase().replaceAll("[.$]", "-");
         StringBuilder builder = new StringBuilder(first);
         for (String postfix : more) {
-            builder.append(Objects.requireNonNull(postfix));
+            builder.append(Strings.nullToEmpty(postfix));
         }
         return builder.toString();
     }
 
     /**
-     * NamingsTest, {"1","2","3"} == namings-test123
+     * NamingsTest, ["1", "2", "3"] == namings-test123
      *
      * @param clazz 任意类的描述对象。
      * @param more  更多的后缀数组。
@@ -38,32 +43,23 @@ public enum Namings {
         String first = ofCamel(clazz.getSimpleName());
         StringBuilder builder = new StringBuilder(first);
         for (String postfix : more) {
-            builder.append(Objects.requireNonNull(postfix));
+            builder.append(Strings.nullToEmpty(postfix));
         }
         return builder.toString();
     }
 
     /**
+     * 驼峰转小写字母和 - 连接。
+     * <p>
      * CamelString == camel-string
+     * <p>
+     * 推荐使用 {@link CaseFormat} 工具。
      *
      * @param camel 驼峰字符串。
      * @return 修改驼峰字符串为破折号连接。
      */
     public static String ofCamel(String camel) {
         Preconditions.checkNotNull(camel, "camel == null");
-
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < camel.length(); i++) {
-            char c = camel.charAt(i);
-            if (Ascii.isUpperCase(c)) {
-                if (i > 0) {
-                    builder.append("-");
-                }
-                builder.append(Ascii.toLowerCase(c));
-            } else {
-                builder.append(c);
-            }
-        }
-        return builder.toString();
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, camel);
     }
 }

@@ -1,15 +1,25 @@
 package com.github.mrzhqiang.helper.awt;
 
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
-import java.awt.*;
+import java.awt.Font;
+import java.util.List;
 
 /**
  * 字体工具类。
  */
-public enum Fonts {
-    ;
+public final class Fonts {
+    private Fonts() {
+        // no instances
+    }
 
+    /**
+     * 逗号分割器。
+     * <p>
+     * 忽略空字符串，自动裁减返回值的前后空格。
+     */
+    private static final Splitter DOT_SPLITTER = Splitter.on(',').omitEmptyStrings().trimResults();
     /**
      * 默认的字体数组。
      * <p>
@@ -44,10 +54,10 @@ public enum Fonts {
             return defaultFonts;
         }
 
-        String[] fontNames = font.split(",");
-        Font[] fonts = new Font[fontNames.length];
-        for (int i = 0; i < fontNames.length; i++) {
-            fonts[i] = new Font(fontNames[i], Font.BOLD, fontSize);
+        List<String> fontNames = DOT_SPLITTER.splitToList(font);
+        Font[] fonts = new Font[fontNames.size()];
+        for (int i = 0; i < fontNames.size(); i++) {
+            fonts[i] = new Font(fontNames.get(i), Font.BOLD, fontSize);
         }
         return fonts;
     }

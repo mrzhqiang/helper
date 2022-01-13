@@ -1,6 +1,8 @@
 package com.github.mrzhqiang.helper.io;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.collect.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,16 +11,19 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 资源管理器。
  *
  * @author mrzhqiang
  */
-public enum Explorer {
-    ;
+public final class Explorer {
+    private Explorer() {
+        // no instances
+    }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("helper");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Explorer.class);
 
     /**
      * 创建目录。
@@ -36,17 +41,19 @@ public enum Explorer {
         try {
             if (Files.notExists(path)) {
                 Files.createDirectories(path);
-                LOGGER.info("创建新目录：{}", path);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("创建新目录：{}", path);
+                }
             }
         } catch (IOException e) {
-            throw new ExplorerException(String.format("创建所有目录 [%s] 失败", path), e);
+            throw new ExplorerException(Strings.lenientFormat("创建所有目录 [%s] 失败", path), e);
         }
     }
 
     /**
      * 创建文件。
      * <p>
-     * 注意：此方法将通过 org.slf4j.Logger 打印创建新文件的日志，使用的是 info 级别。
+     * 注意：如果开启日志的调试打印，则此方法将通过 org.slf4j.Logger 打印创建新文件的日志信息。
      * <p>
      * 创建操作只会在 path 不存在的情况下进行，已存在文件将不进行任何操作。
      *
@@ -59,10 +66,12 @@ public enum Explorer {
         try {
             if (Files.notExists(path)) {
                 Files.createFile(path);
-                LOGGER.info("创建新文件：{}", path);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("创建新文件：{}", path);
+                }
             }
         } catch (IOException e) {
-            throw new ExplorerException(String.format("创建失败 [%s]", path), e);
+            throw new ExplorerException(Strings.lenientFormat("创建失败 [%s]", path), e);
         }
     }
 
@@ -85,10 +94,12 @@ public enum Explorer {
             // 目录必须为空，否则将抛出 DirectoryNotEmptyException
             if (Files.exists(path)) {
                 Files.delete(path);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("已删除：{}", path);
+                }
             }
-            LOGGER.info("已删除：{}", path);
         } catch (IOException e) {
-            throw new ExplorerException(String.format("删除 [%s] 失败", path), e);
+            throw new ExplorerException(Strings.lenientFormat("删除 [%s] 失败", path), e);
         }
     }
 
@@ -120,7 +131,7 @@ public enum Explorer {
                 }
             });
         } catch (IOException e) {
-            throw new ExplorerException(String.format("删除 [%s] 失败", path), e);
+            throw new ExplorerException(Strings.lenientFormat("删除 [%s] 失败", path), e);
         }
     }
 
@@ -131,18 +142,18 @@ public enum Explorer {
      * <p>
      * 这个方法只会覆盖内容，不追加。
      *
-     * @param path    文件路径。
-     * @param content 文件内容。
+     * @param path  文件路径。
+     * @param bytes 文件内容的字节数组。
      * @throws NullPointerException 如果传入的 path 或 content 为 Null，则抛出此异常。
      * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是写入失败。
      */
-    public static void write(Path path, String content) {
+    public static void write(Path path, byte[] bytes) {
         Preconditions.checkNotNull(path, "path == null");
-        Preconditions.checkNotNull(content, "content == null");
+        Preconditions.checkNotNull(bytes, "content == null");
         try {
-            Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
+            Files.write(path, bytes, StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new ExplorerException(String.format("无法写入到 [%s]", path), e);
+            throw new ExplorerException(Strings.lenientFormat("无法写入到 [%s]", path), e);
         }
     }
 
@@ -164,7 +175,7 @@ public enum Explorer {
         try {
             Files.write(path, content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new ExplorerException(String.format("无法写入到 [%s]", path), e);
+            throw new ExplorerException(Strings.lenientFormat("无法写入到 [%s]", path), e);
         }
     }
 
@@ -185,7 +196,26 @@ public enum Explorer {
                 return Collections.emptyList();
             }
         } catch (IOException e) {
-            throw new ExplorerException(String.format("无法读取文件内容 [%s]", path), e);
+            throw new ExplorerException(Strings.lenientFormat("无法读取文件内容 [%s]", path), e);
+        }
+    }
+
+    /**
+     * 列出指定目录路径下的子目录或子文件。
+     * <p>
+     * 需要使用 try-resources 语句关闭流。
+     *
+     * @param path 目录路径。
+     * @return 路径流。仅包含当前目录下的子目录和子文件，不递归。
+     * @throws NullPointerException 如果传入的 path 为 Null，则抛出此异常。
+     * @throws ExplorerException    如果 IO 执行出现问题，则抛出此异常。通常情况下，是读取失败。
+     */
+    public static Stream<Path> list(Path path) {
+        Preconditions.checkNotNull(path, "path == null");
+        try {
+            return Files.list(path);
+        } catch (IOException e) {
+            throw new ExplorerException(Strings.lenientFormat("无法列出目录内容 [%s]", path), e);
         }
     }
 }

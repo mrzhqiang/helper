@@ -6,7 +6,7 @@ import com.github.mrzhqiang.helper.captcha.Captcha;
 import com.github.mrzhqiang.helper.captcha.TextProducer;
 import com.github.mrzhqiang.helper.captcha.WordRenderer;
 import com.github.mrzhqiang.helper.math.Numbers;
-import com.github.mrzhqiang.helper.text.UserNames;
+import com.github.mrzhqiang.helper.text.Names;
 import com.google.common.base.Preconditions;
 
 import java.awt.*;
@@ -54,7 +54,7 @@ public final class GifCaptcha implements Captcha {
             int length = text.length();
             Color[] fontColor = new Color[length];
             for (int i = 0; i < length; i++) {
-                fontColor[i] = Colors.of(UserNames.randomColor());
+                fontColor[i] = Colors.of(Names.randomColor());
             }
             renderer.setFontColor(fontColor);
 

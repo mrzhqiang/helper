@@ -5,7 +5,7 @@ package com.github.mrzhqiang.helper.io;
  *
  * @author mrzhqiang
  */
-public final class ExplorerException extends RuntimeException {
+public class ExplorerException extends RuntimeException {
 
     private static final long serialVersionUID = 4510908274351398195L;
 

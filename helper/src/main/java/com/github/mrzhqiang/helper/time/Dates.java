@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.helper.time;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -78,13 +80,13 @@ import java.util.TimeZone;
  * 另外：
  * 如果你已抛弃 {@link Date Date}，那么 {@link java.time.format.DateTimeFormatter DateTimeFormatter}
  * 的相关常量解析器将是你最好的工具。
- *
- * @author mrzhqiang
  */
-public enum Dates {
-    ;
+public final class Dates {
+    private Dates() {
+        // no instances
+    }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("helper");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Dates.class);
 
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.datetime");
 
@@ -124,16 +126,19 @@ public enum Dates {
      * </pre>
      * 即可修改为你希望的日期时间格式。
      *
-     * @param value {@link Date Date}，非 Null。
+     * @param date {@link Date Date}，非 Null。
      * @return 格式化后的字符串。
      */
-    public static String format(Date value) {
-        Preconditions.checkNotNull(value);
+    public static String format(Date date) {
+        Preconditions.checkNotNull(date, "date == null");
         try {
-            return LOCAL_DATETIME.get().format(value);
+            return LOCAL_DATETIME.get().format(date);
         } catch (Exception e) {
-            LOGGER.error("format {} failed: {}, try format with http...", value, e.getMessage());
-            return formatHTTP(value);
+            String message = Strings.lenientFormat("format {} failed, we will try format with http...", date);
+            LOGGER.error(message, e);
+            return formatHTTP(date);
+        } finally {
+            LOCAL_DATETIME.remove();
         }
     }
 
@@ -148,12 +153,16 @@ public enum Dates {
      * </pre>
      * 即可修改为你希望的日期格式。
      *
-     * @param value {@link Date Date}，非 Null。
+     * @param date {@link Date Date}，非 Null。
      * @return 格式化后的字符串。
      */
-    public static String formatDate(Date value) {
-        Preconditions.checkNotNull(value);
-        return LOCAL_DATE.get().format(value);
+    public static String formatDate(Date date) {
+        Preconditions.checkNotNull(date, "date == null");
+        try {
+            return LOCAL_DATE.get().format(date);
+        } finally {
+            LOCAL_DATE.remove();
+        }
     }
 
     /**
@@ -167,12 +176,16 @@ public enum Dates {
      * </pre>
      * 即可修改为你希望的时间格式。
      *
-     * @param value {@link Date Date}，非 Null。
+     * @param date {@link Date Date}，非 Null。
      * @return 格式化后的字符串。
      */
-    public static String formatTime(Date value) {
-        Preconditions.checkNotNull(value);
-        return LOCAL_TIME.get().format(value);
+    public static String formatTime(Date date) {
+        Preconditions.checkNotNull(date, "date == null");
+        try {
+            return LOCAL_TIME.get().format(date);
+        } finally {
+            LOCAL_TIME.remove();
+        }
     }
 
     /**
@@ -182,12 +195,12 @@ public enum Dates {
      * <p>
      * 这个方法拷贝自 okhttp，因此不具备从配置文件修改的能力。
      *
-     * @param value {@link Date Date}，非 Null。
+     * @param date {@link Date Date}，非 Null。
      * @return 格式化后的字符串。
      */
-    public static String formatHTTP(Date value) {
-        Preconditions.checkNotNull(value);
-        return HttpDate.format(value);
+    public static String formatHTTP(Date date) {
+        Preconditions.checkNotNull(date, "date == null");
+        return HttpDate.format(date);
     }
 
     /**
@@ -208,25 +221,28 @@ public enum Dates {
      */
     @Nullable
     public static Date parse(String source) {
-        Preconditions.checkNotNull(source);
+        Preconditions.checkNotNull(source, "source == null");
         try {
             return LOCAL_DATETIME.get().parse(source);
         } catch (ParseException e) {
-            LOGGER.error("parse {} failed: {}, try parse with http...", source, e.getMessage());
+            String message = Strings.lenientFormat("parse {} failed, we will try parse with http...", source);
+            LOGGER.error(message, e);
             return parseHTTP(source);
+        } finally {
+            LOCAL_DATETIME.remove();
         }
     }
 
     /**
-     * Returns the date for {@code value}. Returns null if the value couldn't be parsed.
+     * Returns the date for {@code source}. Returns null if the value couldn't be parsed.
      *
-     * @param value 字符串表示的时间。
+     * @param source 字符串表示的时间。
      * @return {@link Date Date}，如果解析失败则返回 Null。
      */
     @Nullable
-    public static Date parseHTTP(String value) {
-        Preconditions.checkNotNull(value);
-        return HttpDate.parse(value);
+    public static Date parseHTTP(String source) {
+        Preconditions.checkNotNull(source, "source == null");
+        return HttpDate.parse(source);
     }
 
     /**
@@ -250,19 +266,18 @@ public enum Dates {
      * </pre>
      * 来修改对应的格式。
      *
-     * @param value 某个日期。
+     * @param date 某个日期。
      * @return 对时间间隔的文字描述，比如："1 秒钟前"、"1 小时前"。
      */
-    public static String untilNow(Date value) {
-        Preconditions.checkNotNull(value);
-
-        if (value.after(new Date())) {
+    public static String untilNow(Date date) {
+        if (date == null || date.getTime() > System.currentTimeMillis()) {
             return UNTIL_UNKNOWN;
         }
-        LocalDateTime dateTime = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+
+        LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         LocalDateTime now = LocalDateTime.now();
         long seconds = dateTime.until(now, ChronoUnit.SECONDS);
-        if (seconds == 0) {
+        if (seconds <= 10) {
             return UNTIL_NOW;
         }
         long minutes = dateTime.until(now, ChronoUnit.MINUTES);
@@ -297,29 +312,30 @@ public enum Dates {
      * <p>
      * 3. 如果是过去，则根据 display.range 设定的范围显示对应的 display.prefix 前缀格式。
      *
-     * @param value 某个日期。
+     * @param date 某个日期。
      * @return 格式化的时间字符串。
      */
-    public static String display(Date value) {
-        Preconditions.checkNotNull(value);
+    public static String display(Date date) {
+        Preconditions.checkNotNull(date, "date == null");
 
-        if (value.after(new Date())) {
+        if (date.getTime() > System.currentTimeMillis()) {
             // yyyy-MM-dd HH:mm:ss
-            return format(value);
+            return format(date);
         }
-        long days = LocalDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault())
+
+        long days = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .until(LocalDateTime.now(), ChronoUnit.DAYS);
         if (days == 0) {
             // HH:mm:ss
-            return formatTime(value);
+            return formatTime(date);
         }
         if (days <= DISPLAY_RANGE) {
             int index = (int) days - 1;
             // 昨天/前天 HH:mm:ss
-            return String.format(DISPLAY_PREFIX.get(index), formatTime(value));
+            return String.format(DISPLAY_PREFIX.get(index), formatTime(date));
         }
         // yyyy-MM-dd
-        return formatDate(value);
+        return formatDate(date);
     }
 
     /**
@@ -390,6 +406,7 @@ public enum Dates {
             if (position.getIndex() == value.length()) {
                 // STANDARD_DATE_FORMAT must match exactly; all text must be consumed, e.g. no ignored
                 // non-standard trailing "+01:00". Those cases are covered below.
+                STANDARD_DATE_FORMAT.remove();
                 return result;
             }
             synchronized (BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS) {
@@ -418,10 +435,14 @@ public enum Dates {
         }
 
         /**
-         * Returns the string for {@code value}.
+         * Returns the string for {@code date}.
          */
-        static String format(Date value) {
-            return STANDARD_DATE_FORMAT.get().format(value);
+        static String format(Date date) {
+            try {
+                return STANDARD_DATE_FORMAT.get().format(date);
+            } finally {
+                STANDARD_DATE_FORMAT.remove();
+            }
         }
 
         private HttpDate() {

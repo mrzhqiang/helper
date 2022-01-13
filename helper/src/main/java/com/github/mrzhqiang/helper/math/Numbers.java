@@ -7,11 +7,13 @@ import java.math.BigDecimal;
 /**
  * 数字工具类。
  */
-public enum Numbers {
-    ;
+public final class Numbers {
+    private Numbers() {
+        // no instances
+    }
 
     /**
-     * 从一个正整数转为 int 基本类型。
+     * 从正整数字符串转为 integer 值。
      *
      * @param number       正整数字符串。
      * @param defaultValue 默认值。
@@ -27,6 +29,7 @@ public enum Numbers {
     }
 
     /**
+     * 从整型字符串转换 integer 值。
      * <pre>
      *     ofInt(null) == 0
      *     ofInt("")   == 0
@@ -41,6 +44,7 @@ public enum Numbers {
     }
 
     /**
+     * 从整型字符串转换 integer 值，转换失败则使用默认值。
      * <pre>
      *     ofInt(null,0) == 0
      *     ofInt("",1)   == 1
@@ -64,6 +68,7 @@ public enum Numbers {
     }
 
     /**
+     * 从长整型字符串转为 long 值。
      * <pre>
      *     ofLong(null) == 0L
      *     ofLong("")   == 0L
@@ -78,6 +83,7 @@ public enum Numbers {
     }
 
     /**
+     * 从长整型字符串转为 long 值，转换失败则使用默认值。
      * <pre>
      *     ofLong(null,0L) == 0L
      *     ofLong("",1L)   == 1L
@@ -101,6 +107,7 @@ public enum Numbers {
     }
 
     /**
+     * 从浮点型字符串转为 float 值。
      * <pre>
      *     ofFloat(null)    == 0.0f
      *     ofFloat("")      == 0.0f
@@ -115,6 +122,7 @@ public enum Numbers {
     }
 
     /**
+     * 从浮点型字符串转为 float 值，转换失败则使用默认值。
      * <pre>
      *     ofFloat(null,0.0f) == 0.0f
      *     ofFloat("",1.0f)   == 1.0f
@@ -138,6 +146,7 @@ public enum Numbers {
     }
 
     /**
+     * 从浮点型字符串转为 double 值。
      * <pre>
      *     ofDouble(null) == 0.0d
      *     ofDouble("")   == 0.0d
@@ -152,6 +161,7 @@ public enum Numbers {
     }
 
     /**
+     * 从浮点型字符串转为 double 值，转换失败则使用默认值。
      * <pre>
      *     ofDouble(null,0.0d) == 0.0d
      *     ofDouble("",1.0d)   == 1.0d
@@ -175,6 +185,7 @@ public enum Numbers {
     }
 
     /**
+     * 从 BigDecimal 转为 double 值。
      * <pre>
      *   ofDouble(null)                     == 0.0d
      *   ofDouble(BigDecimal.valueOf(1.0d)) == 1.0d
@@ -188,6 +199,7 @@ public enum Numbers {
     }
 
     /**
+     * 从 BigDecimal 转为 double 值，转换失败则使用默认值。
      * <pre>
      *   ofDouble(null, 1.1d)                     == 1.1d
      *   ofDouble(BigDecimal.valueOf(1.0d), 1.1d) == 1.0d
@@ -202,6 +214,7 @@ public enum Numbers {
     }
 
     /**
+     * 从字节字符串转为 byte 值。
      * <pre>
      *   ofByte(null) ==  0
      *   ofByte("")   ==  0
@@ -216,6 +229,7 @@ public enum Numbers {
     }
 
     /**
+     * 从字节字符串转为 byte 值，转换失败则使用默认值。
      * <pre>
      *   ofByte(null, 1) ==  1
      *   ofByte("", 1)   ==  1
@@ -239,6 +253,7 @@ public enum Numbers {
     }
 
     /**
+     * 从短整型字符串转为 short 值。
      * <pre>
      *   ofShort(null) ==  0
      *   ofShort("")   ==  0
@@ -253,6 +268,7 @@ public enum Numbers {
     }
 
     /**
+     * 从短整型字符串转为 short 值，转换失败则使用默认值。
      * <pre>
      *   ofShort(null, 1) ==  1
      *   ofShort("", 1)   ==  1

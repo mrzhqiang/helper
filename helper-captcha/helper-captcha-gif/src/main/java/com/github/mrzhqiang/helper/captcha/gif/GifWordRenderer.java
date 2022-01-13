@@ -2,7 +2,7 @@ package com.github.mrzhqiang.helper.captcha.gif;
 
 import com.github.mrzhqiang.helper.awt.Colors;
 import com.github.mrzhqiang.helper.captcha.WordRenderer;
-import com.github.mrzhqiang.helper.text.UserNames;
+import com.github.mrzhqiang.helper.text.Names;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ final class GifWordRenderer implements WordRenderer {
         if (fontColor == null) {
             fontColor = new Color[length];
             for (int i = 0; i < length; i++) {
-                fontColor[i] = Colors.of(UserNames.randomColor());
+                fontColor[i] = Colors.of(Names.randomColor());
             }
         }
 
@@ -59,7 +59,7 @@ final class GifWordRenderer implements WordRenderer {
         // 画干扰圆圈
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f * nextInt(10)));  // 设置透明度
         for (int i = 0; i < 2; i++) {
-            g2d.setColor(Colors.of(UserNames.randomColor()));
+            g2d.setColor(Colors.of(Names.randomColor()));
             int w = 5 + nextInt(10);
             g2d.drawOval(nextInt(width - 25), nextInt(height - 15), w, w);
         }
@@ -110,7 +110,7 @@ final class GifWordRenderer implements WordRenderer {
             String value = String.valueOf(word.charAt(i));
             int fY = height - ((height - (int) fontMetrics.getStringBounds(value, g2d).getHeight()) >> 1);  // 文字的纵坐标
             int x;
-            if (UserNames.checkChinese(value)) {
+            if (Names.checkChinese(value)) {
                 x = i * fW + fSp - 3;
             } else {
                 x = i * fW + fSp + 3;
