@@ -15,8 +15,10 @@ import java.util.Optional;
  * todo i18n
  */
 @Slf4j
-public enum Dialogs {
-    ;
+public final class Dialogs {
+    private Dialogs() {
+        // no instances
+    }
 
     private static final String DEFAULT_ERROR_MESSAGE = "抱歉！程序出现未知错误..";
 

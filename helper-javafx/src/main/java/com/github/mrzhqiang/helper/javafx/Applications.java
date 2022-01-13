@@ -18,8 +18,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
-public enum Applications {
-    ;
+public final class Applications {
+    private Applications() {
+        // no instances
+    }
 
     public static void start(Application application, Stage stage) {
         Preconditions.checkNotNull(application, "application == null");

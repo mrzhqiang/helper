@@ -1,14 +1,17 @@
 package com.github.mrzhqiang.helper.data.redis;
 
 import com.fasterxml.jackson.core.json.JsonWriteFeature;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Json 工具类。
@@ -16,8 +19,10 @@ import java.util.Map;
  *
  * @author playframework
  */
-public enum Jsons {
-    ;
+public final class Jsons {
+    private Jsons() {
+        // no instances
+    }
 
     private static final ObjectMapper defaultObjectMapper = newDefaultMapper();
     private static volatile ObjectMapper objectMapper = null;

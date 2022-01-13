@@ -15,8 +15,10 @@ import java.util.function.Supplier;
  *
  * @author qiang.zhang
  */
-public enum Datas {
-    ;
+public final class Datas {
+    private Datas() {
+        // no instances
+    }
 
     private static final int DEFAULT_MIN_PAGE_NUMBER = 0;
     private static final int DEFAULT_MIN_PAGE_SIZE = 10;
