@@ -136,10 +136,8 @@ public final class Dates {
         } catch (Exception e) {
             String message = Strings.lenientFormat("format {} failed, we will try format with http...", date);
             LOGGER.error(message, e);
-            return formatHTTP(date);
-        } finally {
-            LOCAL_DATETIME.remove();
         }
+        return formatHTTP(date);
     }
 
     /**
@@ -158,11 +156,7 @@ public final class Dates {
      */
     public static String formatDate(Date date) {
         Preconditions.checkNotNull(date, "date == null");
-        try {
-            return LOCAL_DATE.get().format(date);
-        } finally {
-            LOCAL_DATE.remove();
-        }
+        return LOCAL_DATE.get().format(date);
     }
 
     /**
@@ -181,11 +175,7 @@ public final class Dates {
      */
     public static String formatTime(Date date) {
         Preconditions.checkNotNull(date, "date == null");
-        try {
-            return LOCAL_TIME.get().format(date);
-        } finally {
-            LOCAL_TIME.remove();
-        }
+        return LOCAL_TIME.get().format(date);
     }
 
     /**
@@ -227,10 +217,8 @@ public final class Dates {
         } catch (ParseException e) {
             String message = Strings.lenientFormat("parse {} failed, we will try parse with http...", source);
             LOGGER.error(message, e);
-            return parseHTTP(source);
-        } finally {
-            LOCAL_DATETIME.remove();
         }
+        return parseHTTP(source);
     }
 
     /**
@@ -406,7 +394,6 @@ public final class Dates {
             if (position.getIndex() == value.length()) {
                 // STANDARD_DATE_FORMAT must match exactly; all text must be consumed, e.g. no ignored
                 // non-standard trailing "+01:00". Those cases are covered below.
-                STANDARD_DATE_FORMAT.remove();
                 return result;
             }
             synchronized (BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS) {
@@ -438,11 +425,7 @@ public final class Dates {
          * Returns the string for {@code date}.
          */
         static String format(Date date) {
-            try {
-                return STANDARD_DATE_FORMAT.get().format(date);
-            } finally {
-                STANDARD_DATE_FORMAT.remove();
-            }
+            return STANDARD_DATE_FORMAT.get().format(date);
         }
 
         private HttpDate() {
