@@ -39,7 +39,7 @@
         <mysql.version>8.0.22</mysql.version>
         <netty.version>4.1.55.Final</netty.version>
         <okhttp3.version>3.14.9</okhttp3.version>
-        <postgresql.version>42.2.18</postgresql.version>
+        <postgresql.version>42.2.25</postgresql.version>
         <rabbit-amqp-client.version>5.7.3</rabbit-amqp-client.version>
         <rxjava2.version>2.2.20</rxjava2.version>
         <rxjava2fx.version>2.2.2</rxjava2fx.version>
