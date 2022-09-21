@@ -36,7 +36,7 @@
         <junit.version>4.13.1</junit.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.16</lombok.version>
-        <mysql.version>8.0.22</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <netty.version>4.1.55.Final</netty.version>
         <okhttp3.version>3.14.9</okhttp3.version>
         <postgresql.version>42.4.1</postgresql.version>
