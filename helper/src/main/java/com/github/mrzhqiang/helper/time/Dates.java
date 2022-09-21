@@ -12,7 +12,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -35,7 +34,7 @@ import java.util.TimeZone;
  * <p>
  * 关于配置加载：
  * <pre>
- *   https://github.com/lightbend/config
+ *   <a href="https://github.com/lightbend/config">Config</a>
  * </pre>
  * <p>
  * 关于配置设定：

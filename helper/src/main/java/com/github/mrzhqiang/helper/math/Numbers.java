@@ -2,10 +2,11 @@ package com.github.mrzhqiang.helper.math;
 
 import com.google.common.base.Strings;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 
 /**
- * 数字工具类。
+ * 数字工具。
  */
 public final class Numbers {
     private Numbers() {
@@ -62,9 +63,9 @@ public final class Numbers {
 
         try {
             return Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        } catch (NumberFormatException ignored) {
         }
+        return defaultValue;
     }
 
     /**
@@ -101,9 +102,9 @@ public final class Numbers {
 
         try {
             return Long.parseLong(number);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        } catch (NumberFormatException ignored) {
         }
+        return defaultValue;
     }
 
     /**
@@ -140,9 +141,9 @@ public final class Numbers {
 
         try {
             return Float.parseFloat(number);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        } catch (NumberFormatException ignored) {
         }
+        return defaultValue;
     }
 
     /**
@@ -179,9 +180,9 @@ public final class Numbers {
 
         try {
             return Double.parseDouble(number);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        } catch (NumberFormatException ignored) {
         }
+        return defaultValue;
     }
 
     /**
@@ -247,9 +248,9 @@ public final class Numbers {
 
         try {
             return Byte.parseByte(number);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        } catch (NumberFormatException ignored) {
         }
+        return defaultValue;
     }
 
     /**
@@ -286,8 +287,41 @@ public final class Numbers {
 
         try {
             return Short.parseShort(number);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 大十进制数字。
+     * <p>
+     * 如果字符串源为 null 或空串，则默认返回 null 值。
+     *
+     * @param source 字符串源。
+     * @return 字符串源转换的大十进制数字，如果字符串源为 null 值或空串，则返回默认值。
+     */
+    @Nullable
+    public static BigDecimal ofBigDecimal(String source) {
+        return ofBigDecimal(source, null);
+    }
+
+    /**
+     * 大十进制数字。
+     *
+     * @param source       字符串源。
+     * @param defaultValue 默认值。
+     * @return 字符串源转换的大十进制数字，如果字符串源为 null 值或空串，则返回默认值。
+     */
+    @Nullable
+    public static BigDecimal ofBigDecimal(String source, @Nullable BigDecimal defaultValue) {
+        if (Strings.isNullOrEmpty(source)) {
             return defaultValue;
         }
+
+        try {
+            return new BigDecimal(source);
+        } catch (Exception ignored) {
+        }
+        return defaultValue;
     }
 }

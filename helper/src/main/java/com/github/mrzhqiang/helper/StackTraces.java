@@ -1,10 +1,7 @@
 package com.github.mrzhqiang.helper;
 
-import com.google.common.base.Throwables;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Objects;
 
 /**
  * 堆栈工具。
@@ -30,18 +27,5 @@ public final class StackTraces {
             printWriter.println(element);
         }
         return writer.toString();
-    }
-
-    /**
-     * 通过指定异常打印堆栈内容。
-     *
-     * @param e 指定可投掷的异常。
-     * @return 字符串信息。当处于调试模式时，打印全部堆栈内容；否则打印异常消息。
-     */
-    public static String of(Throwable e) {
-        if (Environments.debug()) {
-            return Throwables.getStackTraceAsString(e);
-        }
-        return e != null ? e.getMessage() : "Unknown Error!";
     }
 }

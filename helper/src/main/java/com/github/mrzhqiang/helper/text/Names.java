@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.helper.text;
 
+import com.github.mrzhqiang.helper.Matchers;
 import com.github.mrzhqiang.helper.random.RandomNumbers;
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
@@ -53,16 +53,12 @@ public final class Names {
 
     private static final String REGEX_CHINESE = CONFIG.getString("regex.chinese");
 
-    private static final CharMatcher LETTER_OR_DIGIT_MATCHER = CharMatcher.inRange('a', 'z')
-            .or(CharMatcher.inRange('A', 'Z'))
-            .or(CharMatcher.inRange('0', '9'));
-
     /**
      * 获取字符串的第一个字符（仅限于字母或数字，包括汉字）。
      * <p>
      * 这个方法来自：
      * <pre>
-     *   https://github.com/siacs/Conversations
+     *   <a href="https://github.com/siacs/Conversations">Conversations</a>
      * </pre>
      *
      * @param value 字符串。
@@ -84,7 +80,7 @@ public final class Names {
      * <p>
      * 这个方法来自：
      * <pre>
-     *   https://github.com/siacs/Conversations
+     *   <a href="https://github.com/siacs/Conversations">Conversations</a>
      * </pre>
      *
      * @param value 字符串，如果是 Null 或者空串，则返回 {@link #DEFAULT_COLOR}。
@@ -136,7 +132,7 @@ public final class Names {
             return false;
         }
 
-        return LETTER_OR_DIGIT_MATCHER.matchesAllOf(value);
+        return Matchers.LETTER_OR_DIGIT.matchesAllOf(value);
     }
 
     /**

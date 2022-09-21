@@ -1,6 +1,13 @@
 package com.github.mrzhqiang.helper.uppc;
 
-import static com.github.mrzhqiang.helper.uppc.UppcHelper.*;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.Coordinate;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.LatLon;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.Mensuration;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.WorldMap;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.doubleFormat9;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.transMeasureMap;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.transMeasureWJ;
+import static com.github.mrzhqiang.helper.uppc.UppcHelper.transMeasureXYZ;
 
 public class UppcSample {
     public static void main(String[] args) {

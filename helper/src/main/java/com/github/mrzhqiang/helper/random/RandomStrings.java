@@ -39,7 +39,7 @@ import java.util.List;
  * <p>
  * 通常用于匿名用户、权限校验、汉字验证码等场景。
  * <pre>
- *   https://blog.csdn.net/u011762313/article/details/47419063
+ *   <a href="https://blog.csdn.net/u011762313/article/details/47419063">参考文章</a>
  * </pre>
  * <p>
  * 关于数字：
@@ -66,11 +66,11 @@ public final class RandomStrings {
     private static final Config CONFIG = ConfigFactory.load().getConfig("helper.random");
 
     @SuppressWarnings("unused")
-    private static final String SPECIAL = CONFIG.getString("special");
-    private static final String NUMBER = CONFIG.getString("number");
-    private static final String LOWER_CASE = CONFIG.getString("lowerCase");
-    private static final String UPPER_CASE = CONFIG.getString("upperCase");
-    private static final String CHARS = CONFIG.getString("chars");
+    public static final String SPECIAL = CONFIG.getString("special");
+    public static final String NUMBER = CONFIG.getString("number");
+    public static final String LOWER_CASE = CONFIG.getString("lowerCase");
+    public static final String UPPER_CASE = CONFIG.getString("upperCase");
+    public static final String CHARS = CONFIG.getString("chars");
 
     private static final Config CHINESE = CONFIG.getConfig("chinese");
     private static final List<String> NORMAL = CHINESE.getStringList("normal");

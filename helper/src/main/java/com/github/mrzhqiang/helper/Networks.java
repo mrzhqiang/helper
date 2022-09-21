@@ -1,6 +1,5 @@
 package com.github.mrzhqiang.helper;
 
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.net.InetAddresses;
 
@@ -30,8 +29,6 @@ public final class Networks {
     private static final String REGEX_V4_ADDRESS = "([0-9]{1,3}(\\.[0-9]{1,3}){3})";
     private static final String REGEX_V6_ADDRESS = "[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}";
 
-    private static final Splitter DOT_SPLITTER = Splitter.on('.').trimResults();
-
     public static boolean isPort(int port) {
         return port >= MIN_PORT && port <= MAX_PORT;
     }
@@ -45,7 +42,7 @@ public final class Networks {
             return false;
         }
 
-        for (String section : DOT_SPLITTER.split(address)) {
+        for (String section : Splitters.DOT.split(address)) {
             try {
                 int i = Integer.parseInt(section);
                 if (i < 0 || i > 255) {
