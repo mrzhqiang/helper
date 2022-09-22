@@ -143,8 +143,8 @@ public final class Environments {
         } catch (SecurityException ex) {
             // we are not allowed to look at this property
             // System.err.println("Caught a SecurityException reading the system property '" + property
-            // + "'; the SystemUtils property value will default to null.");
-            return null;
+            // + "'; the SystemUtils property value will default to ''.");
+            return "";
         }
     }
 

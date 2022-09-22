@@ -35,4 +35,8 @@ public final class Matchers {
      * 逗号匹配器。
      */
     public static final CharMatcher COMMA = CharMatcher.is(CommonSymbols.FULL_COMMA);
+    /**
+     * 空格匹配器。
+     */
+    public static final CharMatcher SPACE = CharMatcher.is(CommonSymbols.SPACE);
 }

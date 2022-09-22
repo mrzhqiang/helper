@@ -13,7 +13,7 @@
     <description>Helper Build</description>
 
     <properties>
-        <revision>2021.1.4</revision>
+        <revision>2022.1.0</revision>
     </properties>
 
     <modules>
@@ -24,5 +24,6 @@
         <module>helper-captcha</module>
         <module>helper-data</module>
         <module>helper-sample</module>
+        <module>helper-third</module>
     </modules>
 </project>
