@@ -1,5 +1,6 @@
 package com.github.mrzhqiang.helper;
 
+import com.github.mrzhqiang.helper.text.CommonSymbols;
 import com.google.common.base.CharMatcher;
 
 /**
@@ -30,4 +31,8 @@ public final class Matchers {
      * 纯大小写字母 + 纯数字匹配器。
      */
     public static final CharMatcher LETTER_OR_DIGIT = LETTER.or(DIGIT);
+    /**
+     * 逗号匹配器。
+     */
+    public static final CharMatcher COMMA = CharMatcher.is(CommonSymbols.FULL_COMMA);
 }

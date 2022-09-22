@@ -1,7 +1,7 @@
 package com.github.mrzhqiang.helper.awt;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
+import com.github.mrzhqiang.helper.Matchers;
+import com.github.mrzhqiang.helper.Splitters;
 import com.google.common.base.Strings;
 
 import java.awt.Color;
@@ -24,22 +24,6 @@ public final class Colors {
      * 黑色-BLACK：r:0 g:0 b:0
      */
     private static final Color DEFAULT_COLOR = Color.BLACK;
-    /**
-     * 英文单词匹配。
-     * <p>
-     * [A-Za-z]*
-     */
-    private static final CharMatcher LETTER_MATCHER = CharMatcher.inRange('A', 'Z').or(CharMatcher.inRange('a', 'z'));
-    /**
-     * 逗号匹配器。
-     */
-    private static final CharMatcher DOT_MATCHER = CharMatcher.is(',');
-    /**
-     * 逗号分割器。
-     * <p>
-     * 忽略空字符串，裁减返回值的前后空格。
-     */
-    private static final Splitter DOT_SPLITTER = Splitter.on(',').omitEmptyStrings().trimResults();
 
     /**
      * 通过字符串生成 awt 颜色类。
@@ -69,10 +53,10 @@ public final class Colors {
             return defaultColor;
         }
 
-        if (DOT_MATCHER.matchesAnyOf(color)) {
+        if (Matchers.COMMA.matchesAnyOf(color)) {
             try {
                 // 无需裁减前后空格，分割器已自动裁减
-                List<String> colors = DOT_SPLITTER.splitToList(color);
+                List<String> colors = Splitters.COMMA.splitToList(color);
                 if (colors.size() >= 3) {
                     int r = Integer.parseInt(colors.get(0));
                     int g = Integer.parseInt(colors.get(1));
@@ -92,7 +76,7 @@ public final class Colors {
             // "0x", "0X", "#", or leading zero
             return Color.decode(color);
         } catch (Exception ignored) {
-            if (LETTER_MATCHER.matchesAnyOf(color)) {
+            if (Matchers.LETTER.matchesAnyOf(color)) {
                 return ofConstant(color);
             }
         }
@@ -121,7 +105,7 @@ public final class Colors {
      * @return Color 颜色类。默认情况下返回 defaultColor 值。
      */
     public static Color ofConstant(String color, Color defaultColor) {
-        if (Strings.isNullOrEmpty(color) || LETTER_MATCHER.matchesNoneOf(color)) {
+        if (Strings.isNullOrEmpty(color) || Matchers.LETTER.matchesNoneOf(color)) {
             return defaultColor;
         }
 

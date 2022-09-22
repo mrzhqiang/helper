@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.awt;
 
-import com.google.common.base.Splitter;
+import com.github.mrzhqiang.helper.Splitters;
 import com.google.common.base.Strings;
 
 import java.awt.Font;
@@ -14,12 +14,6 @@ public final class Fonts {
         // no instances
     }
 
-    /**
-     * 逗号分割器。
-     * <p>
-     * 忽略空字符串，自动裁减返回值的前后空格。
-     */
-    private static final Splitter DOT_SPLITTER = Splitter.on(',').omitEmptyStrings().trimResults();
     /**
      * 默认的字体数组。
      * <p>
@@ -54,7 +48,7 @@ public final class Fonts {
             return defaultFonts;
         }
 
-        List<String> fontNames = DOT_SPLITTER.splitToList(font);
+        List<String> fontNames = Splitters.COMMA.splitToList(font);
         Font[] fonts = new Font[fontNames.size()];
         for (int i = 0; i < fontNames.size(); i++) {
             fonts[i] = new Font(fontNames.get(i), Font.BOLD, fontSize);
