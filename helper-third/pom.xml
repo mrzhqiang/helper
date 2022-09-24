@@ -19,7 +19,6 @@
     <modules>
         <module>helper-third-api</module>
         <module>helper-third-core</module>
-        <module>helper-third-core</module>
     </modules>
 
     <build>

@@ -1,8 +1,7 @@
 package com.github.mrzhqiang.helper;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertNotEquals;
+import org.junit.Test;
 
 public class StackTracesTest {
 
@@ -11,12 +10,5 @@ public class StackTracesTest {
         String firstTrace = StackTraces.ofCurrent();
         String secondTrace = StackTraces.ofCurrent();
         assertNotEquals(firstTrace, secondTrace);
-    }
-
-    @Test
-    public void of() {
-        String runtime = StackTraces.of(new RuntimeException("runtime"));
-        String nullPointer = StackTraces.of(new NullPointerException("null"));
-        assertNotEquals(runtime, nullPointer);
     }
 }

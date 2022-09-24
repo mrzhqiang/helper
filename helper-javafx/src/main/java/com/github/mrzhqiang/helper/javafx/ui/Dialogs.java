@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper.javafx.ui;
 
-import com.github.mrzhqiang.helper.StackTraces;
+import com.github.mrzhqiang.helper.Exceptions;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import javafx.scene.control.Alert;
@@ -62,11 +62,11 @@ public final class Dialogs {
         return alert;
     }
 
-    public static Alert error(Throwable error) {
+    public static Alert error(Exception error) {
         return error(error.toString(), error);
     }
 
-    public static Alert error(@Nullable String message, Throwable cause) {
+    public static Alert error(@Nullable String message, Exception cause) {
         Preconditions.checkNotNull(cause, "cause == null");
 
         String errorMsg = Strings.isNullOrEmpty(message) ? DEFAULT_ERROR_MESSAGE : message;
@@ -75,7 +75,7 @@ public final class Dialogs {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("错误");
         alert.setHeaderText(errorMsg);
-        alert.setContentText(StackTraces.of(cause));
+        alert.setContentText(Exceptions.ofTrace(cause));
 
         return alert;
     }
