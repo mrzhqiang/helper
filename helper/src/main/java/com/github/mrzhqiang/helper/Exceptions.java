@@ -14,9 +14,15 @@ public final class Exceptions {
     }
 
     /**
+     * 异常消息的最大长度。
+     * <p>
+     * 主要节省内存以及数据库存储空间，明确存储字段长度。
+     */
+    public static final int MAX_MESSAGE_LENGTH = 500;
+    /**
      * 最大异常痕迹字符串的长度。
      * <p>
-     * 主要节省数据库存储空间，明确存储字段的长度。
+     * 主要节省内存以及数据库存储空间，明确存储字段长度。
      */
     public static final int MAX_TRACE_LENGTH = 2000;
 
@@ -29,6 +35,8 @@ public final class Exceptions {
 
     /**
      * 异常消息。
+     * <p>
+     * 为了方便持久化，将限制此方法返回的字符串长度。
      *
      * @param exception 异常实例。
      * @return 异常消息字符串，不会为 null 值。
@@ -36,6 +44,7 @@ public final class Exceptions {
     public static String ofMessage(@Nullable Exception exception) {
         return Optional.ofNullable(exception)
                 .map(Exception::getMessage)
+                .map(it -> it.substring(0, Math.min(MAX_MESSAGE_LENGTH, it.length())))
                 .orElse(UNKNOWN_MESSAGE);
     }
 
