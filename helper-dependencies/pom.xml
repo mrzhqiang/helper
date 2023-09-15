@@ -45,7 +45,7 @@
         <rxjava2.version>2.2.20</rxjava2.version>
         <rxjava2fx.version>2.2.2</rxjava2fx.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <sqlite-jdbc.version>3.28.0</sqlite-jdbc.version>
+        <sqlite-jdbc.version>3.41.2.2</sqlite-jdbc.version>
         <testfx-junit.version>4.0.15-alpha</testfx-junit.version>
         <!-- Plugin versions -->
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
