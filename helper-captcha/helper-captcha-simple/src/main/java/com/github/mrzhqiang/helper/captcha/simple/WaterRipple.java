@@ -40,7 +40,7 @@ final class WaterRipple implements Ripple {
         waterFilter.setPhase(10);
         waterFilter.setWavelength(2);
 
-        BufferedImage effectImage = waterFilter.filter(image, null);
+        BufferedImage effectImage = waterFilter.filter(source, null);
         effectImage = rippleFilter.filter(effectImage, null);
 
         graphics.drawImage(effectImage, 0, 0, null, null);
