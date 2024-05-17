@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
  * 版本工具。
  */
 public final class Versions {
-
     private Versions() {
-        throw new AssertionError();
+        // no instances.
     }
 
     /**

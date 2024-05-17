@@ -4,14 +4,17 @@ import com.github.mrzhqiang.helper.random.RandomStrings;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 序列工具。
  */
 public final class Sequences {
+
     private Sequences() {
         // no instances.
     }
@@ -40,13 +43,25 @@ public final class Sequences {
      * UID 参数键。
      */
     public static final String UID_KEY = "uid";
-
     /**
      * 基础的日期时间格式化器。
      * <p>
      * 主要用于序列号。
      */
     public static final DateTimeFormatter BASIC_DATE_TIME = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+    /**
+     * 安全随机工具。
+     */
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    /**
+     * 随机的取模值。
+     */
+    private static final Integer RANDOM_MOD = 100;
+    /**
+     * 原子性的长整型自增长工具。
+     */
+    private static final AtomicLong ATOMIC_LONG = new AtomicLong(1);
 
     /**
      * 基础日期序列。
@@ -68,6 +83,19 @@ public final class Sequences {
      */
     public static String ofBasicDateTime() {
         return LocalDateTime.now().format(BASIC_DATE_TIME);
+    }
+
+    /**
+     * 获取随机的日期时间序列。
+     * <p>
+     * 序列字符串的格式为：(localDateTime)[yyyyMMddHHmmss] + (randomNumber)[0, 999] + (incrementNumber)[0, 999]。
+     *
+     * @return 序列字符串。
+     */
+    public static String ofRandomDateTime() {
+        int randomNumber = SECURE_RANDOM.nextInt(1000);
+        long incrementNumber = ATOMIC_LONG.incrementAndGet() % RANDOM_MOD;
+        return BASIC_DATE_TIME.format(LocalDateTime.now()) + randomNumber + incrementNumber;
     }
 
     /**
@@ -93,4 +121,5 @@ public final class Sequences {
         uid = Strings.padEnd(uid, UID_MIN_LENGTH, UID_PAD_CHAR);
         return uid;
     }
+
 }
