@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ import java.util.function.Function;
  * 日期时间工具。
  */
 public final class DateTimes {
+
     private DateTimes() {
         // no instances
     }
@@ -114,6 +116,107 @@ public final class DateTimes {
         DEF_MESSAGE_CACHED.put(KEY_HOURS_AGO, DEF_HOURS_AGO);
         DEF_MESSAGE_CACHED.put(KEY_TODAY, DEF_TODAY);
         DEF_MESSAGE_CACHED.put(KEY_YESTERDAY, DEF_YESTERDAY);
+    }
+
+    /**
+     * 转为纪元毫秒值。
+     *
+     * @param dateTime 本地日期时间。
+     * @return 自纪元时间以来的毫秒值。
+     */
+    public static Long toEpochMilli(LocalDateTime dateTime) {
+        return toEpochMilli(dateTime, 0L);
+    }
+
+    /**
+     * 转为纪元毫秒值。
+     *
+     * @param dateTime 本地日期时间。如果这个值为 null 则返回默认值。
+     * @param defValue 默认值。
+     * @return 自纪元时间以来的毫秒值。
+     */
+    @Nullable
+    public static Long toEpochMilli(LocalDateTime dateTime, @Nullable Long defValue) {
+        if (dateTime == null) {
+            return defValue;
+        }
+        return dateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+    }
+
+    /**
+     * 转为纪元秒值。
+     *
+     * @param dateTime 本地日期时间。
+     * @return 自纪元时间以来的秒值。
+     */
+    public static Long toEpochSecond(LocalDateTime dateTime) {
+        return toEpochSecond(dateTime, 0L);
+    }
+
+    /**
+     * 转为纪元秒值。
+     *
+     * @param dateTime 本地日期时间。如果这个值为 null 则返回默认值。
+     * @param defValue 默认值。
+     * @return 自纪元时间以来的秒值。
+     */
+    @Nullable
+    public static Long toEpochSecond(LocalDateTime dateTime, @Nullable Long defValue) {
+        if (dateTime == null) {
+            return defValue;
+        }
+        return dateTime.toEpochSecond(ZoneOffset.UTC);
+    }
+
+    /**
+     * 从纪元毫秒值转换。
+     *
+     * @param epochMilli 纪元毫秒值。
+     * @return 瞬间时间。
+     */
+    @Nullable
+    public static Instant ofEpochMilli(Long epochMilli) {
+        return ofEpochMilli(epochMilli, null);
+    }
+
+    /**
+     * 从纪元毫秒值转换。
+     *
+     * @param epochMilli 纪元毫秒值。
+     * @param defValue 默认值。
+     * @return 瞬间时间。
+     */
+    @Nullable
+    public static Instant ofEpochMilli(Long epochMilli, @Nullable Instant defValue) {
+        if (epochMilli == null) {
+            return defValue;
+        }
+        return Instant.ofEpochMilli(epochMilli);
+    }
+
+    /**
+     * 从纪元秒值转换。
+     *
+     * @param epochSecond 纪元秒值。
+     * @return 瞬间时间。
+     */
+    @Nullable
+    public static Instant ofEpochSecond(Long epochSecond) {
+        return ofEpochSecond(epochSecond, null);
+    }
+
+    /**
+     * 从纪元秒值转换。
+     *
+     * @param epochSecond 纪元秒值。
+     * @param defValue 默认值。
+     * @return 瞬间时间。
+     */
+    public static Instant ofEpochSecond(Long epochSecond, Instant defValue) {
+        if (epochSecond == null) {
+            return defValue;
+        }
+        return Instant.ofEpochSecond(epochSecond);
     }
 
     /**
@@ -306,4 +409,5 @@ public final class DateTimes {
 
         return DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDateTime.ofInstant(target, ZoneId.systemDefault()));
     }
+
 }
