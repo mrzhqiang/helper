@@ -1,6 +1,6 @@
 package com.github.mrzhqiang.helper;
 
-import jdk.internal.joptsimple.internal.Strings;
+import com.google.common.base.Strings;
 
 /**
  * 字符串工具。

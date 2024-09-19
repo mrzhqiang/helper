@@ -1,6 +1,7 @@
 package com.github.mrzhqiang.helper;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * 集合工具。
@@ -15,6 +16,10 @@ public final class CollectionUtils {
 
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    public static boolean isEmpty(Map<?, ?> map) {
+        return map == null || map.isEmpty();
     }
 
 }
