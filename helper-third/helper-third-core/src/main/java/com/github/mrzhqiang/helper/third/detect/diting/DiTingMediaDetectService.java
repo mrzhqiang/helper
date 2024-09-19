@@ -2,6 +2,7 @@ package com.github.mrzhqiang.helper.third.detect.diting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.mrzhqiang.helper.StringUtils;
 import com.github.mrzhqiang.helper.third.detect.MediaDetectAsyncData;
 import com.github.mrzhqiang.helper.third.detect.MediaDetectData;
 import com.github.mrzhqiang.helper.third.detect.MediaDetectFailureException;
@@ -20,8 +21,8 @@ import com.github.mrzhqiang.helper.third.detect.diting.dto.TextInspectRequest;
 import com.github.mrzhqiang.helper.third.detect.diting.dto.TextInspectResponse;
 import com.github.mrzhqiang.helper.third.detect.diting.dto.VideoInspectRequest;
 import com.github.mrzhqiang.helper.third.detect.diting.dto.VideoInspectResultResponse;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import jdk.internal.joptsimple.internal.Strings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
@@ -53,7 +54,7 @@ public class DiTingMediaDetectService implements MediaDetectService {
 
     @Override
     public MediaDetectData detectText(MediaDetectTextRequest request) {
-        if (Strings.isNullOrEmpty(request.getTextType())) {
+        if (!StringUtils.hasText(request.getTextType())) {
             request.setTextType(DEF_TEXT_TYPE);
         }
         Call<TextInspectResponse> call = diTingTextApi.detectText(TextInspectRequest.builder()

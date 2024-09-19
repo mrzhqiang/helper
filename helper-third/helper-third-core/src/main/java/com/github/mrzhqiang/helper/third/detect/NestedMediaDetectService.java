@@ -1,8 +1,9 @@
 package com.github.mrzhqiang.helper.third.detect;
 
+import com.github.mrzhqiang.helper.StringUtils;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import jdk.internal.joptsimple.internal.Strings;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class NestedMediaDetectService implements MediaDetectService {
      */
     public String getCurrentSupplierType() {
         String bucket = SUPPLIER_TYPE_MAP.get(SUPPLIER_KEY);
-        if (Strings.isNullOrEmpty(bucket)) {
+        if (!StringUtils.hasText(bucket)) {
             String type = SUPPLIER_TYPE_DI_TING;
             SUPPLIER_TYPE_MAP.put(SUPPLIER_KEY, type);
             return type;
@@ -63,7 +64,7 @@ public class NestedMediaDetectService implements MediaDetectService {
      * @return 返回 true 表示设置成功；返回 false 表示设置失败，可能是空白字符串或者是不受支持的供应商类型。
      */
     public boolean setCurrentSupplierType(String type) {
-        if (!Strings.isNullOrEmpty(type) && SUPPLIER_LIST.contains(type)) {
+        if (StringUtils.hasText(type) && SUPPLIER_LIST.contains(type)) {
             SUPPLIER_TYPE_MAP.put(SUPPLIER_KEY, type);
             return true;
         }
