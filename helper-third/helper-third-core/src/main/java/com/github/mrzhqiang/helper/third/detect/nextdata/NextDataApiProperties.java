@@ -17,7 +17,7 @@ public class NextDataApiProperties {
     private static final String DEF_ASYNC_IMAGE_HOST = "http://api-img-sh.fengkongcloud.com";
     private static final String DEF_ASYNC_IMAGE_QUERY_HOST = "http://api-img-active-query.fengkongcloud.com";
     private static final String DEF_VIDEO_HOST = "http://api-video-gg.fengkongcloud.com";
-    private static final String DEF_ACCESS_KEY = "GUFEpCzZMgpb26CuOvi0";
+    private static final String DEF_ACCESS_KEY = "";
 
     private String textHost = DEF_TEXT_HOST;
     private String imageHost = DEF_IMAGE_HOST;
