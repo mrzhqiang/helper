@@ -33,7 +33,7 @@
         <jackson-bom.version>${jackson.version}</jackson-bom.version>
         <jedis.version>3.1.0</jedis.version>
         <junit.version>4.13.1</junit.version>
-        <logback.version>1.2.9</logback.version>
+        <logback.version>1.2.13</logback.version>
         <lombok.version>1.18.16</lombok.version>
         <mysql.version>8.0.28</mysql.version>
         <netty.version>4.1.55.Final</netty.version>
