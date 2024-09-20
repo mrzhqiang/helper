@@ -41,7 +41,7 @@
         <retrofit.version>2.9.0</retrofit.version>
         <geoip2.version>2.15.0</geoip2.version>
         <postgresql.version>42.4.3</postgresql.version>
-        <rabbit-amqp-client.version>5.7.3</rabbit-amqp-client.version>
+        <rabbit-amqp-client.version>5.18.0</rabbit-amqp-client.version>
         <rxjava2.version>2.2.20</rxjava2.version>
         <rxjava2fx.version>2.2.2</rxjava2fx.version>
         <slf4j.version>1.7.30</slf4j.version>
